@@ -1,0 +1,3 @@
+export const CHANGE_USER = 'CHANGE_USER'
+export const PROCESS_FORM = 'PROCESS_FORM'
+export const LOCATION_CHANGE = 'LOCATION_CHANGE'
