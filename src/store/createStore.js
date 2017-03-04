@@ -4,13 +4,10 @@ import { browserHistory } from 'react-router'
 import makeRootReducer from './reducers'
 import thunk from 'redux-thunk'
 import { updateLocation } from './location'
-import { persistPrevSignupUrl, authOrNotUrl } from './middleware'
 
 export default (initialState = {}) => {
   const middleware = [
-    thunk,
-    persistPrevSignupUrl,
-    authOrNotUrl
+    thunk
   ]
 
   // ======================================================
@@ -50,8 +47,5 @@ export default (initialState = {}) => {
       store.replaceReducer(reducers(store.asyncReducers))
     })
   }
-
-  console.log('store', store.getState())
-
   return store
 }

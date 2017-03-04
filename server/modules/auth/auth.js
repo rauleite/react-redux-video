@@ -137,13 +137,13 @@ router.post('/login', (req, res, next) => {
 
       return res.status(400).json({
         success: false,
-        message: 'Could not process the form.'
+        message: 'Não foi possível processar o formulário.'
       })
     }
 
     return res.json({
       success: true,
-      message: 'You have successfully logged in!',
+      message: 'Você efetuou o login, com sucesso!',
       token,
       user: userData
     })

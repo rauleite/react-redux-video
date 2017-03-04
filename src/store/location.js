@@ -23,10 +23,13 @@ export const updateLocation = ({ dispatch }) => {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {
-    pathname: location.pathname,
-    search: location.search
-}
+// const initialState = {
+//     pathname: location.pathname,
+//     search: location.search
+// }
+
+const initialState = null
+
 export default function locationReducer (state = initialState , action) {
   console.log('* locationReducer *')
   console.log('---- state', state)

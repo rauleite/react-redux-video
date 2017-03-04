@@ -38,7 +38,7 @@ module.exports = new PassportLocalStrategy({
       }
 
       if (!isMatch) {
-        const error = new Error('Incorrect email or password')
+        const error = new Error('Email ou senha incorreto')
         error.name = 'IncorrectCredentialsError'
 
         return done(error)
@@ -47,9 +47,10 @@ module.exports = new PassportLocalStrategy({
       const payload = {
         sub: user._id
       }
-
+// 1488480670
+// 1488480904
       // create a token string
-      const token = jwt.sign(payload, config.jwt_secret, { expiresIn: '5 days' })
+      const token = jwt.sign(payload, config.jwt_secret, { expiresIn: '5s' })
       const data = {
         name: user.name
       }

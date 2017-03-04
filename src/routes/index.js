@@ -5,17 +5,35 @@ import Home from './Home'
 import LoginRoute from './Form/Login'
 import SignupRoute from './Form/Signup'
 import LogoutRoute from './Form/Logout'
+import ForgotRoute from './Form/Forgot'
+import Dashboard from './Dashboard'
+
+import { previneAcessosAuth, persistPrevLoginUrl } from './utils/hooks'
 
 // PlainRoute objects
 export const createRoutes = (store) => ({
   path: '/',
   component: CoreLayout,
   indexRoute: Home,
+
+  // Hook que é chamado quando entra na Aplicacao (uma vez)
+  onEnter(nextState, replace, callback) {
+    previneAcessosAuth(nextState, replace, callback)
+  },
+  
+  // Hook que é chamado sempre que uma rota filha é alterada
+  onChange(prevState, nextState, replace, callback) {
+    previneAcessosAuth(nextState, replace, callback)
+    persistPrevLoginUrl(prevState, nextState, replace, callback)
+  },
+
   childRoutes: [
     CounterRoute(store),
     LoginRoute(store),
     SignupRoute(store),
-    LogoutRoute(store)
+    LogoutRoute(store),
+    ForgotRoute(store),
+    { path: 'dashboard', component: Dashboard }
   ]
 })
 

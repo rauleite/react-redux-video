@@ -31,14 +31,14 @@
       }
     },
     "dev": {
-      "command": "nodemon bin/dev-server  --ignore dist --ignore coverage --ignore tests --ignore src",
+      "command": "nodemon bin/dev-server --ignore node_modules --ignore dist --ignore coverage --ignore tests --ignore src",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "app:*"
       }
     },
     "dev-debug": {
-      "command": "nodemon --debug-brk=5858 bin/dev-server --ignore dist --ignore coverage --ignore tests --ignore src",
+      "command": "nodemon --debug-brk=5858 bin/dev-server --ignore node_modules --ignore dist --ignore coverage --ignore tests --ignore src",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "app:*"
