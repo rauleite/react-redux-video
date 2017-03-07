@@ -6,33 +6,50 @@ import Auth from '../../modules/Auth'
  * @param {object} prevState
  * @param {object} nextState
  * @param {function} replace
- * @param {function} callback
- * @return {object} callback()
  */
-export function previneAcessosAuth ({ location }, replace, callback) {
-  const urlSolicitada = location.pathname
+export function previneAcessosAuth ({ location }, replace) {
+  console.log('previneAcessosAuth()')
+  const pathSolicitado = location.pathname
 
   const pathsProibidos = ['/signup', '/login']
-  const isUrlProibido = pathsProibidos.includes(urlSolicitada)
-
-  if (urlSolicitada === '/' || !isUrlProibido || !Auth.isUserAuthenticated()) {
-    return callback()
+  const isPathProibido = pathsProibidos.includes(pathSolicitado)
+  if (pathSolicitado === '/' || !isPathProibido || !Auth.isUserAuthenticated()) {
+    return
   }
 
-  console.log('urlSolicitada', urlSolicitada)
-  console.log('isUrlProibido', isUrlProibido)
+  console.log('pathSolicitado', pathSolicitado)
+  console.log('isUrlProibido', isPathProibido)
   console.log('replacing...')
 
   replace('/')
-  return callback()
+  return
 }
 
-export function proibeAcessosSemAuth({ location }, replace, callback) {
-  const urlSolicitada = location.pathname
+/**
+ * Proibe determinados acessos sem autenticacao
+ * @param {object} nextState
+ * @param {function} replace 
+ */
+export function proibeAcessosSemAuth ({ location }, replace) {
+  console.log('proibeAcessosSemAuth()')
+  const pathSolicitado = location.pathname
 
   const pathsProibidos = ['/dashboard']
-  const isUrlProibido = pathsProibidos.includes(urlSolicitada)
+  const isPathProibido = pathsProibidos.includes(pathSolicitado)
 
+  console.log('1')
+  if (pathSolicitado === '/' || !isPathProibido) {
+    return
+  }
+  console.log('2')
+
+  if (Auth.isUserAuthenticated()) {
+    console.log('3')
+    return
+  } else {
+    console.log('4')
+    replace('/')
+  }
 }
 
 /**
@@ -42,14 +59,15 @@ export function proibeAcessosSemAuth({ location }, replace, callback) {
  * @param {function} replace 
  * @param {function} callback 
  */
-export function persistPrevLoginUrl (prevState, nextState, replace, callback) {
+export function persistPrevLoginUrl (prevState, nextState, replace) {
   const nextLocation = nextState.location
   const prevLocation = prevState.location
 
-  if (nextLocation.pathname !== '/login') {
-    return callback()
+  const pathsAPersistir = ['/login', '/logout']
+
+  if (!pathsAPersistir.includes(nextLocation.pathname)) {
+    return
   }
 
   localStorage.setItem('urlPrevLogin', prevLocation.pathname + prevLocation.search)
-  return callback()
 }

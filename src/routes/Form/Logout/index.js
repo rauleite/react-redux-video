@@ -1,12 +1,11 @@
 import { injectReducer } from '../../../store/reducers'
 import Auth from '../../../modules/Auth'
+import { redirectToPrevUrl } from '../../utils/url'
 
 export default (store) => ({
   path: 'logout',
   onEnter: (nextState, replace) => {
     Auth.deauthenticateUser()
-
-    // change the current URL to /
-    replace('/')
+    redirectToPrevUrl()
   }
 })

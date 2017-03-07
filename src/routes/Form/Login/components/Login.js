@@ -20,6 +20,8 @@ const Login = ({
 
       <TextField
         floatingLabelText='Email'
+        tabIndex='1'
+        autoFocus
         name='email'
         errorText={errors.email}
         onChange={onChange}
@@ -28,6 +30,7 @@ const Login = ({
       <br />
       <TextField
         floatingLabelText='Senha'
+        tabIndex='2'
         type='password'
         name='password'
         onChange={onChange}

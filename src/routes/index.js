@@ -8,7 +8,7 @@ import LogoutRoute from './Form/Logout'
 import ForgotRoute from './Form/Forgot'
 import Dashboard from './Dashboard'
 
-import { previneAcessosAuth, persistPrevLoginUrl } from './utils/hooks'
+import { previneAcessosAuth, persistPrevLoginUrl, proibeAcessosSemAuth } from './utils/hooks'
 
 // PlainRoute objects
 export const createRoutes = (store) => ({
@@ -18,13 +18,19 @@ export const createRoutes = (store) => ({
 
   // Hook que é chamado quando entra na Aplicacao (uma vez)
   onEnter(nextState, replace, callback) {
-    previneAcessosAuth(nextState, replace, callback)
+    console.log('onEnter')
+    previneAcessosAuth(nextState, replace)
+    proibeAcessosSemAuth(nextState, replace)
+    callback()
   },
-  
+
   // Hook que é chamado sempre que uma rota filha é alterada
   onChange(prevState, nextState, replace, callback) {
-    previneAcessosAuth(nextState, replace, callback)
-    persistPrevLoginUrl(prevState, nextState, replace, callback)
+    console.log('onChange')
+    previneAcessosAuth(nextState, replace)
+    proibeAcessosSemAuth(nextState, replace)
+    persistPrevLoginUrl(prevState, nextState, replace)
+    callback()
   },
 
   childRoutes: [

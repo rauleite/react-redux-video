@@ -18,7 +18,7 @@ const initialState = {
   successMessage: ''
 }
 
-export default function loginReducer (state = initialState, action) {
+export default function forgotReducer (state = initialState, action) {
   console.log('* loginReducer *')
   console.log('---- state', state)
   console.log('---- action', action)

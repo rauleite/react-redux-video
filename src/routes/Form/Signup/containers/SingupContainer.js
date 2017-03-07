@@ -9,8 +9,8 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = ({ signup }) => ({
-  errors: signup.errors,
-  user: signup.user
+  errors: signup.get('errors'),
+  user: signup.get('user')
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup)

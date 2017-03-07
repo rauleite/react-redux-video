@@ -17,6 +17,7 @@ const Signup = ({ onSubmit, onChange, errors, user }) => (
         <TextField
           floatingLabelText='Nome'
           name='name'
+          autoFocus
           errorText={errors.name}
           onChange={onChange}
           value={user.name}

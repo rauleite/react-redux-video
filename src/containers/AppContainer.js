@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, PropTypes, PureComponent } from 'react'
 import { Router, browserHistory } from 'react-router'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
@@ -6,19 +6,19 @@ import { Provider } from 'react-redux'
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
-export default class AppContainer extends Component {
+export default class AppContainer extends PureComponent {
 
   static propTypes = {
     routes : PropTypes.object.isRequired,
     store  : PropTypes.object.isRequired
   }
 
-  componentWillMount () {
-  }
+  // componentWillMount () {
+  // }
 
-  shouldComponentUpdate () {
-    return true
-  }
+  // shouldComponentUpdate () {
+  //   return true
+  // }
 
   render () {
     const { routes, store } = this.props

@@ -1,6 +1,8 @@
 import Auth from '../../../../modules/Auth'
-import { browserHistory } from 'react-router'
 import { CHANGE_USER, PROCESS_FORM } from './consts'
+import { redirectToPrevUrl } from '../../../utils/url'
+import { sendUser } from '../../../utils/ajax'
+import { Map } from 'immutable'
 
 /**
  * @param {Object} Event Objeto de evento javascript
@@ -8,55 +10,34 @@ import { CHANGE_USER, PROCESS_FORM } from './consts'
 export function processForm (event) {
   event.preventDefault()
   return (dispatch, getState) => {
-    const state = getState().login
+    const userState = getState().login.get('user')
 
-    // create a string for an HTTP body message
-    const email = encodeURIComponent(state.user.email)
-    const password = encodeURIComponent(state.user.password)
-    const formData = `email=${email}&password=${password}`
+    sendUser('/auth/login', userState.toJS(), (err, resp) => {
+      if (err) {
+        const errors = err.erros ? err.erros : {}
+        errors.summary = err.message
+        errors.email = errors.email
+        errors.password = errors.password
 
-    // create an AJAX request
-    const xhr = new XMLHttpRequest()
-    xhr.open('post', '/auth/login')
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-    xhr.responseType = 'json'
-    xhr.addEventListener('load', () => {
-      console.log('xhr.status', xhr.status)
-      if (xhr.status === 200) {
-        // success
+        console.log('errrrr', err)
 
-        // change the component-container state
-        // state.errors = {}
-        // save the token
-        Auth.authenticateUser(xhr.response.token)
 
-        // change the current URL
-        let redirectPrevUrl = localStorage.getItem('urlPrevLogin')
-        console.log('redirectPrevUrl', redirectPrevUrl)
-        if (redirectPrevUrl) {
-          browserHistory.push(redirectPrevUrl)
-        } else {
-          browserHistory.push('/')
-        }
-      } else {
-        // failure
 
-        // change the component state
-        const errors = xhr.response.errors ? xhr.response.errors : {}
-        errors.summary = xhr.response.message
+        console.log('errors', errors)
 
-        dispatch({
+        return dispatch({
           type: PROCESS_FORM,
           payload: {
             errors,
-            successMessage: state.successMessage,
-            user: state.user
+            successMessage: '',
+            user: userState
           }
         })
       }
+
+      Auth.authenticateUser(resp.token)
+      redirectToPrevUrl()
     })
-    console.log('formData', formData)
-    xhr.send(formData)
   }
 }
 

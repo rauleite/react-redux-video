@@ -1,54 +1,51 @@
 import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../../consts'
 import { deepFreeze } from '../../../utils/dev-mode'
-import { cloneDeep } from 'lodash'
+// import { cloneDeep } from 'lodash'
+import { Map } from 'immutable'
 
 // successMessage: '',
-const initialState = {
+const initialState = Map({
   errors: {
-    // name: '',
     password: '',
     email: '',
     summary: ''
   },
-  user: {
-    // name: '',
+  user: Map({
     password: '',
     email: ''
-  },
+  }),
   successMessage: ''
-}
+})
 
-export default function loginReducer (state = initialState, action) {
-  console.log('* loginReducer *')
-  console.log('---- state', state)
-  console.log('---- action', action)
+export default function loginReducer (state = initialState , action) {
   deepFreeze(state)
 
   switch (action.type) {
     case PROCESS_FORM:
-      return {
-        errors: state.errors,
-        user: state.user,
-        successMessage: state.successMessage
-      }
+
+    console.log('))act', action)
+
+      return state
+        .set('errors', action.payload.errors)
+        .set('user', action.payload.user)
+        .set('successMessage', action.payload.successMessage)
 
     case CHANGE_USER:
       const input = action.payload
       const field = input.name
 
-      let isEmail = field === 'email'
-      let isPassword = field === 'password'
+      const isField = {
+        email: field === 'email',
+        password: field === 'password'
+      } 
 
-      let user = cloneDeep(state.user)
-      user.email = isEmail ? input.value : state.user.email
-      user.password = isPassword ? input.value : state.user.password
+      return state
+        .setIn(['user', 'email'], isField.email ? 
+          input.value : state.getIn(['user', 'email']))
 
-      return {
-        user,
-        errors: state.errors,
-        successMessage: state.successMessage
-      }
-
+        .setIn(['user', 'password'], isField.password ? 
+          input.value : state.getIn(['user', 'password']))
+      
     case LOCATION_CHANGE:
       return initialState
 
