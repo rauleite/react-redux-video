@@ -4,7 +4,6 @@ export default (store) => ({
   path: 'login',
   /*  Async getComponent is only invoked when route matches   */
   getComponent (nextState, cbReplace) {
-    console.log('getComponent - nextState', nextState)
     /*  Webpack - use 'require.ensure' to create a split point
         and embed an async module loader (jsonp) when bundling   */
     require.ensure([], (require) => {

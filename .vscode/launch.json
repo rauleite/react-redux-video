@@ -31,7 +31,10 @@
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome localhost",
-      "url": "http://localhost:8080",
+      "sourceMaps": true,      
+      "port": 9222,      
+      "url": "http://localhost:3000/logout",
+      "diagnosticLogging": false,      
       "webRoot": "${workspaceRoot}",
       "skipFiles": [
         "node_modules/**/*.js",

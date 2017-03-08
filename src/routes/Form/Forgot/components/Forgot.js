@@ -14,25 +14,17 @@ const Forgot = ({
 }) => (
   <Card >
     <form action='/' onSubmit={onSubmit}>
-      <CardTitle title='Entre' subtitle='Coloque seu email e receba as instruções' />
+      <CardTitle title='Esqueceu sua Senha?' subtitle='Então coloque seu email e resete-a' />
       { successMessage && <p className='success-message'>{ successMessage }</p> }
       { errors.summary && <p className='error-message'>{ errors.summary }</p> }
 
       <TextField
         floatingLabelText='Email'
         name='email'
+        autoFocus
         errorText={errors.email}
         onChange={onChange}
         value={user.email}
-      />
-      <br />
-      <TextField
-        floatingLabelText='Senha'
-        type='password'
-        name='password'
-        onChange={onChange}
-        errorText={errors.password}
-        value={user.password}
       />
       <br />
       <br />

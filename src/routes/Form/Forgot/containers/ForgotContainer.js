@@ -14,10 +14,9 @@ const mapDispatchToProps = {
  * @return {Object} Propriedades relacionado ao Forgot
 */
 const mapStateToProps = ({ forgot }, ownProps) => ({
-  // stateName: 'forgot',
-  errors: forgot.errors,
-  successMessage: forgot.successMessage,
-  user: forgot.user
+  errors: forgot.get('errors'),
+  successMessage: forgot.get('successMessage'),
+  user: forgot.get('user')
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Forgot)

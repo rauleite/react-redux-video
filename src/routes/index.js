@@ -18,7 +18,6 @@ export const createRoutes = (store) => ({
 
   // Hook que é chamado quando entra na Aplicacao (uma vez)
   onEnter(nextState, replace, callback) {
-    console.log('onEnter')
     previneAcessosAuth(nextState, replace)
     proibeAcessosSemAuth(nextState, replace)
     callback()

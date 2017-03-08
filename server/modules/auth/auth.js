@@ -4,7 +4,9 @@ const express = require('express')
 const validator = require('validator')
 const passport = require('passport')
 const crypto = require('crypto')
-
+const User = require('mongoose').model('User')
+const config = require('../../../config/project.config')
+// oi
 const router = new express.Router()
 
 /**
@@ -41,8 +43,7 @@ function validateSignupForm (payload) {
   return {
     success: isFormValid,
     message,
-    errors
-  }
+  errors}
 }
 
 /**
@@ -74,12 +75,37 @@ function validateLoginForm (payload) {
   return {
     success: isFormValid,
     message,
-    errors
+  errors}
+}
+
+/**
+ * Validate the logout form
+ *
+ * @param {object} payload the HTTP body message
+ * @returns {object} The result of validation. Object contains a boolean validation result,
+ *                   errors tips, and a global message for the whole form.
+ */
+function validateLogoutForm (payload) {
+  const errors = {}
+  let isFormValid = true
+  let message = ''
+
+  if (!payload || typeof payload.email !== 'string' || payload.email.trim().length === 0) {
+    isFormValid = false
+    errors.email = 'Digite o seu email, por favor.'
   }
+
+  if (!isFormValid) {
+    message = 'Há algo errado.'
+  }
+
+  return {
+    success: isFormValid,
+    message,
+  errors}
 }
 
 router.post('/signup', (req, res, next) => {
-  console.log('req.b', req.body)
   const validationResult = validateSignupForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -151,6 +177,14 @@ router.post('/login', (req, res, next) => {
 })
 
 router.post('/forgot', function (req, res, next) {
+  const validationResult = validateLogoutForm(req.body)
+  if (!validationResult.success) {
+    return res.status(400).json({
+      success: false,
+      message: validationResult.message,
+      errors: validationResult.errors
+    })
+  }
   async.waterfall([
     function (done) {
       crypto.randomBytes(20, function (err, buf) {
@@ -179,16 +213,19 @@ router.post('/forgot', function (req, res, next) {
     },
 
     function (token, user, done) {
-      var smtpTransport = nodemailer.createTransport('SMTP', {
-        service: 'SendGrid',
+      var smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        // host: 'smtp.gmail.com',
+        // port: 465, 
+        secureConnection: false,
         auth: {
-          user: '!!! YOUR SENDGRID USERNAME !!!',
-          pass: '!!! YOUR SENDGRID PASSWORD !!!'
+          user: config.email,
+          pass: config.email_pass
         }
       })
       var mailOptions = {
+        from: config.email,
         to: user.email,
-        from: 'passwordreset@demo.com',
         subject: 'Node.js Password Reset',
         text: 'You are receiving this because you (or someone else) have requested the reset of the password for ' +
           'your account.\n\n' +
@@ -197,6 +234,9 @@ router.post('/forgot', function (req, res, next) {
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       }
       smtpTransport.sendMail(mailOptions, function (err) {
+        if (err) {
+          console.log('err', err)
+        }
         req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.')
         done(err, 'done')
       })
@@ -204,6 +244,18 @@ router.post('/forgot', function (req, res, next) {
   ], function (err) {
     if (err) return next(err)
     res.redirect('/forgot')
+  })
+})
+
+router.get('/reset/:token', function (req, res) {
+  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
+    if (!user) {
+      req.flash('error', 'Password reset token is invalid or has expired.')
+      return res.redirect('/forgot')
+    }
+    res.render('reset', {
+      user: req.user
+    })
   })
 })
 

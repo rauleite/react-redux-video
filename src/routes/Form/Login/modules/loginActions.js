@@ -16,12 +16,6 @@ export function processForm (event) {
       if (err) {
         const errors = err.erros ? err.erros : {}
         errors.summary = err.message
-        errors.email = errors.email
-        errors.password = errors.password
-
-        console.log('errrrr', err)
-
-
 
         console.log('errors', errors)
 

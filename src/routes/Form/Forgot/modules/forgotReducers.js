@@ -1,53 +1,36 @@
 import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../../consts'
 import { deepFreeze } from '../../../utils/dev-mode'
-import { cloneDeep } from 'lodash'
+import { Map } from 'immutable'
 
 // successMessage: '',
-const initialState = {
+const initialState = Map({
   errors: {
-    // name: '',
-    password: '',
     email: '',
     summary: ''
   },
-  user: {
-    // name: '',
-    password: '',
+  user: Map({
     email: ''
-  },
+  }),
   successMessage: ''
-}
+})
 
 export default function forgotReducer (state = initialState, action) {
-  console.log('* loginReducer *')
-  console.log('---- state', state)
-  console.log('---- action', action)
   deepFreeze(state)
 
   switch (action.type) {
     case PROCESS_FORM:
-      return {
-        errors: state.errors,
-        user: state.user,
-        successMessage: state.successMessage
-      }
+    return state
+      .setIn(['user', 'email'], 
+        action.payload.input ? action.payload.input : state.user)
 
     case CHANGE_USER:
-      const input = action.payload
-      const field = input.name
+      const inputElement = action.payload
 
-      let isEmail = field === 'email'
-      let isPassword = field === 'password'
-
-      let user = cloneDeep(state.user)
-      user.email = isEmail ? input.value : state.user.email
-      user.password = isPassword ? input.value : state.user.password
-
-      return {
-        user,
-        errors: state.errors,
-        successMessage: state.successMessage
-      }
+      let user = state.get('user')
+      return state
+        .set('user', user.set('email', inputElement.value))
+        // .set('errors', state.get(errors)
+        // .set('successMessage', state.successMessage)
 
     case LOCATION_CHANGE:
       return initialState

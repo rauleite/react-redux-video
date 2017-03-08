@@ -8,7 +8,6 @@ import Auth from '../../modules/Auth'
  * @param {function} replace
  */
 export function previneAcessosAuth ({ location }, replace) {
-  console.log('previneAcessosAuth()')
   const pathSolicitado = location.pathname
 
   const pathsProibidos = ['/signup', '/login']
@@ -31,7 +30,6 @@ export function previneAcessosAuth ({ location }, replace) {
  * @param {function} replace 
  */
 export function proibeAcessosSemAuth ({ location }, replace) {
-  console.log('proibeAcessosSemAuth()')
   const pathSolicitado = location.pathname
 
   const pathsProibidos = ['/dashboard']

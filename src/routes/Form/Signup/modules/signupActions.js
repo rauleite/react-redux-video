@@ -28,11 +28,8 @@ export function processForm (event) {
       if (err) {
         const errors = err.erros ? err.erros : {}
         errors.summary = err.message
-        errors.name = errors.name
-        errors.email = errors.email
-        errors.password = errors.password
 
-        console.log('errors', errors)
+        console.error('errors', errors)
 
         return dispatch({
           type: PROCESS_FORM,
@@ -50,10 +47,6 @@ export function processForm (event) {
           user: userState
         }
       })
-
-      // set a message
-      // localStorage.setItem('successMessage', xhr.response.message)
-      // console.log('get item', localStorage.getItem('successMessage'))
 
       // make a redirect
       redirectToPrevUrl()

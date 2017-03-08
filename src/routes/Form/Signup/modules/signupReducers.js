@@ -21,7 +21,6 @@ export default function signupReducer (state = initialState, action) {
 
   switch (action.type) {
     case PROCESS_FORM:
-      console.log('case PROCESS_FORM')
       return state
         .set('errors', action.payload.errors)
         .set('user', action.payload.user)
@@ -49,8 +48,6 @@ export default function signupReducer (state = initialState, action) {
       return initialState
 
     default:
-      console.log('case default')
-
       return state
   }
 }

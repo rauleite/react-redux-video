@@ -30,6 +30,9 @@ const config = {
   db_uri: 'mongodb://rauleite:senha@localhost/react_app',
   jwt_secret: 'kS?3w_Be=#6YJ+&$',
 
+  email : 'raul.abreu.leite@gmail.com',
+  email_pass : 'Ja58Ah58',
+
   // ----------------------------------
   // Compiler Configuration
   // ----------------------------------
@@ -117,7 +120,8 @@ config.paths = {
   base   : base,
   client : base.bind(null, config.dir_client),
   public : base.bind(null, config.dir_public),
-  dist   : base.bind(null, config.dir_dist)
+  dist   : base.bind(null, config.dir_dist),
+  server : base.bind(null, config.dir_server)  
 }
 
 // ========================================================
