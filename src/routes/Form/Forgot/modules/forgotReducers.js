@@ -19,9 +19,14 @@ export default function forgotReducer (state = initialState, action) {
 
   switch (action.type) {
     case PROCESS_FORM:
-    return state
-      .setIn(['user', 'email'], 
-        action.payload.input ? action.payload.input : state.user)
+      // console.log('forgotReducer()', 'LOCATION_CHANGE', state)
+      // console.log('forgotReducer()', 'LOCATION_CHANGE', action)
+      const success = action.payload.successMessage
+      return state
+        .setIn(['user', 'email'], 
+          action.payload.input ? action.payload.input : state.user)
+        .set('successMessage', 
+          success ? success : state.get('success'))
 
     case CHANGE_USER:
       const inputElement = action.payload
@@ -33,6 +38,8 @@ export default function forgotReducer (state = initialState, action) {
         // .set('successMessage', state.successMessage)
 
     case LOCATION_CHANGE:
+      // console.log('forgotReducer()', 'LOCATION_CHANGE', state)
+      // console.log('forgotReducer()', 'LOCATION_CHANGE', action)
       return initialState
 
     default:

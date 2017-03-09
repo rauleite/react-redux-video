@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
 
 // define the User model schema
 const UserSchema = new mongoose.Schema({
@@ -8,6 +8,8 @@ const UserSchema = new mongoose.Schema({
     index: { unique: true }
   },
   password: String,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
   name: String
 })
 

@@ -1,6 +1,6 @@
 import { CHANGE_USER, PROCESS_FORM } from '../consts'
 import { redirectToPrevUrl } from '../../../utils/url'
-import { sendUser } from '../../../utils/ajax'
+import { sendForm } from '../../formUtils'
 
 /**
  * Action para onChange
@@ -24,30 +24,7 @@ export function processForm (event) {
     // const userState = getState().signup.get('user')
     const userState = getState().signup.get('user')
 
-    sendUser('/auth/signup', userState.toJS(), (err, resp) => {
-      if (err) {
-        const errors = err.erros ? err.erros : {}
-        errors.summary = err.message
-
-        console.error('errors', errors)
-
-        return dispatch({
-          type: PROCESS_FORM,
-          payload: {
-            errors,
-            user: userState
-          }
-        })
-      }
-
-      dispatch({
-        type: PROCESS_FORM,
-        payload: {
-          errors: {},
-          user: userState
-        }
-      })
-
+    sendForm('/auth/signup', userState, dispatch, (res) => {
       // make a redirect
       redirectToPrevUrl()
     })

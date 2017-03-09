@@ -1,4 +1,8 @@
-const User = require('mongoose').model('User')
+import mongoose from 'mongoose'
+import user from '../../server/models/user'
+
+
+const User = mongoose.model('User')
 const PassportLocalStrategy = require('passport-local').Strategy
 
 /**

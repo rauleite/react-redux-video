@@ -23,7 +23,8 @@ export default function loginReducer (state = initialState , action) {
   switch (action.type) {
     case PROCESS_FORM:
 
-    console.log('))act', action)
+      // console.log('loginReducer()', 'PROCESS_FORM', state)
+      // console.log('loginReducer()', 'PROCESS_FORM', action)
 
       return state
         .set('errors', action.payload.errors)
@@ -47,6 +48,8 @@ export default function loginReducer (state = initialState , action) {
           input.value : state.getIn(['user', 'password']))
       
     case LOCATION_CHANGE:
+      // console.log('loginReducer()', 'LOCATION_CHANGE', state)
+      // console.log('loginReducer()', 'LOCATION_CHANGE', action)
       return initialState
 
     default:

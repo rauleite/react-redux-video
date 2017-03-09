@@ -1,12 +1,20 @@
-const express = require('express')
-const debug = require('debug')('app:server')
-const path = require('path')
-const webpack = require('webpack')
-const webpackConfig = require('../config/webpack.config')
-const project = require('../config/project.config')
-const compress = require('compression')
-const bodyParser = require('body-parser')
-const passport = require('passport')
+import express from 'express'
+import log from 'debug'
+import path from 'path'
+import webpack from 'webpack'
+import webpackConfig from '../config/webpack.config'
+import project from '../config/project.config'
+import compress from 'compression'
+import bodyParser from 'body-parser'
+import passport from 'passport'
+import React from 'react'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import { renderToString } from 'react-dom/server'
+import localSignupStrategy from './passport/local-signup'
+import localLoginStrategy from './passport/local-login'
+
+const debug = log('app:server')
 
 const app = express()
 
@@ -19,9 +27,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // pass the passport middleware
 app.use(passport.initialize())
 
+app.use(handleRender)
+
+// We are going to fill these out in the sections to follow
+function handleRender(req, res, next) { return next() }
+function renderFullPage(html, preloadedState) { /* ... */ }
+
+
 // load passport strategies
-const localSignupStrategy = require('./passport/local-signup')
-const localLoginStrategy = require('./passport/local-login')
 passport.use('local-signup', localSignupStrategy)
 passport.use('local-login', localLoginStrategy)
 
@@ -33,27 +46,18 @@ if (project.env === 'development') {
 
   debug('Enabling webpack dev and HMR middleware')
   app.use(require('webpack-dev-middleware')(compiler, {
-    publicPath  : webpackConfig.output.publicPath,
-    contentBase : project.paths.client(),
-    hot         : true,
-    quiet       : project.compiler_quiet,
-    noInfo      : project.compiler_quiet,
-    lazy        : false,
-    stats       : project.compiler_stats
+    publicPath: webpackConfig.output.publicPath,
+    // contentBase : [project.paths.client(), project.paths.server()],
+    contentBase: project.paths.client(),
+    hot: true,
+    quiet: project.compiler_quiet,
+    noInfo: project.compiler_quiet,
+    lazy: false,
+    stats: project.compiler_stats
   }))
   app.use(require('webpack-hot-middleware')(compiler, {
     path: '/__webpack_hmr'
   }))
-  // // Compile server
-  // app.use(require('webpack-dev-middleware')(compiler, {
-  //   publicPath  : webpackConfig.output.publicPath,
-  //   contentBase : project.paths.server(),
-  //   hot         : true,
-  //   quiet       : project.compiler_quiet,
-  //   noInfo      : project.compiler_quiet,
-  //   lazy        : false,
-  //   stats       : project.compiler_stats
-  // }))
 
   // Serve static assets from ~/public since Webpack is unaware of
   // these files. This middleware doesn't need to be enabled outside
@@ -93,4 +97,4 @@ if (project.env === 'development') {
   app.use(express.static(project.paths.dist()))
 }
 
-module.exports = app
+export default app

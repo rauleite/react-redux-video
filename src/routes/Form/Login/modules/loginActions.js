@@ -1,7 +1,7 @@
 import Auth from '../../../../modules/Auth'
 import { CHANGE_USER, PROCESS_FORM } from './consts'
 import { redirectToPrevUrl } from '../../../utils/url'
-import { sendUser } from '../../../utils/ajax'
+import { sendForm } from '../../formUtils'
 import { Map } from 'immutable'
 
 /**
@@ -11,25 +11,8 @@ export function processForm (event) {
   event.preventDefault()
   return (dispatch, getState) => {
     const userState = getState().login.get('user')
-
-    sendUser('/auth/login', userState.toJS(), (err, resp) => {
-      if (err) {
-        const errors = err.erros ? err.erros : {}
-        errors.summary = err.message
-
-        console.log('errors', errors)
-
-        return dispatch({
-          type: PROCESS_FORM,
-          payload: {
-            errors,
-            successMessage: '',
-            user: userState
-          }
-        })
-      }
-
-      Auth.authenticateUser(resp.token)
+    sendForm('/auth/login', userState, dispatch, (res) => {
+      Auth.authenticateUser(res.token)
       redirectToPrevUrl()
     })
   }

@@ -4,7 +4,8 @@
  * @param {object} user User do Obj State
  * @param {function} callback Retorno do xhr 
  */
-export function sendUser (path, user, callback) {
+export function sendUser (path, userState, callback) {
+  const user = userState.toJS()
   let formData = ``
 
   formData += user.name ? `name=${encodeURIComponent(user.name)}&` : ``
@@ -13,9 +14,25 @@ export function sendUser (path, user, callback) {
 
   formData = formData.replace(/^\&/, '').replace(/\&\&/, '&').replace(/\&$/, '')
 
+  const config = {
+    type: 'POST',
+    path: path,
+    data: formData
+  }
+
+  send(config, callback)
+}
+
+export function send (config, callback) {
+  config = { 
+    path: config.path ? config.path : undefined,
+    type: config.type ? config.type : 'GET',
+    data: config.data ? config.data : null
+  }
+  
   // create an AJAX request
   const xhr = new XMLHttpRequest()
-  xhr.open('post', path)
+  xhr.open(config.type, config.path)
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
   xhr.responseType = 'json'
   xhr.addEventListener('load', () => {
@@ -31,6 +48,6 @@ export function sendUser (path, user, callback) {
     }
 
   })
-  console.info('formData', formData)
-  xhr.send(formData)
+  console.info(config.type, '->', config.path, config.data)
+  xhr.send(config.data)
 }

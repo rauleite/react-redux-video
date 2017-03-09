@@ -6,7 +6,9 @@ import LoginRoute from './Form/Login'
 import SignupRoute from './Form/Signup'
 import LogoutRoute from './Form/Logout'
 import ForgotRoute from './Form/Forgot'
+import ResetRoute from './Form/Reset'
 import Dashboard from './Dashboard'
+
 
 import { previneAcessosAuth, persistPrevLoginUrl, proibeAcessosSemAuth } from './utils/hooks'
 
@@ -38,7 +40,8 @@ export const createRoutes = (store) => ({
     SignupRoute(store),
     LogoutRoute(store),
     ForgotRoute(store),
-    { path: 'dashboard', component: Dashboard }
+    { path: 'dashboard', component: Dashboard },
+    ResetRoute(store)
   ]
 })
 

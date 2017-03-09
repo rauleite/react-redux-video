@@ -6,7 +6,6 @@ const passport = require('passport')
 const crypto = require('crypto')
 const User = require('mongoose').model('User')
 const config = require('../../../config/project.config')
-// oi
 const router = new express.Router()
 
 /**
@@ -176,7 +175,7 @@ router.post('/login', (req, res, next) => {
   })(req, res, next)
 })
 
-router.post('/forgot', function (req, res, next) {
+router.post('/forgot', (req, res, next) => {
   const validationResult = validateLogoutForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -186,20 +185,17 @@ router.post('/forgot', function (req, res, next) {
     })
   }
   async.waterfall([
-    function (done) {
+    (done) => {
       crypto.randomBytes(20, function (err, buf) {
         var token = buf.toString('hex')
         done(err, token)
       })
     },
 
-    function (token, done) {
+   (token, done) => {
       User.findOne({ email: req.body.email }, function (err, user) {
-        if (err) {
-          throw new Error('Falha na consulta')
-        }
         if (!user) {
-          req.flash('error', 'No account with that email address exists.')
+          req.flash('error', 'Nenhuma conta encontrada com este email')
           return res.redirect('/forgot')
         }
 
@@ -212,7 +208,7 @@ router.post('/forgot', function (req, res, next) {
       })
     },
 
-    function (token, user, done) {
+    (token, user, done) => {
       var smtpTransport = nodemailer.createTransport({
         service: 'Gmail',
         // host: 'smtp.gmail.com',
@@ -223,36 +219,61 @@ router.post('/forgot', function (req, res, next) {
           pass: config.email_pass
         }
       })
+      
       var mailOptions = {
         from: config.email,
         to: user.email,
-        subject: 'Node.js Password Reset',
-        text: 'You are receiving this because you (or someone else) have requested the reset of the password for ' +
-          'your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+        subject: 'Melhore.me - Resete sua senha',
+        text: `
+          Você recebeu este email, porque você (ou alguém) solicitou que a senha de sua conta seja resetada.
+
+          Para completar o processo, por favor clique no seguinte link, ou cole em seu browser:
+
+          http://${req.headers.host}/reset/${token}
+
+          Caso você não tenha feito esta solicitação, por favor ignore este email. Assim, sua senha permanecerá inalterada.
+        `
       }
+
       smtpTransport.sendMail(mailOptions, function (err) {
-        if (err) {
-          console.log('err', err)
-        }
-        req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.')
         done(err, 'done')
       })
+      
     }
-  ], function (err) {
-    if (err) return next(err)
-    res.redirect('/forgot')
+  ], 
+  (err) => {
+    if (err)  {
+      console.err('err', err.stack)
+      return next(err)
+    }
+    // res.status(200).json({
+    //   success: true,
+    //   message: 'Email com procedimentos enviado com sucesso.',
+    // })  
+    res.render('index', {
+      content: require('../../../src/routes/Form/Forgot'),
+      context: 'Email com procedimentos enviado com sucesso.'
+    }); 
   })
 })
 
-router.get('/reset/:token', function (req, res) {
-  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
-    if (!user) {
-      req.flash('error', 'Password reset token is invalid or has expired.')
-      return res.redirect('/forgot')
+router.get('/reset/:token', (req, res) => {
+  User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordExpires: { $gt: Date.now() }
+  },
+  (err, user) => {
+    if (err) {
+      console.err('err', err.stack)
     }
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'O Token para reset da senha é inválido ou expirou.'
+      })
+    }
+
     res.render('reset', {
       user: req.user
     })

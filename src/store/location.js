@@ -23,10 +23,6 @@ export const updateLocation = ({ dispatch }) => {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-// const initialState = {
-//     pathname: location.pathname,
-//     search: location.search
-// }
 
 const initialState = null
 

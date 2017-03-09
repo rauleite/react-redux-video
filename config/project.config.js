@@ -18,7 +18,6 @@ const config = {
   dir_client : 'src',
   dir_dist   : 'dist',
   dir_public : 'public',
-  dir_server : 'server',
   dir_test   : 'tests',
 
   // ----------------------------------
@@ -120,8 +119,7 @@ config.paths = {
   base   : base,
   client : base.bind(null, config.dir_client),
   public : base.bind(null, config.dir_public),
-  dist   : base.bind(null, config.dir_dist),
-  server : base.bind(null, config.dir_server)  
+  dist   : base.bind(null, config.dir_dist)
 }
 
 // ========================================================

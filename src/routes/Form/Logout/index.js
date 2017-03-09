@@ -1,4 +1,3 @@
-import { injectReducer } from '../../../store/reducers'
 import Auth from '../../../modules/Auth'
 import { redirectToPrevUrl } from '../../utils/url'
 

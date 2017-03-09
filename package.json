@@ -14,7 +14,8 @@
     "lint:fix": "npm run lint -- --fix",
     "start": "better-npm-run start",
     "dev": "better-npm-run dev",
-    "dev-debug": "better-npm-run dev-debug",
+    "dev:debug": "better-npm-run dev:debug",
+    "dev:node": "better-npm-run dev:node",
     "test": "better-npm-run test",
     "test:dev": "npm run test -- --watch",
     "deploy": "better-npm-run deploy",
@@ -31,14 +32,21 @@
       }
     },
     "dev": {
-      "command": "nodemon bin/dev-server --ignore node_modules --ignore dist --ignore coverage --ignore tests --ignore src",
+      "command": "nodemon bin/dev-server.js --ignore node_modules --ignore dist --ignore coverage --ignore tests --ignore src --exec babel-node --presets es2015,stage-2,react",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "app:*"
       }
     },
-    "dev-debug": {
-      "command": "nodemon --debug-brk=5858 bin/dev-server --ignore node_modules --ignore dist --ignore coverage --ignore tests --ignore src",
+    "dev:debug": {
+      "command": "nodemon --debug-brk=5858 bin/dev-server.js --ignore node_modules --ignore dist --ignore coverage --ignore tests --ignore src --exec babel-node --presets es2015,stage-2,react",
+      "env": {
+        "NODE_ENV": "development",
+        "DEBUG": "app:*"
+      }
+    },
+    "dev:node": {
+      "command": "nodemon index_old.js --ignore node_modules --ignore dist --ignore coverage --ignore tests --ignore src --exec babel-node --presets es2015,stage-2",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "app:*"
@@ -99,6 +107,7 @@
     "cssnano": "^3.7.4",
     "debug": "^2.2.0",
     "deep-freeze": "^0.0.1",
+    "express": "^4.15.2",
     "extract-text-webpack-plugin": "^1.0.0",
     "file-loader": "^0.9.0",
     "fs-extra": "^1.0.0",
@@ -118,7 +127,7 @@
     "postcss-loader": "^1.1.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
-    "react-redux": "^5.0.1",
+    "react-redux": "^5.0.3",
     "react-router": "^3.0.0",
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
@@ -132,9 +141,12 @@
     "yargs": "^6.3.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.23.0",
     "babel-eslint": "^7.1.0",
     "babel-plugin-istanbul": "^3.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-2": "^6.22.0",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
     "chai-enzyme": "^0.6.1",
