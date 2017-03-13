@@ -1,12 +1,11 @@
 import { sendUser } from '../utils/ajax'
 import { PROCESS_FORM } from './consts'
 
-
 export function sendForm (path, userState, dispatch, callback) {
   sendUser(path, userState, (err, res) => {
     console.log('res', res)
     console.log('dispatch', dispatch)
-    
+
     if (err) {
       const errors = err.erros ? err.erros : {}
       errors.summary = err.message

@@ -1,4 +1,3 @@
-import React from 'react'
 import Login from '../components/Login'
 import { connect } from 'react-redux'
 import { changeUser, processForm } from '../modules/loginActions'

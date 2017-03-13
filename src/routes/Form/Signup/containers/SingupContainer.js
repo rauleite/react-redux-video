@@ -1,4 +1,3 @@
-import React from 'react'
 import Signup from '../components/Signup'
 import { connect } from 'react-redux'
 import { processForm, changeUser } from '../modules/signupActions'

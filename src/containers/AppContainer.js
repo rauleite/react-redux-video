@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, PureComponent } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { Router, browserHistory } from 'react-router'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'

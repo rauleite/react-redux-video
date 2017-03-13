@@ -4,6 +4,8 @@ const debug = require('debug')('app:config:project')
 const argv = require('yargs').argv
 const ip = require('ip')
 
+console.log('ip.address()', ip.address())
+
 debug('Creating default configuration.')
 // ========================================================
 // Default Configuration
@@ -24,7 +26,7 @@ const config = {
   // ----------------------------------
   // Server Configuration
   // ----------------------------------
-  server_host : ip.address(), // use string 'localhost' to prevent exposure on local network
+  server_host : 'localhost', // ip.address() use string 'localhost' to prevent exposure on local network
   server_port : process.env.PORT || 3000,
 
   db_uri: 'mongodb://rauleite:senha@localhost/react_app',
@@ -38,7 +40,7 @@ const config = {
   // ----------------------------------
   compiler_babel : {
     cacheDirectory : true,
-    plugins        : ['transform-runtime', 'transform-object-rest-spread'],
+    plugins        : ['transform-runtime', 'transform-object-rest-spread']
     // presets        : ['es2015', 'react', 'stage-0']
   },
   compiler_devtool         : 'source-map',
@@ -121,8 +123,8 @@ config.paths = {
   client : base.bind(null, config.dir_client),
   public : base.bind(null, config.dir_public),
   dist   : base.bind(null, config.dir_dist),
-  server : base.bind(null, config.dir_server),
-  
+  server : base.bind(null, config.dir_server)
+
 }
 
 // ========================================================

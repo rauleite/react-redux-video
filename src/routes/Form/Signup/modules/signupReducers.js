@@ -33,7 +33,7 @@ export default function signupReducer (state = initialState, action) {
         name: field === 'name',
         email : field === 'email',
         password: field === 'password'
-      } 
+      }
 
       let user = state.get('user')
 

@@ -1,6 +1,4 @@
-import Auth from '../../../../modules/Auth'
-import { browserHistory } from 'react-router'
-import { CHANGE_USER, PROCESS_FORM } from './consts'
+import { CHANGE_USER } from './consts'
 import { sendForm } from '../../formUtils'
 
 /**

@@ -2,7 +2,7 @@
  * Faz requisicao ajax de usuario, no client
  * @param {string} path url path
  * @param {object} user User do Obj State
- * @param {function} callback Retorno do xhr 
+ * @param {function} callback Retorno do xhr
  */
 export function sendUser (path, userState, callback) {
   const user = userState.toJS()
@@ -12,7 +12,7 @@ export function sendUser (path, userState, callback) {
   formData += user.email ? `&email=${encodeURIComponent(user.email)}&` : ``
   formData += user.password ? `&password=${encodeURIComponent(user.password)}` : ``
 
-  formData = formData.replace(/^\&/, '').replace(/\&\&/, '&').replace(/\&$/, '')
+  formData = formData.replace(/^&/, '').replace(/&&/, '&').replace(/&$/, '')
 
   const config = {
     type: 'POST',
@@ -24,12 +24,12 @@ export function sendUser (path, userState, callback) {
 }
 
 export function send (config, callback) {
-  config = { 
+  config = {
     path: config.path ? config.path : undefined,
     type: config.type ? config.type : 'GET',
     data: config.data ? config.data : null
   }
-  
+
   // create an AJAX request
   const xhr = new XMLHttpRequest()
   xhr.open(config.type, config.path)
@@ -47,7 +47,6 @@ export function send (config, callback) {
       console.err('error', error)
       callback(error, xhr.response)
     }
-
   })
   console.info(config.type, '->', config.path, config.data)
   xhr.send(config.data)

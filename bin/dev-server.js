@@ -1,7 +1,13 @@
-import project from '../config/project.config'
-import log from 'debug'
-import { connect } from './mongo-connect'
-import server from '../server/main'
+const project = require('../config/project.config')
+const log = require('debug')
+const connect = require('./mongo-connect')
+let server = null
+
+if (process.env === 'development') {
+  server = require('../server/main')
+} else {
+  server = require('../dist-server/main')
+}
 
 const debug = log('app:bin:dev-server')
 
@@ -10,6 +16,6 @@ const debug = log('app:bin:dev-server')
 // })
 
 connect(() => {
-  server.listen(project.server_port);
+  server.listen(project.server_port)
   debug(`Server is now running at http://localhost:${project.server_port}.`)
 })

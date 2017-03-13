@@ -1,8 +1,7 @@
 import Auth from '../../../../modules/Auth'
-import { CHANGE_USER, PROCESS_FORM } from './consts'
+import { CHANGE_USER } from './consts'
 import { redirectToPrevUrl } from '../../../utils/url'
 import { sendForm } from '../../formUtils'
-import { Map } from 'immutable'
 
 /**
  * @param {Object} Event Objeto de evento javascript

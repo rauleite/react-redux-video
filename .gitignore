@@ -9,3 +9,5 @@ coverage
 .idea/
 
 js-tests.js
+
+dist*

@@ -1,10 +1,10 @@
-import mongoose from 'mongoose'
-import project from '../config/project.config'
-import log from 'debug'
+const mongoose = require('mongoose')
+const project = require('../config/project.config')
+const log = require('debug')
 
 const debug = log('app:bin:dev-server')
 
-export function connect (callback) {
+module.exports = function connect (callback) {
   // connect to the database and load models
   mongoose.connect(project.db_uri)
 
@@ -23,10 +23,9 @@ export function connect (callback) {
 
     // load models
     debug(`Mongoose default connection open to ${project.db_uri}`)
-    
+
     if (callback) {
       callback()
     }
   })
-
 }

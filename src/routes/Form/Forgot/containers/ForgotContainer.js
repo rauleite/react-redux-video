@@ -1,4 +1,3 @@
-import React from 'react'
 import Forgot from '../components/Forgot'
 import { connect } from 'react-redux'
 import { changeUser, processForm } from '../modules/forgotActions'

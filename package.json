@@ -10,6 +10,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
+    "compile:server": "better-npm-run compile:server",
     "lint": "eslint bin build config server src tests",
     "lint:fix": "npm run lint -- --fix",
     "start": "better-npm-run start",
@@ -33,6 +34,13 @@
         "DEBUG": "app:*"
       }
     },
+    "compile:server": {
+      "command": "babel server --out-dir dist-server --source-maps inline",
+      "env": {
+        "NODE_ENV": "production",
+        "DEBUG": "app:*"
+      }
+    },
     "dev": {
       "command": "nodemon bin/dev-server.js --ignore node_modules --ignore dist --ignore coverage --ignore tests --ignore src --exec babel-node",
       "env": {
@@ -48,7 +56,7 @@
       }
     },
     "dev-back": {
-      "command": "babel-node bin/dev-server.js ",
+      "command": "babel-node bin/dist/dev-server.js ",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "app:*"
@@ -89,7 +97,7 @@
       }
     },
     "start": {
-      "command": "NODE_ENV=production node bin/dev-server",
+      "command": "NODE_ENV=production node bin/dev-server.js",
       "env": {
         "DEBUG": "app:*"
       }
@@ -130,6 +138,7 @@
     "cssnano": "^3.10.0",
     "debug": "^2.2.0",
     "deep-freeze": "^0.0.1",
+    "ejs": "^2.5.6",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.1",
     "fs-extra": "^2.0.0",

@@ -1,4 +1,4 @@
-import { CHANGE_USER, PROCESS_FORM } from '../consts'
+import { CHANGE_USER } from '../consts'
 import { redirectToPrevUrl } from '../../../utils/url'
 import { sendForm } from '../../formUtils'
 

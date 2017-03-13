@@ -11,6 +11,10 @@ injectTapEventPlugin()
 // Store Instantiation
 // ========================================================
 const initialState = window.___INITIAL_STATE__
+delete window.___INITIAL_STATE__
+
+console.log('initialState', initialState)
+
 const store = createStore(initialState)
 
 // ========================================================

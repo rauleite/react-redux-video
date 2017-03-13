@@ -1,4 +1,5 @@
 import express from 'express'
+import ejs from 'ejs'
 import log from 'debug'
 import path from 'path'
 import webpack from 'webpack'
@@ -7,13 +8,8 @@ import project from '../config/project.config'
 import compress from 'compression'
 import bodyParser from 'body-parser'
 import passport from 'passport'
-import React from 'react'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import { renderToString } from 'react-dom/server'
 import localSignupStrategy from './passport/local-signup'
 import localLoginStrategy from './passport/local-login'
-// import nodemon from 'nodemon'
 
 const debug = log('app:server')
 
@@ -25,14 +21,11 @@ app.use(compress())
 // tell the app to parse HTTP body messages
 app.use(bodyParser.urlencoded({ extended: false }))
 
+app.set('view engine', 'html')
+app.engine('html', ejs.renderFile)
+
 // pass the passport middleware
 app.use(passport.initialize())
-
-app.use(handleRender)
-
-// We are going to fill these out in the sections to follow
-function handleRender(req, res, next) { return next() }
-function renderFullPage(html, preloadedState) { /* ... */ }
 
 // load passport strategies
 passport.use('local-signup', localSignupStrategy)
@@ -90,9 +83,14 @@ if (project.env === 'development') {
   // the web server and not the app server, but this helps to demo the
   // server in production.
   app.use(express.static(project.paths.dist()))
+
+  // app.use('/', (req, res) => {
+  //   console.log('foi')
+  //   res.render(`${project.paths.dist()}/index.html`)
+  // })
 }
 
 // routes
 require('./modules/all-routes')(app)
 
-export default app
+module.exports = app

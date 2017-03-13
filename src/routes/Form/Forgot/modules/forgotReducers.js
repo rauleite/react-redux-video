@@ -23,10 +23,10 @@ export default function forgotReducer (state = initialState, action) {
       // console.log('forgotReducer()', 'LOCATION_CHANGE', action)
       const success = action.payload.successMessage
       return state
-        .setIn(['user', 'email'], 
+        .setIn(['user', 'email'],
           action.payload.input ? action.payload.input : state.user)
-        .set('successMessage', 
-          success ? success : state.get('success'))
+        .set('successMessage',
+          success || state.get('success'))
 
     case CHANGE_USER:
       const inputElement = action.payload

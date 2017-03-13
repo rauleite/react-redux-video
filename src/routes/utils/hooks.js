@@ -27,7 +27,7 @@ export function previneAcessosAuth ({ location }, replace) {
 /**
  * Proibe determinados acessos sem autenticacao
  * @param {object} nextState
- * @param {function} replace 
+ * @param {function} replace
  */
 export function proibeAcessosSemAuth ({ location }, replace) {
   const pathSolicitado = location.pathname
@@ -52,10 +52,10 @@ export function proibeAcessosSemAuth ({ location }, replace) {
 
 /**
  * Persiste a ultima url quando entra na tela de login, para redirecionamento posterior
- * @param {object} prevState 
- * @param {object} nextState 
- * @param {function} replace 
- * @param {function} callback 
+ * @param {object} prevState
+ * @param {object} nextState
+ * @param {function} replace
+ * @param {function} callback
  */
 export function persistPrevLoginUrl (prevState, nextState, replace) {
   const nextLocation = nextState.location

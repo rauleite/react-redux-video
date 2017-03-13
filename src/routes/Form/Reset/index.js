@@ -5,8 +5,8 @@ export default (store) => ({
   path: 'reset/:token',
   onEnter: (nextState, replace) => {
     let isPathAndTokenOk = () => (
-      nextState && 
-      nextState.params && 
+      nextState &&
+      nextState.params &&
       !isEmpty(nextState.params.token) &&
       nextState.location &&
       nextState.location.pathname
@@ -19,7 +19,6 @@ export default (store) => ({
           return
         }
         console.log('resp', resp)
-
       })
     }
     // Auth.deauthenticateUser()

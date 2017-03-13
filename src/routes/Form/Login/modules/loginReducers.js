@@ -17,7 +17,7 @@ const initialState = Map({
   successMessage: ''
 })
 
-export default function loginReducer (state = initialState , action) {
+export default function loginReducer (state = initialState, action) {
   deepFreeze(state)
 
   switch (action.type) {
@@ -38,15 +38,15 @@ export default function loginReducer (state = initialState , action) {
       const isField = {
         email: field === 'email',
         password: field === 'password'
-      } 
+      }
 
       return state
-        .setIn(['user', 'email'], isField.email ? 
-          input.value : state.getIn(['user', 'email']))
+        .setIn(['user', 'email'], isField.email
+          ? input.value : state.getIn(['user', 'email']))
 
-        .setIn(['user', 'password'], isField.password ? 
-          input.value : state.getIn(['user', 'password']))
-      
+        .setIn(['user', 'password'], isField.password
+          ? input.value : state.getIn(['user', 'password']))
+
     case LOCATION_CHANGE:
       // console.log('loginReducer()', 'LOCATION_CHANGE', state)
       // console.log('loginReducer()', 'LOCATION_CHANGE', action)
