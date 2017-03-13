@@ -13,6 +13,7 @@ import { Provider } from 'react-redux'
 import { renderToString } from 'react-dom/server'
 import localSignupStrategy from './passport/local-signup'
 import localLoginStrategy from './passport/local-login'
+// import nodemon from 'nodemon'
 
 const debug = log('app:server')
 
@@ -33,21 +34,17 @@ app.use(handleRender)
 function handleRender(req, res, next) { return next() }
 function renderFullPage(html, preloadedState) { /* ... */ }
 
-
 // load passport strategies
 passport.use('local-signup', localSignupStrategy)
 passport.use('local-login', localLoginStrategy)
 
-// ------------------------------------
-// Apply Webpack HMR Middleware
-// ------------------------------------
 if (project.env === 'development') {
   const compiler = webpack(webpackConfig)
 
   debug('Enabling webpack dev and HMR middleware')
+
   app.use(require('webpack-dev-middleware')(compiler, {
     publicPath: webpackConfig.output.publicPath,
-    // contentBase : [project.paths.client(), project.paths.server()],
     contentBase: project.paths.client(),
     hot: true,
     quiet: project.compiler_quiet,
@@ -55,6 +52,7 @@ if (project.env === 'development') {
     lazy: false,
     stats: project.compiler_stats
   }))
+// }
   app.use(require('webpack-hot-middleware')(compiler, {
     path: '/__webpack_hmr'
   }))
@@ -64,9 +62,6 @@ if (project.env === 'development') {
   // of development since this directory will be copied into ~/dist
   // when the application is compiled.
   app.use(express.static(project.paths.public()))
-
-  // routes
-  require('./modules/all-routes')(app)
 
   // This rewrites all routes requests to the root /index.html file
   // (ignoring file requests). If you want to implement universal
@@ -96,5 +91,8 @@ if (project.env === 'development') {
   // server in production.
   app.use(express.static(project.paths.dist()))
 }
+
+// routes
+require('./modules/all-routes')(app)
 
 export default app

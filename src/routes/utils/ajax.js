@@ -44,6 +44,7 @@ export function send (config, callback) {
         erros: xhr.response.errors,
         message: xhr.response.message
       }
+      console.err('error', error)
       callback(error, xhr.response)
     }
 

@@ -18,6 +18,7 @@ const config = {
   dir_client : 'src',
   dir_dist   : 'dist',
   dir_public : 'public',
+  dir_server : 'server',
   dir_test   : 'tests',
 
   // ----------------------------------
@@ -38,7 +39,7 @@ const config = {
   compiler_babel : {
     cacheDirectory : true,
     plugins        : ['transform-runtime', 'transform-object-rest-spread'],
-    presets        : ['es2015', 'react', 'stage-0']
+    // presets        : ['es2015', 'react', 'stage-0']
   },
   compiler_devtool         : 'source-map',
   compiler_hash_type       : 'hash',
@@ -119,7 +120,9 @@ config.paths = {
   base   : base,
   client : base.bind(null, config.dir_client),
   public : base.bind(null, config.dir_public),
-  dist   : base.bind(null, config.dir_dist)
+  dist   : base.bind(null, config.dir_dist),
+  server : base.bind(null, config.dir_server),
+  
 }
 
 // ========================================================
