@@ -1,14 +1,15 @@
 import express from 'express'
-import User from 'mongoose'
+import crypto from 'crypto'
 import nodemailer from 'nodemailer'
-import async from 'async'
 import config from '../../../config/project.config'
+import promisify from 'tiny-promisify'
 
+const User = require('mongoose').model('User')
+const randomBytes = promisify(crypto.randomBytes)
 const router = new express.Router()
-User.model('User')
 
-router.post('/forgot', (req, res, next) => {
-  const validationResult = validateLogoutForm(req.body)
+router.post('/', (req, res, next) => {
+  const validationResult = validateForgotForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
       success: false,
@@ -16,32 +17,22 @@ router.post('/forgot', (req, res, next) => {
       errors: validationResult.errors
     })
   }
-  async.waterfall([
-    (done) => {
-      crypto.randomBytes(20, function (err, buf) {
-        var token = buf.toString('hex')
-        done(err, token)
-      })
-    },
 
-    (token, done) => {
-      User.findOne({ email: req.body.email }, function (err, user) {
-        if (err) throw new Error('Erro na busca', err)
-        if (!user) {
-          req.flash('error', 'Nenhuma conta encontrada com este email')
-          return res.redirect('/forgot')
-        }
+  // Self Envoke 
+  (async () => {    
+    try {
+      const buf = await randomBytes(20)
+      const token = buf.toString('hex')
 
-        user.resetPasswordToken = token
-        user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
+      const user = await User.findOne({ email: req.body.email })
 
-        user.save(function (err) {
-          done(err, token, user)
-        })
-      })
-    },
+      if (!user) throw new Error('Nenhuma conta encontrada com este email')
 
-    (token, user, done) => {
+      user.resetPasswordToken = token
+      user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
+
+      const save = user.save()
+
       const smtpTransport = nodemailer.createTransport({
         service: 'Gmail',
         // host: 'smtp.gmail.com',
@@ -52,26 +43,21 @@ router.post('/forgot', (req, res, next) => {
           pass: config.email_pass
         }
       })
-
+      
       smtpTransport.sendMail(mailOptions(user, req, token), function (err) {
-        done(err, 'done')
+        if (err) throw new Error('Erro na busca', err)
+      })
+
+    } catch(err) {
+      console.error('err', err.stack)
+      
+      return res.status(400).json({
+        success: false,
+        message: err.message,
       })
     }
-  ],
-  (err) => {
-    if (err) {
-      console.err('err', err.stack)
-      return next(err)
-    }
-    // res.status(200).json({
-    //   success: true,
-    //   message: 'Email com procedimentos enviado com sucesso.',
-    // })
-    res.render('index', {
-      content: require('../../../src/routes/Form/Forgot'),
-      context: 'Email com procedimentos enviado com sucesso.'
-    })
-  })
+  // END Self Envoke
+  })()
 })
 
 /**
@@ -81,7 +67,7 @@ router.post('/forgot', (req, res, next) => {
  * @returns {object} The result of validation. Object contains a boolean validation result,
  *                   errors tips, and a global message for the whole form.
  */
-function validateLogoutForm (payload) {
+function validateForgotForm (payload) {
   const errors = {}
   let isFormValid = true
   let message = ''
@@ -98,7 +84,8 @@ function validateLogoutForm (payload) {
   return {
     success: isFormValid,
     message,
-    errors }
+    errors
+  }
 }
 
 function mailOptions (user, req, token) {
@@ -118,5 +105,5 @@ function mailOptions (user, req, token) {
   }
 }
 
+// export default router
 module.exports = router
-

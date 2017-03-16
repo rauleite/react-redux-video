@@ -16,13 +16,13 @@ const Forgot = ({
     <form action='/' onSubmit={onSubmit}>
       <CardTitle title='Esqueceu sua Senha?' subtitle='Então coloque seu email e resete-a' />
       { successMessage && <p className='success-message'>{ successMessage }</p> }
-      { errors.summary && <p className='error-message'>{ errors.summary }</p> }
+      { errors.get('summary') && <p className='error-message'>{ errors.get('summary') }</p> }
 
       <TextField
         floatingLabelText='Email'
         name='email'
         autoFocus
-        errorText={errors.email}
+        errorText={errors.get('email')}
         onChange={onChange}
         value={user.email}
       />

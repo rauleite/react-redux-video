@@ -11,6 +11,8 @@ export function sendUser (path, userState, callback) {
   formData += user.name ? `name=${encodeURIComponent(user.name)}&` : ``
   formData += user.email ? `&email=${encodeURIComponent(user.email)}&` : ``
   formData += user.password ? `&password=${encodeURIComponent(user.password)}` : ``
+  formData += user.token ? `&token=${encodeURIComponent(user.token)}` : ``
+  
 
   formData = formData.replace(/^&/, '').replace(/&&/, '&').replace(/&$/, '')
 
@@ -38,13 +40,14 @@ export function send (config, callback) {
   xhr.addEventListener('load', () => {
     console.log('xhr.status', xhr.status)
     if (xhr.status === 200) {
+      console.error('sucesso', xhr.response)
       callback(null, xhr.response)
     } else {
       const error = {
         erros: xhr.response.errors,
-        message: xhr.response.message
+        message: xhr.response.message,
       }
-      console.err('error', error)
+      console.error('error', error)
       callback(error, xhr.response)
     }
   })

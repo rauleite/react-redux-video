@@ -10,7 +10,7 @@ import Auth from '../../modules/Auth'
 export function previneAcessosAuth ({ location }, replace) {
   const pathSolicitado = location.pathname
 
-  const pathsProibidos = ['/signup', '/login']
+  const pathsProibidos = ['/signup', '/login', '/forgot', '/reset']
   const isPathProibido = pathsProibidos.includes(pathSolicitado)
   if (pathSolicitado === '/' || !isPathProibido || !Auth.isUserAuthenticated()) {
     return
@@ -35,17 +35,13 @@ export function proibeAcessosSemAuth ({ location }, replace) {
   const pathsProibidos = ['/dashboard']
   const isPathProibido = pathsProibidos.includes(pathSolicitado)
 
-  console.log('1')
   if (pathSolicitado === '/' || !isPathProibido) {
     return
   }
-  console.log('2')
 
   if (Auth.isUserAuthenticated()) {
-    console.log('3')
     return
   } else {
-    console.log('4')
     replace('/')
   }
 }

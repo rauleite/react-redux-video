@@ -3,35 +3,38 @@ import { PROCESS_FORM } from './consts'
 
 export function sendForm (path, userState, dispatch, callback) {
   sendUser(path, userState, (err, res) => {
-    console.log('res', res)
-    console.log('dispatch', dispatch)
-
     if (err) {
       const errors = err.erros ? err.erros : {}
       errors.summary = err.message
 
-      console.error('errors', errors)
-
-      return dispatch({
+      const dispatchError = {
         type: PROCESS_FORM,
         payload: {
           errors,
-          user: userState
+          user: userState,
+          successMessage: ''
         }
-      })
+      }
+
+      console.log('dispatchError', dispatchError)
+
+      return dispatch(dispatchError)
     }
 
-    dispatch({
+    const dispatchSuccess = {
       type: PROCESS_FORM,
       payload: {
         errors: {},
         user: userState,
         successMessage: res.message
       }
-    })
+    }
+
+    console.log('dispatchSuccess', dispatchSuccess)
+    dispatch(dispatchSuccess)
 
     if (callback) {
-      callback(res)
+      return callback(res)
     }
   })
 }

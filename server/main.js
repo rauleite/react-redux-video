@@ -1,5 +1,4 @@
 import express from 'express'
-import ejs from 'ejs'
 import log from 'debug'
 import path from 'path'
 import webpack from 'webpack'
@@ -11,7 +10,7 @@ import passport from 'passport'
 import localSignupStrategy from './passport/local-signup'
 import localLoginStrategy from './passport/local-login'
 
-const debug = log('app:server')
+const debug = log('app:bin:dev-server')
 
 const app = express()
 
@@ -20,9 +19,6 @@ app.use(compress())
 
 // tell the app to parse HTTP body messages
 app.use(bodyParser.urlencoded({ extended: false }))
-
-app.set('view engine', 'html')
-app.engine('html', ejs.renderFile)
 
 // pass the passport middleware
 app.use(passport.initialize())
@@ -45,7 +41,7 @@ if (project.env === 'development') {
     lazy: false,
     stats: project.compiler_stats
   }))
-// }
+  // }
   app.use(require('webpack-hot-middleware')(compiler, {
     path: '/__webpack_hmr'
   }))
@@ -55,6 +51,9 @@ if (project.env === 'development') {
   // of development since this directory will be copied into ~/dist
   // when the application is compiled.
   app.use(express.static(project.paths.public()))
+
+  // routes
+  carregaRotas()
 
   // This rewrites all routes requests to the root /index.html file
   // (ignoring file requests). If you want to implement universal
@@ -78,19 +77,18 @@ if (project.env === 'development') {
     'server such as nginx to serve your static files. See the "deployment" ' +
     'section in the README for more information on deployment strategies.'
   )
-
   // Serving ~/dist by default. Ideally these files should be served by
   // the web server and not the app server, but this helps to demo the
   // server in production.
+
   app.use(express.static(project.paths.dist()))
 
-  // app.use('/', (req, res) => {
-  //   console.log('foi')
-  //   res.render(`${project.paths.dist()}/index.html`)
-  // })
+  // routes
+  carregaRotas()
 }
 
-// routes
-require('./modules/all-routes')(app)
+function carregaRotas () {
+  return require('./modules/all-routes')(app)
+}
 
 module.exports = app

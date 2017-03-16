@@ -1,9 +1,10 @@
-const express = require('express')
-const validator = require('validator')
-const passport = require('passport')
+import express from 'express'
+import validator from 'validator'
+import passport from 'passport'
+
 const router = new express.Router()
 
-router.post('/signup', (req, res, next) => {
+router.post('/', (req, res, next) => {
   const validationResult = validateSignupForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -77,4 +78,5 @@ function validateSignupForm (payload) {
     errors }
 }
 
+// export default router
 module.exports = router

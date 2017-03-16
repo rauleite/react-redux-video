@@ -2,9 +2,7 @@
 const path = require('path')
 const debug = require('debug')('app:config:project')
 const argv = require('yargs').argv
-const ip = require('ip')
-
-console.log('ip.address()', ip.address())
+// const ip = require('ip')
 
 debug('Creating default configuration.')
 // ========================================================
@@ -40,8 +38,9 @@ const config = {
   // ----------------------------------
   compiler_babel : {
     cacheDirectory : true,
-    plugins        : ['transform-runtime', 'transform-object-rest-spread']
-    // presets        : ['es2015', 'react', 'stage-0']
+    plugins        : ['transform-runtime', 'transform-object-rest-spread'],
+    presets        : ['es2015', 'react', 'stage-0']
+    // presets        : ['react']
   },
   compiler_devtool         : 'source-map',
   compiler_hash_type       : 'hash',
@@ -55,9 +54,9 @@ const config = {
   },
   compiler_vendors : [
     'react',
+    'redux',
     'react-redux',
-    'react-router',
-    'redux'
+    'react-router'
   ],
 
   // ----------------------------------

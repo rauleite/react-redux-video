@@ -1,19 +1,10 @@
 const project = require('../config/project.config')
 const log = require('debug')
 const connect = require('./mongo-connect')
-let server = null
-
-if (process.env === 'development') {
-  server = require('../server/main')
-} else {
-  server = require('../dist-server/main')
-}
+require('./env').load('../server/models/user')
+const server = require('./env').load('../server/main')
 
 const debug = log('app:bin:dev-server')
-
-// nodemon({ script: 'bin/server' }).on('restart', () => {
-//   console.log('restaraaart')
-// })
 
 connect(() => {
   server.listen(project.server_port)

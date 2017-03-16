@@ -1,5 +1,5 @@
 import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../consts'
-import { deepFreeze } from '../../../utils/dev-mode'
+import { deepFreeze } from '../../utils/dev-mode'
 import { Map } from 'immutable'
 // successMessage: '',
 const initialState = Map({

@@ -40,7 +40,7 @@ const karmaConfig = {
 
           loader : 'imports-loader'
           // options: {
-          //   define: false,
+          //   // define: false,
           //   require: false
           // }
         }

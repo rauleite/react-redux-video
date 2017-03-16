@@ -1,5 +1,5 @@
-import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../../consts'
-import { deepFreeze } from '../../../utils/dev-mode'
+import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../consts'
+import { deepFreeze } from '../../utils/dev-mode'
 // import { cloneDeep } from 'lodash'
 import { Map } from 'immutable'
 
@@ -22,10 +22,6 @@ export default function loginReducer (state = initialState, action) {
 
   switch (action.type) {
     case PROCESS_FORM:
-
-      // console.log('loginReducer()', 'PROCESS_FORM', state)
-      // console.log('loginReducer()', 'PROCESS_FORM', action)
-
       return state
         .set('errors', action.payload.errors)
         .set('user', action.payload.user)

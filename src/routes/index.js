@@ -2,11 +2,11 @@
 import CoreLayout from '../layouts/CoreLayout'
 import CounterRoute from './Counter'
 import Home from './Home'
-import LoginRoute from './Form/Login'
-import SignupRoute from './Form/Signup'
-import LogoutRoute from './Form/Logout'
-import ForgotRoute from './Form/Forgot'
-import ResetRoute from './Form/Reset'
+import LoginRoute from './Form/login'
+import SignupRoute from './Form/signup'
+import LogoutRoute from './Form/logout'
+import ForgotRoute from './Form/forgot'
+import ResetRoute from './Form/reset'
 import Dashboard from './Dashboard'
 
 import { previneAcessosAuth, persistPrevLoginUrl, proibeAcessosSemAuth } from './utils/hooks'
@@ -34,13 +34,20 @@ export const createRoutes = (store) => ({
   },
 
   childRoutes: [
+    // { 
+    //   indexRedirect: {
+    //     to: '/'
+    //   }
+    // },
     CounterRoute(store),
     LoginRoute(store),
     SignupRoute(store),
     LogoutRoute(store),
     ForgotRoute(store),
     { path: 'dashboard', component: Dashboard },
-    ResetRoute(store)
+    ResetRoute(store),
+    { path: '*', component: Home },
+    
   ]
 })
 

@@ -1,8 +1,13 @@
+import login from './auth/login'
+import signup from './auth/signup'
+import forgot from './auth/forgot'
+import reset from './auth/reset'
+
 module.exports = (app) => {
   app.use('/api', require('./api/api'))
 
-  app.use('/login', require('./auth/login'))
-  app.use('/signup', require('./api/signup'))
-  app.use('/forgot', require('./auth/forgot'))
-  app.use('/reset', require('./api/reset'))
+  app.use('/auth/login', login)
+  app.use('/auth/signup', signup)
+  app.use('/auth/forgot', forgot)
+  app.use('/auth/reset', reset)
 }

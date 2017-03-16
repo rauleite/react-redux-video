@@ -25,7 +25,7 @@
     "deploy:dev": "better-npm-run deploy:dev",
     "deploy:prod": "better-npm-run deploy:prod",
     "codecov": "cat coverage/*/lcov.info | codecov",
-    "js-test": "yarn webpack js-tests.js _js-tests.js; if [ -f ./_js-tests.js ]; then node _js-tests.js; rm _js-tests.js; fi "
+    "js-test": "babel-node js-tests.js"
   },
   "betterScripts": {
     "compile": {
@@ -35,7 +35,7 @@
       }
     },
     "compile:server": {
-      "command": "babel server --out-dir dist-server --source-maps inline",
+      "command": "babel server --out-dir dist-server",
       "env": {
         "NODE_ENV": "production",
         "DEBUG": "app:*"
@@ -77,7 +77,7 @@
       }
     },
     "deploy": {
-      "command": "npm run lint && npm run test && npm run clean && npm run compile",
+      "command": "npm run lint && npm run test && npm run clean && npm run compile && npm run compile:server",
       "env": {
         "DEBUG": "app:*"
       }
@@ -138,7 +138,6 @@
     "cssnano": "^3.10.0",
     "debug": "^2.2.0",
     "deep-freeze": "^0.0.1",
-    "ejs": "^2.5.6",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.1",
     "fs-extra": "^2.0.0",
@@ -167,6 +166,7 @@
     "rimraf": "^2.5.4",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.13.2",
+    "tiny-promisify": "^1.0.0",
     "url-loader": "^0.5.8",
     "validator": "^6.2.1",
     "webpack": "^2.2.1",

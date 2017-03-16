@@ -1,5 +1,5 @@
 import { CHANGE_USER } from './consts'
-import { sendForm } from '../../formUtils'
+import { sendForm } from '../formUtils'
 
 /**
  * @param {Object} Event Objeto de evento javascript
