@@ -17,6 +17,13 @@ const debug = log('app:bin:dev-server')
 
 connect(() => {
   // server.listen(project.server_port)
-  app.listen(project.server_port)
-  debug(`Server is now running at http://localhost:${project.server_port}.`)
+  console.log('project.server_port', project.server_port)
+  app.listen(project.server_port, (error) => {
+    if (error) {
+      console.log('project.server_port', project.server_port)
+      console.log('Erro --> ', error)
+      return
+    }
+    debug(`Server is now running at http://localhost:${project.server_port}.`)
+  })
 })
