@@ -8,14 +8,14 @@
     "npm": "^3.0.0"
   },
   "scripts": {
-    "prestart": "yarn install; yarn deploy:prod",
+    "start": "yarn install; yarn deploy:heroku; yarn start-server",
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
     "compile:prod": "better-npm-run compile",
     "compile:server": "better-npm-run compile:server",
     "lint": "eslint bin build config server src tests",
     "lint:fix": "npm run lint -- --fix",
-    "start": "better-npm-run start",
+    "start-server": "better-npm-run start-server",
     "dev": "better-npm-run dev",
     "dev:server": "better-npm-run dev:server",
     "dev:debug": "better-npm-run dev:debug",
@@ -24,8 +24,10 @@
     "test:debug": "better-npm-run test:debug",
     "test:dev": "npm run test -- --watch",
     "deploy": "better-npm-run deploy",
+    "deploy:light": "better-npm-run deploy:light",
     "deploy:dev": "better-npm-run deploy:dev",
     "deploy:prod": "better-npm-run deploy:prod",
+    "deploy:heroku": "better-npm-run deploy:heroku",
     "codecov": "cat coverage/*/lcov.info | codecov",
     "js-tests": "babel-node js-tests.js"
   },
@@ -83,6 +85,12 @@
         "DEBUG": "app:*"
       }
     },
+    "deploy:light": {
+      "command": "npm run clean && npm run compile",
+      "env": {
+        "DEBUG": "app:*"
+      }
+    },
     "deploy:dev": {
       "command": "npm run deploy",
       "env": {
@@ -97,7 +105,14 @@
         "DEBUG": "app:*"
       }
     },
-    "start": {
+    "deploy:heroku": {
+      "command": "npm run deploy:light",
+      "env": {
+        "NODE_ENV": "production",
+        "DEBUG": "app:*"
+      }
+    },
+    "start-server": {
       "command": "NODE_ENV=production DEBUG=express* node bin/dev-server.js",
       "env": {
         "DEBUG": "app:*"
@@ -126,6 +141,7 @@
   "license": "MIT",
   "dependencies": {
     "babel-core": "^6.23.1",
+    "babel-cli": "^6.23.0",
     "babel-loader": "^6.4.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
@@ -178,7 +194,6 @@
     "yargs": "^6.3.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
     "babel-eslint": "^7.1.1",
     "babel-plugin-istanbul": "^4.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
