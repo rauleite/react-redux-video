@@ -4,8 +4,8 @@
   "description": "Get started with React, Redux, and React-Router!",
   "main": "index.js",
   "engines": {
-    "node": ">=4.5.0",
-    "npm": "^3.0.0"
+    "node": ">=7.7.2",
+    "npm": "^4.0.0"
   },
   "scripts": {
     "start": "yarn install; yarn deploy:heroku; yarn start-server",
