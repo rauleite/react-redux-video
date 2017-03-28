@@ -8,14 +8,14 @@
     "npm": "^3.0.0"
   },
   "scripts": {
-    "start": "yarn install && yarn deploy:prod && yarn start-server",
+    "prestart": "yarn install; yarn deploy:prod",
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
     "compile:prod": "better-npm-run compile",
     "compile:server": "better-npm-run compile:server",
     "lint": "eslint bin build config server src tests",
     "lint:fix": "npm run lint -- --fix",
-    "start-server": "better-npm-run start-server",
+    "start": "better-npm-run start",
     "dev": "better-npm-run dev",
     "dev:server": "better-npm-run dev:server",
     "dev:debug": "better-npm-run dev:debug",
@@ -97,7 +97,7 @@
         "DEBUG": "app:*"
       }
     },
-    "start-server": {
+    "start": {
       "command": "NODE_ENV=production DEBUG=express* node bin/dev-server.js",
       "env": {
         "DEBUG": "app:*"
