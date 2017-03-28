@@ -12,7 +12,9 @@ const mapStateToProps = ({ reset }) => ({
   user: reset.get('user'),
   successMessage: reset.get('successMessage'),
   success: reset.get('success'),
-  token: reset.get('token')
+  token: reset.get('token'),
+  styles: reset.get('styles'),
+  button: reset.get('button')
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Reset)

@@ -58,10 +58,24 @@ a:hover {
 
 .error-message {
   padding: 0 16px;
-  color: tomato;
+  color: #f44336;
 }
 
 .success-message {
   padding: 0 16px;
-  color: green;
+  color: #4caf50;
+}
+
+.warning-message {
+  padding: 0 16px;
+  color: #ff9800;
+}
+
+// Just change "red" to any color
+input:-webkit-autofill {
+  -webkit-text-fill-color: #ffebb6 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #343434 inset;
+  
+  -moz-box-shadow: 0 0 0px 1000px #343434 inset;
+  box-shadow: 0 0 0px 1000px #343434 inset;
 }

@@ -16,10 +16,6 @@ export function previneAcessosAuth ({ location }, replace) {
     return
   }
 
-  console.log('pathSolicitado', pathSolicitado)
-  console.log('isUrlProibido', isPathProibido)
-  console.log('replacing...')
-
   replace('/')
   return
 }

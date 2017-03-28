@@ -1,6 +1,5 @@
 import React, { PropTypes, PureComponent } from 'react'
 import { Router, browserHistory } from 'react-router'
-import Home from '../routes/Home'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Provider } from 'react-redux'

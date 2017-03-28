@@ -1,54 +1,59 @@
 import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../consts'
 import { deepFreeze } from '../../utils/dev-mode'
-// import { cloneDeep } from 'lodash'
-import { Map } from 'immutable'
-
-// successMessage: '',
-const initialState = Map({
-  errors: {
-    password: '',
-    email: '',
-    summary: ''
-  },
-  user: Map({
-    password: '',
-    email: ''
-  }),
-  successMessage: ''
-})
+import { initialState, objInitialState } from './logic/utils/initialState'
+import { changeUser } from './logic/loginLogic'
+import { className, extractStateProp } from './logic/utils/logicUtils'
 
 export default function loginReducer (state = initialState, action) {
   deepFreeze(state)
 
-  switch (action.type) {
-    case PROCESS_FORM:
-      return state
-        .set('errors', action.payload.errors)
-        .set('user', action.payload.user)
-        .set('successMessage', action.payload.successMessage)
+  console.log('loginReducer', action.type)
 
-    case CHANGE_USER:
-      const input = action.payload
-      const field = input.name
+  if (action.type === PROCESS_FORM) {
+    return state
+      .set('user', extractStateProp(state, action, 'user'))
+      .set('errors', extractStateProp(state, action, 'errors'))
+      .set('styles', extractStateProp(state, action, 'styles'))
+      .set('successMessage', extractStateProp(state, action, 'successMessage'))
+      .set('button', extractStateProp(state, action, 'button'))
+  } else if (action.type === CHANGE_USER) {
+    const { user, errors, styles, button } = changeUser(state, action)
+    return state
+      .set('user', user)
+      .set('errors', errors)
+      .set('styles', styles)
+      .set('button', button)
+  } else if (action.type === LOCATION_CHANGE) {
+    const successMessage = localStorage.getItem('successMessage')
+    const email = localStorage.getItem('email')
 
-      const isField = {
-        email: field === 'email',
-        password: field === 'password'
-      }
+    let hasStorage = false
 
-      return state
-        .setIn(['user', 'email'], isField.email
-          ? input.value : state.getIn(['user', 'email']))
+    let objState = objInitialState()
+    let stylesInit = objState.styles
+    let userInit = objState.user
 
-        .setIn(['user', 'password'], isField.password
-          ? input.value : state.getIn(['user', 'password']))
+    if (successMessage) {
+      localStorage.removeItem('successMessage')
+      stylesInit.infoMessage = className.success
+      hasStorage = true
+    }
 
-    case LOCATION_CHANGE:
-      // console.log('loginReducer()', 'LOCATION_CHANGE', state)
-      // console.log('loginReducer()', 'LOCATION_CHANGE', action)
+    if (email) {
+      localStorage.removeItem('email')
+      userInit.email = email
+      hasStorage = true
+    }
+
+    if (!hasStorage) {
       return initialState
+    }
 
-    default:
-      return state
+    return initialState
+      .set('successMessage', successMessage)
+      .set('styles', stylesInit)
+      .set('user', userInit)
+  } else {
+    return state
   }
 }

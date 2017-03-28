@@ -10,8 +10,8 @@ injectTapEventPlugin()
 // ========================================================
 // Store Instantiation
 // ========================================================
-const initialState = window.___INITIAL_STATE__
-delete window.___INITIAL_STATE__
+const initialState = window.__INITIAL_STATE__
+delete window.__INITIAL_STATE__
 
 const store = createStore(initialState)
 
@@ -53,7 +53,6 @@ if (__DEV__) {
     // accept update of dependency
     module.hot.accept('./routes/index', () => {
       // replace request handler of server
-      // console.log('first')
       ReactDOM.unmountComponentAtNode(MOUNT_NODE)
       render()
     }

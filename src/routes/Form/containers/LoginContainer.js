@@ -17,7 +17,9 @@ const mapStateToProps = ({ login }, ownProps) => {
     // props: login
     errors: login.get('errors'),
     successMessage: login.get('successMessage'),
-    user: login.get('user')
+    user: login.get('user'),
+    styles: login.get('styles'),
+    button: login.get('button')
   }
 }
 

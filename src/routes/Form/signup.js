@@ -8,7 +8,7 @@ export default (store) => ({
         and embed an async module loader (jsonp) when bundling   */
     require.ensure([], (require) => {
       /*  Webpack - use require callback to define
-          dependencies for bundling   */
+          dependencies for bundling */
 
       // dynamic imports
       const Login = require('./containers/SingupContainer').default

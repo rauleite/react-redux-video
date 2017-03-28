@@ -12,14 +12,12 @@ const mapDispatchToProps = {
  * @param {Object} ownProps Todas propriedades
  * @return {Object} Propriedades relacionado ao Forgot
 */
-const mapStateToProps = ({ forgot }, ownProps) => {
-  let obj = {
-    errors: forgot.get('errors'),
-    successMessage: forgot.get('successMessage'),
-    user: forgot.get('user')
-  }
-  console.log(obj)
-  return obj
-}
+const mapStateToProps = ({ forgot }, ownProps) => ({
+  errors: forgot.get('errors'),
+  successMessage: forgot.get('successMessage'),
+  user: forgot.get('user'),
+  styles: forgot.get('styles'),
+  button: forgot.get('button')
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Forgot)

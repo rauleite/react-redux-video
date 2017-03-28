@@ -38,7 +38,6 @@ export default (initialState = {}) => {
   // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
   store.unsubscribeHistory = browserHistory.listen(updateLocation(store))
 
-  // console.log('** module.hot', module.hot)
   if (module.hot) {
     module.hot.accept('./reducers', () => {
       const reducers = require('./reducers').default

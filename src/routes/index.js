@@ -17,16 +17,26 @@ export const createRoutes = (store) => ({
   component: CoreLayout,
   indexRoute: Home,
 
-  // Hook que é chamado quando entra na Aplicacao (uma vez)
+  /**
+   * Hook que é chamado quando entra na Aplicacao (uma vez)
+   * @param {objects} nextState
+   * @param {function} replace
+   * @param {function} callback
+   */
   onEnter (nextState, replace, callback) {
     previneAcessosAuth(nextState, replace)
     proibeAcessosSemAuth(nextState, replace)
     callback()
   },
 
-  // Hook que é chamado sempre que uma rota filha é alterada
+  /**
+   * Hook que é chamado sempre que uma rota filha é alterada
+   * @param {objects} prevState
+   * @param {objects} nextState
+   * @param {function} replace
+   * @param {function} callback
+   */
   onChange (prevState, nextState, replace, callback) {
-    console.log('onChange')
     previneAcessosAuth(nextState, replace)
     proibeAcessosSemAuth(nextState, replace)
     persistPrevLoginUrl(prevState, nextState, replace)
@@ -34,7 +44,7 @@ export const createRoutes = (store) => ({
   },
 
   childRoutes: [
-    // { 
+    // {
     //   indexRedirect: {
     //     to: '/'
     //   }
@@ -46,8 +56,8 @@ export const createRoutes = (store) => ({
     ForgotRoute(store),
     { path: 'dashboard', component: Dashboard },
     ResetRoute(store),
-    { path: '*', component: Home },
-    
+    { path: '*', component: Home }
+
   ]
 })
 

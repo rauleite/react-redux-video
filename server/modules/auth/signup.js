@@ -1,6 +1,10 @@
 import express from 'express'
-import validator from 'validator'
+// import validator from 'validator'
 import passport from 'passport'
+import {
+  emailFormValidate,
+  passwordFormValidate
+} from './utils'
 
 const router = new express.Router()
 
@@ -21,22 +25,22 @@ router.post('/', (req, res, next) => {
         // the 409 HTTP status code is for conflict error
         return res.status(409).json({
           success: false,
-          message: 'Check the form for errors.',
+          message: 'Ocorreu algum erro.',
           errors: {
-            email: 'This email is already taken.'
+            email: 'Este email já existe, você pode se logar usando-o.'
           }
         })
       }
 
       return res.status(400).json({
         success: false,
-        message: 'Could not process the form.'
+        message: 'Erro interno ao tentar processar o cadastro.'
       })
     }
 
     return res.status(200).json({
       success: true,
-      message: 'You have successfully signed up! Now you should be able to log in.'
+      message: 'Seu cadastro foi realizado com sucesso, agora pode fazer o login.'
     })
   })(req, res, next)
 })
@@ -53,20 +57,14 @@ function validateSignupForm (payload) {
   let isFormValid = true
   let message = ''
 
-  if (!payload || typeof payload.email !== 'string' || !validator.isEmail(payload.email)) {
-    isFormValid = false
-    errors.email = 'Forneça um email válido, por favor.'
-  }
-
-  if (!payload || typeof payload.password !== 'string' || payload.password.trim().length < 8) {
-    isFormValid = false
-    errors.password = 'A senha deve ter pelo menos 8 caracteres.'
-  }
-
   if (!payload || typeof payload.name !== 'string' || payload.name.trim().length === 0) {
     isFormValid = false
     errors.name = 'Por favor, forneça o seu nome.'
   }
+
+  isFormValid = emailFormValidate(payload, errors, isFormValid)
+
+  isFormValid = passwordFormValidate(payload, errors, isFormValid)
 
   if (!isFormValid) {
     message = 'Ops, ocorreu algum equívoco.'
@@ -75,7 +73,8 @@ function validateSignupForm (payload) {
   return {
     success: isFormValid,
     message,
-    errors }
+    errors
+  }
 }
 
 // export default router

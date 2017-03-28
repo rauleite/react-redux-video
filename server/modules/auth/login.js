@@ -1,5 +1,6 @@
 import express from 'express'
 import passport from 'passport'
+import { emailFormValidate, passwordFormValidate } from './utils'
 
 const router = new express.Router()
 
@@ -19,15 +20,8 @@ function validateLoginForm (payload) {
   let isFormValid = true
   let message = ''
 
-  if (!payload || typeof payload.email !== 'string' || payload.email.trim().length === 0) {
-    isFormValid = false
-    errors.email = 'Digite o seu email, por favor.'
-  }
-
-  if (!payload || typeof payload.password !== 'string' || payload.password.trim().length === 0) {
-    isFormValid = false
-    errors.password = 'Digite a sua senha, please.'
-  }
+  isFormValid = emailFormValidate(payload, errors, isFormValid)
+  isFormValid = passwordFormValidate(payload, errors, isFormValid)
 
   if (!isFormValid) {
     message = 'Ops, Ocorreu algum errinho.'
@@ -36,7 +30,8 @@ function validateLoginForm (payload) {
   return {
     success: isFormValid,
     message,
-    errors }
+    errors
+  }
 }
 
 export function doLogin (req, res, next) {

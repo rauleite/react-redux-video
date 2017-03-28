@@ -5,13 +5,15 @@ import { sendForm } from '../formUtils'
 /**
  * Action para onChange
  *
- * @param {Event} event Evento onChange
- * @return {Function} Redux Thunk
+ * @param {event} event Evento onChange
+ * @return {funciton} Redux Thunk
  */
 export function changeUser (event) {
   return {
     type: CHANGE_USER,
-    payload: event.target
+    payload: {
+      input: event.target
+    }
   }
 }
 
@@ -21,7 +23,6 @@ export function changeUser (event) {
 export function processForm (event) {
   event.preventDefault()
   return (dispatch, getState) => {
-    // const userState = getState().signup.get('user')
     const userState = getState().signup.get('user')
 
     sendForm('/auth/signup', userState, dispatch, (res) => {

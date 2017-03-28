@@ -11,34 +11,35 @@ const Reset = ({
   errors,
   successMessage,
   success,
-  user
+  user,
+  styles,
+  button
 }) => (
   <Card >
     <form action='/' onSubmit={onSubmit}>
       { successMessage && <p className='success-message'>{ successMessage }</p> }
-      
-      {/* IF show or not */}
-      { !success
-        ?
+      { /* IF show or not */ }
+      { !success && !errors.errorForm ?
         <div>
           <br />
-          <p className='error-message'>{ errors.get('summary') }</p>
+          <p className='error-message'>{ errors.summary }</p>
           <CardText>
             <Link to='/forgot'>Tente novamente</Link>
           </CardText>
-
-        </div> 
-        : 
+        </div>
+        :
         <div>
           <CardTitle title='Altere' subtitle='Digite uma nova senha.' />
+          { errors.summary && <p className='error-message'>{ errors.summary }</p> }
           <TextField
+            autoFocus
             floatingLabelText='Senha'
             type='password'
             name='password'
             onChange={onChange}
             errorText={errors.password}
-            value={user.password}
-            autoFocus
+            floatingLabelShrinkStyle={styles.password}
+            errorStyle={styles.password}
           />
           <br />
           <TextField
@@ -47,14 +48,15 @@ const Reset = ({
             name='confirmePassword'
             onChange={onChange}
             errorText={errors.confirmePassword}
-            value={user.confirmePassword}
+            floatingLabelShrinkStyle={styles.confirmePassword}
+            errorStyle={styles.confirmePassword}
           />
           <br />
           <br />
-          <RaisedButton type='submit' label='ALTERAR' primary />
+          <RaisedButton type='submit' label='ALTERAR' primary disabled={button.disabled} />
           <br />
           <br />
-        </div> 
+        </div>
       }{/* END IF show or not */}
       <br />
     </form>
@@ -66,8 +68,10 @@ Reset.propTypes = {
   onChange: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   successMessage: PropTypes.string.isRequired,
+  styles: PropTypes.object.isRequired,
   success: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  button: PropTypes.object.isRequired
 }
 
 export default Reset

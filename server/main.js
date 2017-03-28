@@ -1,27 +1,43 @@
+import 'babel-polyfill'
 import express from 'express'
 import log from 'debug'
 import path from 'path'
 import webpack from 'webpack'
 import webpackConfig from '../config/webpack.config'
 import project from '../config/project.config'
-import compress from 'compression'
+// import compress from 'compression'
 import bodyParser from 'body-parser'
 import passport from 'passport'
 import localSignupStrategy from './passport/local-signup'
 import localLoginStrategy from './passport/local-login'
+// import helmet from 'helmet'
+import expressLimiter from 'express-limiter'
+const redisClient = require('redis').createClient()
 
 const debug = log('app:bin:dev-server')
 
 const app = express()
 
 // Apply gzip compression
-app.use(compress())
+// app.use(compress())
 
 // tell the app to parse HTTP body messages
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // pass the passport middleware
 app.use(passport.initialize())
+
+/* Cabeçalhos protegidos */
+// app.use(helmet())
+
+const limiter = expressLimiter(app, redisClient)
+
+/* Limit requests to 100 per hour per ip address. */
+limiter({
+  lookup: ['connection.remoteAddress'],
+  total: 100,
+  expire: 1000 * 60 * 60
+})
 
 // load passport strategies
 passport.use('local-signup', localSignupStrategy)
@@ -50,6 +66,7 @@ if (project.env === 'development') {
   // these files. This middleware doesn't need to be enabled outside
   // of development since this directory will be copied into ~/dist
   // when the application is compiled.
+
   app.use(express.static(project.paths.public()))
 
   // routes

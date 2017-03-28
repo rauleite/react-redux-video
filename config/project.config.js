@@ -27,6 +27,9 @@ const config = {
   server_host : 'localhost', // ip.address() use string 'localhost' to prevent exposure on local network
   server_port : process.env.PORT || 3000,
 
+  ssl_cert : '/www/ssl/cert-melhore.pem',
+  ssl_key : '/www/ssl/key-melhore.pem',
+
   db_uri: 'mongodb://rauleite:senha@localhost/react_app',
   jwt_secret: 'kS?3w_Be=#6YJ+&$',
 
@@ -39,8 +42,8 @@ const config = {
   compiler_babel : {
     cacheDirectory : true,
     plugins        : ['transform-runtime', 'transform-object-rest-spread'],
-    presets        : ['es2015', 'react', 'stage-0']
-    // presets        : ['react']
+    presets        : [['es2015', { 'modules': false }], 'react', 'stage-0']
+    // presets        : ['es2015', 'react', 'stage-0']
   },
   compiler_devtool         : 'source-map',
   compiler_hash_type       : 'hash',

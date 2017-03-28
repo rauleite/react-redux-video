@@ -156,7 +156,9 @@ webpackConfig.module.rules.push({
     {
       loader  : 'sass-loader',
       options : {
-        sourceMap : true
+        sourceMap     : true,
+        // adicionado
+        includePaths  : [...project.paths.client('styles'), './node_modules']
       }
     }
   ]

@@ -7,20 +7,19 @@ import { send } from '../utils/ajax'
 export default (store) => ({
   path: 'reset/:token',
   onEnter: (nextState, replace, callback) => {
-
     // Conveniencia
     if (Auth.isUserAuthenticated()) {
       replace('/')
       return callback()
     }
-    
+
     // Se ha path e token
     let isPathAndTokenOk = () => (
-      nextState
-      && nextState.params
-      && !isEmpty(nextState.params.token)
-      && nextState.location
-      && nextState.location.pathname
+      nextState &&
+      nextState.params &&
+      !isEmpty(nextState.params.token) &&
+      nextState.location &&
+      nextState.location.pathname
     )
 
     // Se ha path e token
@@ -32,7 +31,7 @@ export default (store) => ({
             payload: {
               success: false,
               user: {
-                token: res && res.user && res.user.token ? res.user.token : '',
+                passwordToken: res && res.user && res.user.passwordToken ? res.user.passwordToken : ''
               },
               errors: {
                 summary: err.message ? err.message : 'Erro interno'
@@ -48,6 +47,8 @@ export default (store) => ({
             user: {
               token: res && res.user && res.user.token ? res.user.token : '',
               email: (res && res.user && res.user.email) ? res.user.email : ''
+              // password: '',
+              // confirmePassword: ''
             },
             success: true
           }
@@ -57,7 +58,7 @@ export default (store) => ({
     }
   },
   /*  Async getComponent is only invoked when route matches   */
-  getComponent(nextState, cbReplace) {
+  getComponent (nextState, cbReplace) {
     /*  Webpack - use 'require.ensure' to create a split point
         and embed an async module loader (jsonp) when bundling   */
     require.ensure([], (require) => {
@@ -69,7 +70,7 @@ export default (store) => ({
       const reducer = require('./modules/resetReducers').default
 
       /*  Add the reducer to the store on key 'forgot'  */
-      injectReducer(store, { key: 'reset', reducer})
+      injectReducer(store, { key: 'reset', reducer })
 
       /*  Return getComponent   */
       cbReplace(null, Reset)

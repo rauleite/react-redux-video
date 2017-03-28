@@ -25,7 +25,7 @@ module.exports = new PassportLocalStrategy({
     }
 
     if (!user) {
-      const error = new Error('Incorrect email or password')
+      const error = new Error('Você digitou login ou senha errado')
       error.name = 'IncorrectCredentialsError'
 
       return done(error)

@@ -27,6 +27,11 @@ a:hover {
   color: tomato;
 }
 
+.warning-message {
+  padding: 0 16px;
+  color: #ff9800;
+}
+
 .success-message {
   padding: 0 16px;
   color: green;

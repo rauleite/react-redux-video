@@ -33,7 +33,7 @@
       "name": "Launch Chrome localhost",
       "sourceMaps": true,      
       "port": 9222,      
-      "url": "http://localhost:3000/forgot",
+      "url": "http://localhost:3000/reset/f2390bb9cc5993d15674f17e13f809710b59cbd1",
       "trace": true,
       "webRoot": "${workspaceRoot}",
       "skipFiles": [

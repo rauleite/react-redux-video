@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
-const Signup = ({ onSubmit, onChange, errors, user }) => (
+const Signup = ({ onSubmit, onChange, errors, user, successMessage }) => (
   <Card>
     <form action='/' onSubmit={onSubmit}>
       <CardTitle
@@ -48,8 +48,8 @@ const Signup = ({ onSubmit, onChange, errors, user }) => (
         <RaisedButton type='submit' label='CRIAR NOVA CONTA' primary />
       </div>
       <CardText>
-        Already have an account?
-        <Link to={'/login'}> Log in
+        Já possui uma conta?
+        <Link to={'/login'}> Logue-se
         </Link>
       </CardText>
     </form>
@@ -60,7 +60,8 @@ Signup.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  successMessage: PropTypes.string.isRequired
 }
 
 export default Signup

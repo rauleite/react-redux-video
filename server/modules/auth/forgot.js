@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import nodemailer from 'nodemailer'
 import config from '../../../config/project.config'
 import promisify from 'tiny-promisify'
+import { emailFormValidate } from './utils'
 
 const User = require('mongoose').model('User')
 const randomBytes = promisify(crypto.randomBytes)
@@ -18,8 +19,8 @@ router.post('/', (req, res, next) => {
     })
   }
 
-  // Self Envoke 
-  (async () => {    
+  // Self Envoke
+  (async () => {
     try {
       const buf = await randomBytes(20)
       const token = buf.toString('hex')
@@ -31,7 +32,7 @@ router.post('/', (req, res, next) => {
       user.resetPasswordToken = token
       user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
 
-      const save = user.save()
+      await user.save()
 
       const smtpTransport = nodemailer.createTransport({
         service: 'Gmail',
@@ -43,17 +44,21 @@ router.post('/', (req, res, next) => {
           pass: config.email_pass
         }
       })
-      
+
       smtpTransport.sendMail(mailOptions(user, req, token), function (err) {
         if (err) throw new Error('Erro na busca', err)
+        return res.status(200).json({
+          success: true,
+          message: 'Foi enviado o procedimento ao seu endereço de email, dê uma olhadinha.',
+          data: {
+            email: user.email
+          }
+        })
       })
-
-    } catch(err) {
-      console.error('err', err.stack)
-      
+    } catch (error) {
       return res.status(400).json({
         success: false,
-        message: err.message,
+        message: 'O email informado não consta em nossa base.'
       })
     }
   // END Self Envoke
@@ -72,10 +77,7 @@ function validateForgotForm (payload) {
   let isFormValid = true
   let message = ''
 
-  if (!payload || typeof payload.email !== 'string' || payload.email.trim().length === 0) {
-    isFormValid = false
-    errors.email = 'Digite o seu email, por favor.'
-  }
+  isFormValid = emailFormValidate(payload, errors, isFormValid)
 
   if (!isFormValid) {
     message = 'Há algo errado.'
@@ -98,7 +100,7 @@ function mailOptions (user, req, token) {
 
       Para completar o processo, por favor clique no seguinte link, ou cole em seu browser:
 
-      http://${req.headers.host}/reset/${token}
+      https://${req.headers.host}/reset/${token}
 
       Caso você não tenha feito esta solicitação, por favor ignore este email. Assim, sua senha permanecerá inalterada.
     `

@@ -6,7 +6,6 @@ import { browserHistory } from 'react-router'
 export function redirectToPrevUrl () {
   // change the current URL
   let redirectPrevUrl = localStorage.getItem('urlPrevLogin')
-  console.log('redirectPrevUrl', redirectPrevUrl)
   if (redirectPrevUrl) {
     browserHistory.push(redirectPrevUrl)
   } else {
@@ -16,8 +15,8 @@ export function redirectToPrevUrl () {
 
 /**
  * Redireciona para a url informada
- * @param {string} pathname 
+ * @param {string} pathname
  */
 export function redirectToUrl (pathname) {
-    browserHistory.push(pathname)
+  browserHistory.push(pathname)
 }

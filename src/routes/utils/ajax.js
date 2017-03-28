@@ -5,16 +5,24 @@
  * @param {function} callback Retorno do xhr
  */
 export function sendUser (path, userState, callback) {
-  const user = userState.toJS()
+  let user
+  /** Pra manter compatibilidade */
+  if (typeof userState.toJS === 'function') {
+    user = userState.toJS()
+  }
+  user = userState
+
   let formData = ``
 
-  formData += user.name ? `name=${encodeURIComponent(user.name)}&` : ``
-  formData += user.email ? `&email=${encodeURIComponent(user.email)}&` : ``
-  formData += user.password ? `&password=${encodeURIComponent(user.password)}` : ``
-  formData += user.token ? `&token=${encodeURIComponent(user.token)}` : ``
-  
+  for (var key in user) {
+    if (user.hasOwnProperty(key)) {
+      formData += user[key] ? `${key}=${encodeURIComponent(user[key])}&` : ``
+    }
+  }
 
   formData = formData.replace(/^&/, '').replace(/&&/, '&').replace(/&$/, '')
+
+  console.info('formData', formData)
 
   const config = {
     type: 'POST',
@@ -40,12 +48,12 @@ export function send (config, callback) {
   xhr.addEventListener('load', () => {
     console.log('xhr.status', xhr.status)
     if (xhr.status === 200) {
-      console.error('sucesso', xhr.response)
+      console.info('sucesso', xhr.response)
       callback(null, xhr.response)
     } else {
       const error = {
         erros: xhr.response.errors,
-        message: xhr.response.message,
+        message: xhr.response.message
       }
       console.error('error', error)
       callback(error, xhr.response)

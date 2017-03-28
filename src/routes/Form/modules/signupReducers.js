@@ -1,20 +1,21 @@
 import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../consts'
 import { deepFreeze } from '../../utils/dev-mode'
-import { Map } from 'immutable'
+import { initialState } from './logic/utils/initialState'
+import { inputUser } from './logic/utils/logicUtils'
 // successMessage: '',
-const initialState = Map({
-  errors: {
-    name: '',
-    password: '',
-    email: '',
-    summary: ''
-  },
-  user: Map({
-    name: '',
-    password: '',
-    email: ''
-  })
-})
+// const initialState = Map({
+//   errors: {
+//     name: '',
+//     password: '',
+//     email: '',
+//     summary: ''
+//   },
+//   user: Map({
+//     name: '',
+//     password: '',
+//     email: ''
+//   })
+// })
 
 export default function signupReducer (state = initialState, action) {
   deepFreeze(state)
@@ -26,23 +27,12 @@ export default function signupReducer (state = initialState, action) {
         .set('user', action.payload.user)
 
     case CHANGE_USER:
-      const input = action.payload
-      const field = input.name
+      const {
+        user
+      } = inputUser(state, action, ['name', 'email', 'password'])
 
-      const isField = {
-        name: field === 'name',
-        email : field === 'email',
-        password: field === 'password'
-      }
-
-      let user = state.get('user')
-
-      let newUser = user
-        .set('name', isField.name ? input.value : user.get('name'))
-        .set('email', isField.email ? input.value : user.get('email'))
-        .set('password', isField.password ? input.value : user.get('password'))
-
-      return state.set('user', newUser)
+      console.log('userrrr', user)
+      return state.set('user', user)
 
     case LOCATION_CHANGE:
       return initialState

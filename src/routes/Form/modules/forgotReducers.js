@@ -1,53 +1,52 @@
 import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../consts'
 import { deepFreeze } from '../../utils/dev-mode'
-import { Map } from 'immutable'
-
-// successMessage: '',
-const initialState = Map({
-  errors: Map({
-    email: '',
-    summary: ''
-  }),
-  user: Map({
-    email: ''
-  }),
-  successMessage: ''
-})
+import { changeUser } from './logic/forgotLogic'
+import { initialState } from './logic/utils/initialState'
+// import {  } from './logic/utils/logicUtils'
 
 export default function forgotReducer (state = initialState, action) {
   deepFreeze(state)
+  console.log('forgotReducer', action.type)
 
-  switch (action.type) {
-    case PROCESS_FORM:
-      const success = action.payload.successMessage
-      return state
-        .setIn(
-          ['user', 'email'],
-          action.payload.input 
-            ? action.payload.input 
-            : state.getIn(['user', 'email'])
-        )
-        .setIn(
-          ['errors', 'summary'],
-            action.payload.errors &&
-            action.payload.errors.summary
-              ? action.payload.errors.summary 
-              : state.getIn(['errors', 'summary'])
-        )
-        .set('successMessage',
-          success || state.get('successMessage'))
+  if (action.type === PROCESS_FORM) {
+    if (action.payload.success) return state
 
-    case CHANGE_USER:
-      const inputElement = action.payload
-
-      let user = state.get('user')
-      return state
-        .set('user', user.set('email', inputElement.value))
-
-    case LOCATION_CHANGE:
-      return initialState
-
-    default:
-      return state
+    return state
+      .set('errors',
+        action.payload.errors
+          ? action.payload.errors
+          : state.get('errors')
+    )
+      .set('styles',
+        action.payload.styles
+          ? action.payload.styles
+          : state.get('styles')
+    )
+      .set('button',
+        action.payload.button
+          ? action.payload.button
+          : state.get('button')
+    )
+      .set('successMessage',
+        action.payload.successMessage
+          ? action.payload.successMessage
+          : state.get('successMessage')
+    )
   }
+
+  if (action.type === CHANGE_USER) {
+    const { user, styles, errors, button } = changeUser(state, action)
+    return state
+      .set('user', user)
+      .set('styles', styles)
+      .set('errors', errors)
+      .set('button', button)
+  // .set('input', inputElement(state, action))
+  }
+
+  if (action.type === LOCATION_CHANGE) {
+    return initialState
+  }
+
+  return state
 }
