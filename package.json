@@ -15,7 +15,7 @@
     "compile:server": "better-npm-run compile:server",
     "lint": "eslint bin build config server src tests",
     "lint:fix": "npm run lint -- --fix",
-    "start": "better-npm-run start",
+    "start-server": "better-npm-run start-server",
     "dev": "better-npm-run dev",
     "dev:server": "better-npm-run dev:server",
     "dev:debug": "better-npm-run dev:debug",
@@ -97,7 +97,7 @@
         "DEBUG": "app:*"
       }
     },
-    "start": {
+    "start-server": {
       "command": "NODE_ENV=production DEBUG=express* node bin/dev-server.js",
       "env": {
         "DEBUG": "app:*"
