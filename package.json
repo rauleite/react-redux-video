@@ -227,5 +227,6 @@
     "webpack-hot-middleware": "^2.17.1"
   },
   "devDependencies": {
+    
   }
 }
