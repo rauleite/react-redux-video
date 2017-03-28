@@ -4,8 +4,8 @@
   "description": "Get started with React, Redux, and React-Router!",
   "main": "index.js",
   "engines": {
-    "node": ">=7.7.2",
-    "npm": "^4.0.0"
+    "node": "^7.7.2",
+    "npm": "^4.1.2"
   },
   "scripts": {
     "start": "yarn install; yarn deploy:heroku; yarn start-server",
@@ -140,8 +140,8 @@
   "author": "David Zukowski <david@zuko.me> (http://zuko.me)",
   "license": "MIT",
   "dependencies": {
-    "babel-core": "^6.23.1",
     "babel-cli": "^6.23.0",
+    "babel-core": "^6.23.1",
     "babel-loader": "^6.4.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
@@ -198,7 +198,6 @@
     "babel-plugin-istanbul": "^4.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-polyfill": "^6.23.0",
-    "babel-preset-stage-2": "^6.22.0",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
     "chai-enzyme": "^0.6.1",
