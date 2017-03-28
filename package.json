@@ -7,8 +7,8 @@
     "node": ">=4.5.0",
     "npm": "^3.0.0"
   },
-  "start": "yarn install && yarn deploy:prod && yarn start-server",
   "scripts": {
+    "start": "yarn install && yarn deploy:prod && yarn start-server",
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
     "compile:prod": "better-npm-run compile",
