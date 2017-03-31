@@ -1,10 +1,11 @@
 import Login from '../components/Login'
 import { connect } from 'react-redux'
-import { changeUser, processForm } from '../modules/loginActions'
+import { changeUser, processForm, changeCaptcha } from '../modules/loginActions'
 
 const mapDispatchToProps = {
   onSubmit: processForm,
-  onChange: changeUser
+  onChange: changeUser,
+  onChangeCaptcha: changeCaptcha
 }
 
 /**
@@ -19,7 +20,8 @@ const mapStateToProps = ({ login }, ownProps) => {
     successMessage: login.get('successMessage'),
     user: login.get('user'),
     styles: login.get('styles'),
-    button: login.get('button')
+    button: login.get('button'),
+    captcha: login.get('captcha')
   }
 }
 

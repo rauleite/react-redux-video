@@ -11,6 +11,7 @@ export function objInitialState () {
       email: '',
       password: '',
       confirmePassword: '',
+      captcha: '',
       summary: '',
       /** Erro de Preenchimento, front */
       errorForm: false
@@ -27,11 +28,17 @@ export function objInitialState () {
       infoMessage: {},
       email: {},
       password: {},
-      confirmePassword: {}
+      confirmePassword: {},
+      captcha: {}
     },
     button: {
       label: '',
       disabled: true
+    },
+    captcha: {
+      value: {},
+      element: {},
+      hasCaptchaComponent: false
     },
     /* Vem do server */
     success: true,

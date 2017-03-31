@@ -1,5 +1,5 @@
 import Auth from '../../../modules/Auth'
-import { CHANGE_USER, PROCESS_FORM } from '../consts'
+import { CHANGE_USER, PROCESS_FORM, CHANGE_CAPTCHA } from '../consts'
 import { redirectToPrevUrl } from '../../utils/url'
 import { sendForm } from '../formUtils'
 import { style } from './logic/utils/logicUtils'
@@ -9,7 +9,25 @@ import { style } from './logic/utils/logicUtils'
 */
 export function processForm (event) {
   event.preventDefault()
+
   return (dispatch, getState) => {
+    // const errors = {}
+    // const captcha = getState().login.get('captcha')
+    // console.log('captcha', captcha)
+
+    // if (isEmpty(captcha)) {
+    //   errors.summary = 'É necessário o preenchimento correto do captcha'
+    //   return dispatch({
+    //     type: PROCESS_FORM,
+    //     payload: {
+    //       errors,
+    //       button: {
+    //         label: 'ERRO...',
+    //         disabled: true
+    //       }
+    //     }
+    //   })
+    // }
     dispatch({
       type: PROCESS_FORM,
       payload: {
@@ -20,8 +38,11 @@ export function processForm (event) {
       }
     })
     const user = getState().login.get('user')
-    sendForm('/auth/login', user, dispatch, (error, res) => {
+    const captcha = getState().login.get('captcha')
+    sendForm('/auth/login', { user, captchaValue: captcha.value }, dispatch, (error, res) => {
+      console.log('res', res)
       if (error) {
+        if (captcha.hasCaptchaComponent) captcha.element.reset()
         return dispatch({
           type: PROCESS_FORM,
           payload: {
@@ -31,6 +52,11 @@ export function processForm (event) {
             styles: {
               email: style.error,
               password: style.error
+            },
+            captcha: {
+              value: {},
+              element: captcha.element,
+              hasCaptchaComponent: res.hasCaptchaComponent
             },
             button: {
               label: 'REDIGITE...',
@@ -51,11 +77,33 @@ export function processForm (event) {
  * @param {Event} event Evento onChange
  * @return {Function} Redux Thunk
  */
-export function changeUser (event) {
+export function changeUser (eventOrCaptcha) {
+  console.log('eventOrCaptcha', eventOrCaptcha)
+
+  const target = eventOrCaptcha && eventOrCaptcha.target ? eventOrCaptcha.target : null
+  const captchaValue = eventOrCaptcha && !eventOrCaptcha.target ? eventOrCaptcha : null
+
   return {
     type: CHANGE_USER,
     payload: {
-      input: event.target
+      input: target,
+      captcha: {
+        value: captchaValue
+      }
     }
+  }
+}
+
+/**
+ * Action para onChangeCaptcha
+ *
+ * @param {Event} tokenCaptcha Evento onChange
+ * @return {Function} Redux Thunk
+ */
+export function changeCaptcha (element) {
+  console.log('changeCaptcha', element)
+  return {
+    type: CHANGE_CAPTCHA,
+    payload: { captcha: { element } }
   }
 }

@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
   password: String,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
+  hasCaptchaComponent: Boolean,
   name: String
 })
 
@@ -49,5 +50,10 @@ UserSchema.pre('save', function saveHook (next) {
     })
   })
 })
+
+// const User = mongoose.model('User', UserSchema)
+
+// const userAppendAsyncMethods = ['findOne']
+// asyncUtils.appendAsyncMethodToObject(User, userAppendAsyncMethods)
 
 module.exports = mongoose.model('User', UserSchema)

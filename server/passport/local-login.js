@@ -43,12 +43,12 @@ module.exports = new PassportLocalStrategy({
 
         return done(error)
       }
+
       // exp: 5 dias
       const payload = {
         sub: user._id
       }
-// 1488480670
-// 1488480904
+
       // create a token string
       const token = jwt.sign(payload, config.jwt_secret, { expiresIn: '5s' })
       const data = {

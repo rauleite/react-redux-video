@@ -8,14 +8,13 @@
     "npm": "^4.1.2"
   },
   "scripts": {
-    "start": "yarn install; yarn deploy:heroku; yarn start-server",
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
     "compile:prod": "better-npm-run compile",
     "compile:server": "better-npm-run compile:server",
     "lint": "eslint bin build config server src tests",
     "lint:fix": "npm run lint -- --fix",
-    "start-server": "better-npm-run start-server",
+    "start": "better-npm-run start",
     "dev": "better-npm-run dev",
     "dev:server": "better-npm-run dev:server",
     "dev:debug": "better-npm-run dev:debug",
@@ -112,7 +111,7 @@
         "DEBUG": "app:*"
       }
     },
-    "start-server": {
+    "start": {
       "command": "NODE_ENV=production DEBUG=express* node bin/dev-server.js",
       "env": {
         "DEBUG": "app:*"
@@ -143,15 +142,18 @@
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.4.0",
+    "babel-plugin-async-to-promises": "^1.0.5",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
+    "babel-preset-stage-3": "^6.22.0",
     "babel-runtime": "^6.23.0",
     "bcrypt": "^1.0.2",
     "better-npm-run": "0.0.13",
+    "bluebird": "^3.5.0",
     "compression": "^1.6.2",
     "css-loader": "^0.26.4",
     "cssnano": "^3.10.0",
@@ -159,7 +161,7 @@
     "deep-freeze": "^0.0.1",
     "express": "^4.15.2",
     "express-limiter": "^1.6.0",
-    "extract-text-webpack-plugin": "^2.1.0",
+    "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "^0.10.1",
     "fs-extra": "^2.0.0",
     "global": "^4.3.1",
@@ -180,7 +182,7 @@
     "passport-local": "^1.0.0",
     "postcss-loader": "^1.3.3",
     "react": "^15.4.2",
-    "react-async-script": "^0.8.0",
+    "react-async-script": "~0.7.0",
     "react-dom": "^15.4.2",
     "react-google-recaptcha": "^0.8.0",
     "react-redux": "^5.0.3",
@@ -189,13 +191,16 @@
     "redis": "^2.7.1",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.0",
     "rimraf": "^2.5.4",
-    "sass-loader": "^6.0.3",
+    "sass-loader": "^4.1.1",
     "style-loader": "^0.13.2",
-    "tiny-promisify": "^1.0.0",
     "url-loader": "^0.5.8",
-    "webpack": "^2.2.1",
-    "yargs": "^6.3.0",
+    "webpack": "^1.12.14",
+    "yargs": "^6.3.0"
+  },
+  "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-plugin-istanbul": "^4.0.0",
     "chai": "^3.4.1",
@@ -225,8 +230,5 @@
     "sinon-chai": "^2.8.0",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-hot-middleware": "^2.17.1"
-  },
-  "devDependencies": {
-    
   }
 }

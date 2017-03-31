@@ -4,19 +4,27 @@
  * @param {object} user User do Obj State
  * @param {function} callback Retorno do xhr
  */
-export function sendUser (path, userState, callback) {
-  let user
-  /** Pra manter compatibilidade */
-  if (typeof userState.toJS === 'function') {
-    user = userState.toJS()
-  }
-  user = userState
-
+export function sendUser (path, data, callback) {
+  // let user
+  // /** Pra manter compatibilidade */
+  // if (typeof userState.toJS === 'function') {
+  //   user = userState.toJS()
+  // }
+  // user = userState
   let formData = ``
+  for (let key in data) {
+    if (!data.hasOwnProperty(key)) continue
 
-  for (var key in user) {
-    if (user.hasOwnProperty(key)) {
-      formData += user[key] ? `${key}=${encodeURIComponent(user[key])}&` : ``
+    /* Se tiver só um level no obj */
+    if (!(typeof data[key] === 'object')) {
+      formData += data[key] ? `${key}=${encodeURIComponent(data[key])}&` : ``
+      continue
+    }
+
+    for (let key2 in data[key]) {
+      if (!data[key].hasOwnProperty(key2)) continue
+
+      formData += data[key][key2] ? `${key2}=${encodeURIComponent(data[key][key2])}&` : ``
     }
   }
 

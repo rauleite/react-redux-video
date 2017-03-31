@@ -48,6 +48,8 @@ export function changeState ({ user, styles, errors, button }) {
 export function inputUser (state, action, fieldNames) {
   const input = extractStateProp(state, action, 'input')
 
+  console.log('input', input)
+
   const isField = isCorrectField(fieldNames, input)
 
   let user = {}
@@ -57,6 +59,19 @@ export function inputUser (state, action, fieldNames) {
   return { user, isField }
 }
 
+export function captchaUser (state, action, propNames) {
+  const captcha = action.payload && action.payload.captcha ? action.payload.captcha : null
+  const captchaState = state.get('captcha')
+
+  let result = {}
+
+  propNames.forEach(p => {
+    result[p] = captcha && captcha[p] && captcha[p] !== captchaState[p] ? captcha[p] : captchaState[p]
+  })
+
+  return result
+}
+
 /**
  * Retorna o State[propName]
  * @param {object} state
@@ -64,13 +79,14 @@ export function inputUser (state, action, fieldNames) {
  * @param {string} propName
  * @returns {object} prop
  */
-export function extractStateProp (state, action, propName) {
+export function extractStateProp (state, action, propName, isNullAlternative) {
+  console.log('action.payload.' + propName, action.payload[propName])
   return (
   action.payload &&
   /* Se houver payload.propName, mesmo que seja string vazia */
   action.payload[propName] || action.payload[propName] === ''
     ? action.payload[propName]
-    : state.get(propName)
+    : isNullAlternative ? null : state.get(propName)
   )
 }
 

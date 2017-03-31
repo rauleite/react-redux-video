@@ -1,18 +1,25 @@
 import { Card, CardText, CardTitle } from 'material-ui/Card'
 import React, { PropTypes } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 import { Link } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
+// function onChange (value) {
+//   console.log("Captcha value:", value)
+// }
+
 const Login = ({
   onSubmit,
   onChange,
+  onChangeCaptcha,
   errors,
   styles,
   button,
   successMessage,
-  user
+  user,
+  captcha
 }) => (
   <Card >
     <form action='/' onSubmit={onSubmit}>
@@ -46,6 +53,9 @@ const Login = ({
       />
       <br />
       <br />
+
+      { hasRenderCaptcha(captcha.hasCaptchaComponent, onChangeCaptcha, onChange) }
+
       <RaisedButton type='submit' label={button.label ? button.label : 'ENTRAR'}
         primary disabled={button.disabled} />
       <CardText>
@@ -61,11 +71,30 @@ const Login = ({
 Login.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  onChangeCaptcha: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   styles: PropTypes.object.isRequired,
   button: PropTypes.object.isRequired,
   successMessage: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  captcha: PropTypes.object.isRequired
+}
+
+function hasRenderCaptcha (hasRender, onChangeCaptcha, onChange) {
+  if (hasRender) {
+    console.log('hasRender', hasRender)
+    return (
+      <center>
+        <ReCAPTCHA
+          ref={onChangeCaptcha}
+          sitekey='6LcBpRoUAAAAABxVZrn9Qv7YwNsZaF9Vip7LNLDH'
+          onChange={onChange}
+          theme='dark'
+        />
+        <br />
+      </center>
+    )
+  }
 }
 
 export default Login

@@ -11,8 +11,7 @@ import passport from 'passport'
 import localSignupStrategy from './passport/local-signup'
 import localLoginStrategy from './passport/local-login'
 // import helmet from 'helmet'
-import expressLimiter from 'express-limiter'
-const redisClient = require('redis').createClient()
+// const redisClient = require('redis').createClient()
 
 const debug = log('app:bin:dev-server')
 
@@ -30,18 +29,13 @@ app.use(passport.initialize())
 /* Cabeçalhos protegidos */
 // app.use(helmet())
 
-const limiter = expressLimiter(app, redisClient)
-
-/* Limit requests to 100 per hour per ip address. */
-limiter({
-  lookup: ['connection.remoteAddress'],
-  total: 100,
-  expire: 1000 * 60 * 60
-})
-
-// load passport strategies
+/* load passport strategies */
 passport.use('local-signup', localSignupStrategy)
 passport.use('local-login', localLoginStrategy)
+
+/* load models */
+require('./models/user')
+require('./models/captcha')
 
 if (project.env === 'development') {
   const compiler = webpack(webpackConfig)

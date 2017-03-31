@@ -36,6 +36,8 @@ const config = {
   email : 'raul.abreu.leite@gmail.com',
   email_pass : 'Ja58Ah58',
 
+  captcha_secret: '6LcBpRoUAAAAAHxTbUAMtXN-UFFFbbhdl4GkUtPq',
+
   // ----------------------------------
   // Compiler Configuration
   // ----------------------------------

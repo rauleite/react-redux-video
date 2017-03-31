@@ -1,12 +1,11 @@
-import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../consts'
-import { deepFreeze } from '../../utils/dev-mode'
+import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE, CHANGE_CAPTCHA } from '../consts'
+// import { deepFreeze } from '../../utils/dev-mode'
 import { initialState, objInitialState } from './logic/utils/initialState'
 import { changeUser } from './logic/loginLogic'
 import { className, extractStateProp } from './logic/utils/logicUtils'
 
 export default function loginReducer (state = initialState, action) {
-  deepFreeze(state)
-
+  // deepFreeze(state)
   console.log('loginReducer', action.type)
 
   if (action.type === PROCESS_FORM) {
@@ -16,13 +15,19 @@ export default function loginReducer (state = initialState, action) {
       .set('styles', extractStateProp(state, action, 'styles'))
       .set('successMessage', extractStateProp(state, action, 'successMessage'))
       .set('button', extractStateProp(state, action, 'button'))
+      .set('captcha', extractStateProp(state, action, 'captcha'))
   } else if (action.type === CHANGE_USER) {
-    const { user, errors, styles, button } = changeUser(state, action)
+    const { user, errors, styles, button, captcha } = changeUser(state, action)
+    console.log('reducer captcha', captcha)
     return state
       .set('user', user)
       .set('errors', errors)
       .set('styles', styles)
       .set('button', button)
+      .set('captcha', captcha)
+  } else if (action.type === CHANGE_CAPTCHA) {
+    return state
+      .set('captcha', extractStateProp(state, action, 'captcha'))
   } else if (action.type === LOCATION_CHANGE) {
     const successMessage = localStorage.getItem('successMessage')
     const email = localStorage.getItem('email')

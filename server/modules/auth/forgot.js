@@ -2,14 +2,19 @@ import express from 'express'
 import crypto from 'crypto'
 import nodemailer from 'nodemailer'
 import config from '../../../config/project.config'
-import promisify from 'tiny-promisify'
+import mongoose from 'mongoose'
+import Promise from 'bluebird'
+// import asyncUtils from '../../../utils/asyncUtils'
 import { emailFormValidate } from './utils'
 
-const User = require('mongoose').model('User')
-const randomBytes = promisify(crypto.randomBytes)
+/* Promisify some methods */
+const User = Promise.promisifyAll(mongoose).model('User')
+Promise.promisifyAll(crypto)
+
 const router = new express.Router()
 
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
+  console.log('entrou')
   const validationResult = validateForgotForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -18,51 +23,53 @@ router.post('/', (req, res, next) => {
       errors: validationResult.errors
     })
   }
+  console.log('entrou async')
+  try {
+    const buf = await crypto.randomBytesAsync(20)
+    console.log('passou randomBytes')
 
-  // Self Envoke
-  (async () => {
-    try {
-      const buf = await randomBytes(20)
-      const token = buf.toString('hex')
+    const token = buf.toString('hex')
+    console.log('passou hex')
 
-      const user = await User.findOne({ email: req.body.email })
+    const user = await User.findOneAsync({ email: req.body.email })
+    console.log('passou findOneAsync')
 
-      if (!user) throw new Error('Nenhuma conta encontrada com este email')
+    if (!user) throw new Error('Nenhuma conta encontrada com este email')
 
-      user.resetPasswordToken = token
-      user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
+    user.resetPasswordToken = token
+    user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
 
-      await user.save()
+    await user.save()
+    console.log('passou save')
 
-      const smtpTransport = nodemailer.createTransport({
-        service: 'Gmail',
-        // host: 'smtp.gmail.com',
-        // port: 465,
-        secureConnection: false,
-        auth: {
-          user: config.email,
-          pass: config.email_pass
-        }
-      })
+    const smtpTransport = nodemailer.createTransport({
+      service: 'Gmail',
+      // host: 'smtp.gmail.com',
+      // port: 465,
+      secureConnection: false,
+      auth: {
+        user: config.email,
+        pass: config.email_pass
+      }
+    })
+    console.log('passou nodemailer criou object e retornando sucesso')
+    res.status(200).json({
+      success: true,
+      message: 'Estamos enviando o procedimento ao seu endereço de email, dê uma olhadinha.',
+      data: {
+        email: user.email
+      }
+    })
 
-      smtpTransport.sendMail(mailOptions(user, req, token), function (err) {
-        if (err) throw new Error('Erro na busca', err)
-        return res.status(200).json({
-          success: true,
-          message: 'Foi enviado o procedimento ao seu endereço de email, dê uma olhadinha.',
-          data: {
-            email: user.email
-          }
-        })
-      })
-    } catch (error) {
-      return res.status(400).json({
-        success: false,
-        message: 'O email informado não consta em nossa base.'
-      })
-    }
-  // END Self Envoke
-  })()
+    const sendMail = Promise.promisify(smtpTransport.sendMail.bind(smtpTransport))
+    await sendMail(mailOptions(user, req, token))
+    console.log('nodemailer mandou email')
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: 'O email informado não consta em nossa base.'
+    })
+  }
 })
 
 /**
@@ -70,7 +77,7 @@ router.post('/', (req, res, next) => {
  *
  * @param {object} payload the HTTP body message
  * @returns {object} The result of validation. Object contains a boolean validation result,
- *                   errors tips, and a global message for the whole form.
+ * errors tips, and a global message for the whole form.
  */
 function validateForgotForm (payload) {
   const errors = {}

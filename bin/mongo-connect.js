@@ -24,7 +24,7 @@ module.exports = function connect (callback) {
     // load models
     debug(`Mongoose default connection open to ${project.db_uri}`)
 
-    if (callback) {
+    if (callback && typeof callback === 'function') {
       callback()
     }
   })

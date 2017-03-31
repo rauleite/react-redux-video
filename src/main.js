@@ -13,6 +13,11 @@ injectTapEventPlugin()
 const initialState = window.__INITIAL_STATE__
 delete window.__INITIAL_STATE__
 
+window.recaptchaOptions = {
+  lang: 'pt_BR',
+  theme: 'dark'
+}
+
 const store = createStore(initialState)
 
 // ========================================================

@@ -1,11 +1,15 @@
 const project = require('../config/project.config')
-const log = require('debug')
-const connect = require('./mongo-connect')
 require('./env').load('../server/models/user')
+const connectMongo = require('./mongo-connect')
+const redisClient = require('./redis-connect')
+const expressLimiter = require('express-limiter')
 const app = require('./env').load('../server/main')
+const limiter = expressLimiter(app, redisClient)
+
 // const https = require('https')
 // const fs = require('fs')
 
+const log = require('debug')
 const debug = log('app:bin:dev-server')
 
 // const options = {
@@ -15,13 +19,17 @@ const debug = log('app:bin:dev-server')
 
 // const server = https.createServer(options, app)
 
-connect(() => {
-  // server.listen(project.server_port)
-  console.log('project.server_port', project.server_port)
+connectMongo(() => {
+  /* Limit requests to 100 per hour per ip address. */
+  limiter({
+    lookup: ['connection.remoteAddress'],
+    total: 100,
+    expire: 1000 * 60 * 60
+  })
+
   app.listen(project.server_port, (error) => {
     if (error) {
-      console.log('project.server_port', project.server_port)
-      console.log('Erro --> ', error)
+      console.error('Erro --> ', error)
       return
     }
     debug(`Server is now running at http://localhost:${project.server_port}.`)
