@@ -18,7 +18,7 @@ export function validateEmail (email) {
  * @param {boolean} isFormValid
  */
 export function emailFormValidate (payload, errors, isFormValid) {
-  console.log('emailFormValidate')
+  console.log('emailFormValidate()')
   if (!payload || typeof payload.email !== 'string' || payload.email.trim().length === 0) {
     console.log('Forneça um email válido, por favor.')
     isFormValid = false
@@ -41,7 +41,7 @@ export function emailFormValidate (payload, errors, isFormValid) {
  * @param {boolean} isFormValid
  */
 export function passwordFormValidate (payload, errors, isFormValid) {
-  console.log('passwordFormValidate')
+  console.log('passwordFormValidate()')
   if (!payload || typeof payload.password !== 'string' || payload.password.trim().length === 0) {
     console.log('Forneça um password válido, por favor.')
     isFormValid = false

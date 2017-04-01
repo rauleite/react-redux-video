@@ -40,40 +40,57 @@ function validateLoginForm (payload) {
 
 export async function doLogin (req, res, next) {
   console.log('doLogin', req.body)
-  if (!req.body.captchaValue) {
-    return resultSend(req, res, '400', {
-      success: false,
-      message: 'O captcha precisa ser preenchido',
-      errors: {
-        captcha: 'O captcha precisa ser preenchido'
-      }
-    })
-  }
-
-  const secretKey = projectConfig.captcha_secret
-  /* ::ffff:127.0.0.1 */
-  let remoteIP = req.connection.remoteAddress.split(':')
-  /* ultimo index é o ip */
-  remoteIP = remoteIP[remoteIP.length - 1]
-
-  let verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=' + secretKey +
-    '&response=' + req.body.captchaValue +
-    '&remoteip=' + remoteIP
-
   try {
-    let responseCaptcha = await request(verificationUrl)
+    let hasCaptcha = await redisClient.hmgetAsync(req.body.email, 'hasCaptcha')
+    /* retorno vem null ou string representando true ou false */
+    hasCaptcha = hasCaptcha[0]
+    console.log('hasCaptcha - antes', hasCaptcha)
+    console.log('typeof hasCaptcha', typeof hasCaptcha)
+    hasCaptcha = hasCaptcha === 'true'
+    console.log('hasCaptcha - depois', hasCaptcha)
+    console.log('hasCaptcha typeof', typeof hasCaptcha, hasCaptcha)
 
-    responseCaptcha = JSON.parse(responseCaptcha)
-    console.log('responseCaptcha', responseCaptcha)
-    // Success will be true or false depending upon captcha validation.
-    if (!responseCaptcha.success) {
-      return resultSend(req, res, '400', {
-        success: false,
-        message: 'Erro na verificação do captcha',
-        errors: {
-          captcha: 'Erro na verificação do captcha'
-        }
-      })
+    /* Se nao ha captcha retorna null, quando ha retorna string do boolean */
+    if (hasCaptcha) {
+      console.log('ha captcha no redis')
+
+      /* Se ha captcha mas browser nao preencheu */
+      if (!req.body.captchaValue) {
+        console.log('NAO foi preenchido pelo browser')
+
+        return resultSend(req, res, '400', {
+          success: false,
+          message: 'O captcha precisa ser preenchido',
+          errors: {
+            captcha: 'O captcha precisa ser preenchido'
+          }
+        })
+      }
+      console.log('FOI preenchido pelo browser')
+
+      /* Se ha captcha e browser preencheu-o */
+      const secretKey = projectConfig.captcha_secret
+      let remoteIP = req.connection.remoteAddress.split(':')
+      remoteIP = remoteIP[remoteIP.length - 1]
+
+      let verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=' + secretKey +
+        '&response=' + req.body.captchaValue +
+        '&remoteip=' + remoteIP
+
+      let responseCaptcha = await request(verificationUrl)
+
+      responseCaptcha = JSON.parse(responseCaptcha)
+      console.log('responseCaptcha', responseCaptcha)
+
+      if (!responseCaptcha.success) {
+        return resultSend(req, res, '400', {
+          success: false,
+          message: 'Erro na verificação do captcha',
+          errors: {
+            captcha: 'Erro na verificação do captcha'
+          }
+        })
+      }
     }
   } catch (error) {
     console.log('error', error)
@@ -119,7 +136,8 @@ async function resultSend (req, res, status, respObj) {
     const objCaptcha = {
       email: req.body.email,
       count: 0,
-      countExpires: Date.now() + 3600000
+      countExpires: Date.now() + 3600000,
+      hasCaptcha: false
     }
 
     let replyCountExpires = await redisClient.hmgetAsync(req.body.email, 'countExpires')
@@ -142,6 +160,8 @@ async function resultSend (req, res, status, respObj) {
 
       /* count maior que 2 */
       if (replyIncrCount >= 2) {
+        const hasCaptchaOk = await redisClient.hmsetAsync(objCaptcha.email, 'hasCaptcha', true)
+        console.log('set hasCaptcha true', hasCaptchaOk)
         respObj.hasCaptchaComponent = true
       }
       return res.status(status).json(respObj)
