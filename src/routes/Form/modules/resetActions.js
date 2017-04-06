@@ -26,11 +26,7 @@ export function processForm (event) {
   return (dispatch, getState) => {
     const userState = getState().reset.get('user')
 
-    console.log('getState()', getState())
-
     sendForm('/auth/reset', userState, dispatch, (error, res) => {
-      console.log('error resetActions', error)
-      console.log('res resetActions', res)
       if (error) {
         return dispatch({
           type: PROCESS_FORM,

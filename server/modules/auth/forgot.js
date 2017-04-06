@@ -14,7 +14,6 @@ Promise.promisifyAll(crypto)
 const router = new express.Router()
 
 router.post('/', async (req, res, next) => {
-  console.log('entrou')
   const validationResult = validateForgotForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -23,16 +22,12 @@ router.post('/', async (req, res, next) => {
       errors: validationResult.errors
     })
   }
-  console.log('entrou async')
   try {
     const buf = await crypto.randomBytesAsync(20)
-    console.log('passou randomBytes')
 
     const token = buf.toString('hex')
-    console.log('passou hex')
 
     const user = await User.findOneAsync({ email: req.body.email })
-    console.log('passou findOneAsync')
 
     if (!user) throw new Error('Nenhuma conta encontrada com este email')
 
@@ -40,7 +35,6 @@ router.post('/', async (req, res, next) => {
     user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
 
     await user.save()
-    console.log('passou save')
 
     const smtpTransport = nodemailer.createTransport({
       service: 'Gmail',

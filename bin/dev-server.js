@@ -19,11 +19,14 @@ const debug = log('app:bin:dev-server')
 
 // const server = https.createServer(options, app)
 
+    // total: 100,
+    // lookup: 'connection.remoteAddress',
+    // expire: 1000
 connectMongo(() => {
   /* Limit requests to 100 per hour per ip address. */
   limiter({
-    lookup: ['connection.remoteAddress'],
-    total: 100,
+    lookup: 'headers.x-forwarded-for',
+    total: 1,
     expire: 1000 * 60 * 60
   })
 

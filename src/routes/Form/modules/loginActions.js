@@ -37,9 +37,11 @@ export function processForm (event) {
         }
       }
     })
-    const user = getState().login.get('user')
-    const captcha = getState().login.get('captcha')
-    sendForm('/auth/login', { user, captchaValue: captcha.value }, dispatch, (error, res) => {
+    const user = getState().login.get('user').toJS()
+    const captcha = getState().login.get('captcha').toJS()
+    const captchaValue = captcha.value
+
+    sendForm('/auth/login', { ...user, captchaValue }, dispatch, (error, res) => {
       console.log('res', res)
       if (error) {
         if (captcha.hasCaptchaComponent) captcha.element.reset()

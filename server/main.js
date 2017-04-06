@@ -10,7 +10,7 @@ import bodyParser from 'body-parser'
 import passport from 'passport'
 import localSignupStrategy from './passport/local-signup'
 import localLoginStrategy from './passport/local-login'
-// import helmet from 'helmet'
+//import helmet from 'helmet'
 // const redisClient = require('redis').createClient()
 
 const debug = log('app:bin:dev-server')
@@ -20,11 +20,31 @@ const app = express()
 // Apply gzip compression
 // app.use(compress())
 
+/* Para uso de informacoes do proxy, como ler headers, para o limit-express */
+app.enable('trust proxy', true)
+app.enable('trust proxy', 'loopback')
+
 // tell the app to parse HTTP body messages
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // pass the passport middleware
 app.use(passport.initialize())
+
+//app.use(helmet())
+app.disable('x-powered-by')
+
+app.use('*', (req, res, next) => {
+  console.log('-------REQ HEADER---------')
+  for (var key in req.headers) {
+    if (req.headers.hasOwnProperty(key)) {
+      var element = req.headers[key]
+      console.log('req.headers.' + key, '-->', element)
+    }
+  }
+  console.log('------- /FIM REQ HEADER---------')
+  next()
+})
 
 /* Cabeçalhos protegidos */
 // app.use(helmet())

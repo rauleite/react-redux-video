@@ -23,7 +23,6 @@ export function changeUser (state, action) {
 }
 
 export function processForm (state, action) {
-  console.log('processForm - forgotLogic')
   const result = objInitialState()
   result.user.email = inputUser(state, action, 'email').email
   result.button.disabled = true

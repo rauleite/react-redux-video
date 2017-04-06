@@ -31,7 +31,6 @@ export default function signupReducer (state = initialState, action) {
         user
       } = inputUser(state, action, ['name', 'email', 'password'])
 
-      console.log('userrrr', user)
       return state.set('user', user)
 
     case LOCATION_CHANGE:

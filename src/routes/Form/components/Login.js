@@ -23,21 +23,20 @@ const Login = ({
 }) => (
   <Card >
     <form action='/' onSubmit={onSubmit}>
-      {console.log('styles,infoMessage', styles.infoMessage)}
       <CardTitle title='Entre' subtitle='Faça seu login e bom proveito' />
-      { successMessage ? <p className={styles.infoMessage}>{ successMessage }</p> : '' }
-      { errors.summary && <p className='error-message'>{ errors.summary }</p> }
+      { successMessage ? <p className={styles.get('infoMessage')}>{ successMessage }</p> : '' }
+      { errors.get('summary') && <p className='error-message'>{ errors.get('summary') }</p> }
 
       <TextField
         floatingLabelText='Email'
         tabIndex='1'
         autoFocus
         name='email'
-        errorText={errors.email}
+        errorText={errors.get('email')}
         onChange={onChange}
-        value={user.email}
-        floatingLabelShrinkStyle={styles.email}
-        errorStyle={styles.email}
+        value={user.get('email')}
+        floatingLabelShrinkStyle={styles.get('email')}
+        errorStyle={styles.get('email')}
       />
       <br />
       <TextField
@@ -46,18 +45,18 @@ const Login = ({
         type='password'
         name='password'
         onChange={onChange}
-        errorText={errors.password}
-        value={user.password}
-        floatingLabelShrinkStyle={styles.password}
-        errorStyle={styles.password}
+        errorText={errors.get('password')}
+        value={user.get('password')}
+        floatingLabelShrinkStyle={styles.get('password')}
+        errorStyle={styles.get('password')}
       />
       <br />
       <br />
 
-      { hasRenderCaptcha(captcha.hasCaptchaComponent, onChangeCaptcha, onChange) }
+      { hasRenderCaptcha(captcha.get('hasCaptchaComponent'), onChangeCaptcha, onChange) }
 
-      <RaisedButton type='submit' label={button.label ? button.label : 'ENTRAR'}
-        primary disabled={button.disabled} />
+      <RaisedButton type='submit' label={button.get('label') ? button.get('label') : 'ENTRAR'}
+        primary disabled={button.get('disabled')} />
       <CardText>
         <Link to='/forgot'>Ou esqueceu a senha?</Link>
       </CardText>
@@ -81,8 +80,8 @@ Login.propTypes = {
 }
 
 function hasRenderCaptcha (hasRender, onChangeCaptcha, onChange) {
+  console.log('hasRender ---', hasRender)
   if (hasRender) {
-    console.log('hasRender', hasRender)
     return (
       <center>
         <ReCAPTCHA

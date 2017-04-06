@@ -1,16 +1,47 @@
+import { Map } from 'immutable'
+
 /**
  * Faz requisicao ajax de usuario, no client
  * @param {string} path url path
  * @param {object} user User do Obj State
  * @param {function} callback Retorno do xhr
  */
-export function sendUser (path, data, callback) {
-  // let user
+
+export async function sendUser (path, data, callback) {
+  console.info('--> POST', data)
+  try {
+    const options = {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify(data)
+    }
+    const res = await fetch(path, options)
+    const resThen = await res.json()
+    console.info('res', resThen)
+
+    let error = false
+
+    if (!resThen.success) {
+      console.error('Erro no retorno -- !resThen.success')
+      error = {
+        erros: resThen.errors,
+        message: resThen.message
+      }
+      console.error('error', error)
+    }
+
+    return callback(error, resThen)
+  } catch (error) {
+    console.error('ERRO GRAVE:', error)
+  }
+}
+
+export function sendUser2 (path, data, callback) {
   // /** Pra manter compatibilidade */
-  // if (typeof userState.toJS === 'function') {
-  //   user = userState.toJS()
-  // }
-  // user = userState
+  if (Map.isMap(data)) {
+    data = data.toJS()
+  }
+
   let formData = ``
   for (let key in data) {
     if (!data.hasOwnProperty(key)) continue

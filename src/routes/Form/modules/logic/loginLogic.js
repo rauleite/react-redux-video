@@ -1,43 +1,27 @@
 import { style,
   className,
   inputUser,
-  captchaUser,
-  validateEmailWithStyles
+  validateEmailWithStyles,
+  validatePasswordWithStyles
 } from './utils/logicUtils'
 
-import { objInitialState } from './utils/initialState'
+import { objInitialState22 } from './utils/initialState'
 import { isEmpty } from 'lodash'
 
 export function changeUser (state, action) {
   const fieldNames = ['email', 'password']
-
-  const result = objInitialState()
+  const result = objInitialState22
 
   const { user } = inputUser(state, action, fieldNames)
 
   result.user.email = user.email
   result.user.password = user.password
 
-  const captcha = captchaUser(state, action, ['value', 'element', 'hasCaptchaComponent'])
-
-  result.captcha.value = captcha.value
-  result.captcha.element = captcha.element
-  result.captcha.hasCaptchaComponent = captcha.hasCaptchaComponent
+  const captcha = action.payload && action.payload.captcha ? action.payload.captcha : false
+  if (captcha) result.captcha = captcha
 
   validateEmailWithStyles(result)
-
-  /* Só chega aqui se o campo for password */
-  const passwordLt = result.user.password.length < 8
-
-  // if (isField.password) {
-  if (passwordLt) {
-    result.errors.password = ' '
-    result.styles.password = style.warning
-  } else {
-    result.errors.password = ' '
-    result.styles.password = style.success
-  }
-  // }
+  validatePasswordWithStyles(result)
 
   result.button.disabled = isDisableButton(result, style)
 
@@ -51,7 +35,13 @@ export function changeUser (state, action) {
     result.styles.infoMessage = className.success
   }
 
-  return result
+  return {
+    user: result.user,
+    errors: result.errors,
+    styles: result.styles,
+    button: result.button,
+    captcha: result.captcha
+  }
 }
 
 function isDisableButton (result, style) {
@@ -65,9 +55,6 @@ function isDisableButton (result, style) {
   } else {
     isDisabled = true
   }
-
-  console.log('result.captcha.hasCaptchaComponent', result.captcha.hasCaptchaComponent)
-  console.log('result.captcha.value', result.captcha.value)
 
   if (!isDisabled && result.captcha.hasCaptchaComponent) {
     if (!isEmpty(result.captcha.value)) {

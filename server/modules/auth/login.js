@@ -1,11 +1,18 @@
 import express from 'express'
-import passport from 'passport'
+import passportSync from 'passport'
 import request from 'request-promise'
 import redisClient from '../../../bin/redis-connect'
+import { isEmpty } from 'lodash'
+import { promisifyAll } from 'bluebird'
 
-import { emailFormValidate, passwordFormValidate } from './utils'
+import {
+  emailFormValidate,
+  passwordFormValidate
+} from './utils'
+
 import projectConfig from '../../../config/project.config'
 
+const passport = promisifyAll(passportSync)
 const router = new express.Router()
 
 router.post('/', (req, res, next) => {
@@ -19,16 +26,15 @@ router.post('/', (req, res, next) => {
  * @returns {object} The result of validation. Object contains a boolean validation result,
  *                   errors tips, and a global message for the whole form.
  */
-function validateLoginForm (payload) {
+function validateLoginForm (user) {
   const errors = {}
-  let isFormValid = true
+  let isFormValid
   let message = ''
 
-  isFormValid = emailFormValidate(payload, errors, isFormValid)
-  isFormValid = passwordFormValidate(payload, errors, isFormValid)
+  isFormValid = emailFormValidate(user, errors) && passwordFormValidate(user, errors)
 
   if (!isFormValid) {
-    message = 'Ops, Ocorreu algum errinho.'
+    message = 'Ops, Ocorreu algum erro.'
   }
 
   return {
@@ -38,24 +44,56 @@ function validateLoginForm (payload) {
   }
 }
 
+// const cacheMiddleware = (seconds) => (req, res, next) => {
+//     res.setHeader("Cache-Control", `public, max-age=${seconds}`)
+//     next()
+// }
+
 export async function doLogin (req, res, next) {
-  console.log('doLogin', req.body)
+  console.log('req.connection.remoteAddress', req.connection.remoteAddress)
+  console.log('req.headers.x-forwarded-for', req.headers['x-forwarded-for'])
+  console.log('req.headers.x-real-ip', req.headers['x-real-ip'])
+  console.log('req.ip', req.ip)
+  console.log('req.ips', req.ips)
+  console.log('--> auth/login', req.body)
   try {
+    if (
+      isEmpty(req.body) ||
+      isEmpty(req.body.email) ||
+      isEmpty(req.body.password) ||
+      typeof req.body.email !== 'string' ||
+      typeof req.body.password !== 'string' ||
+      typeof req.body !== 'object'
+    ) {
+      console.error('ERRO GRAVE: request body enviado errado')
+      return res.status(400).json({
+        success: false,
+        message: 'Erro no formulário. Favor preencher corretamente.'
+      })
+    }
+
+    const captchaValue = req.body.captchaValue
+    const validation = validateLoginForm(req.body)
+
+    if (!validation.success) {
+      return resultSend(req, res, '400', {
+        success: false,
+        message: validation.message,
+        errors: validation.errors
+      })
+    }
+
     let hasCaptcha = await redisClient.hmgetAsync(req.body.email, 'hasCaptcha')
     /* retorno vem null ou string representando true ou false */
     hasCaptcha = hasCaptcha[0]
-    console.log('hasCaptcha - antes', hasCaptcha)
-    console.log('typeof hasCaptcha', typeof hasCaptcha)
     hasCaptcha = hasCaptcha === 'true'
-    console.log('hasCaptcha - depois', hasCaptcha)
-    console.log('hasCaptcha typeof', typeof hasCaptcha, hasCaptcha)
 
     /* Se nao ha captcha retorna null, quando ha retorna string do boolean */
     if (hasCaptcha) {
       console.log('ha captcha no redis')
 
       /* Se ha captcha mas browser nao preencheu */
-      if (!req.body.captchaValue) {
+      if (isEmpty(captchaValue)) {
         console.log('NAO foi preenchido pelo browser')
 
         return resultSend(req, res, '400', {
@@ -74,7 +112,7 @@ export async function doLogin (req, res, next) {
       remoteIP = remoteIP[remoteIP.length - 1]
 
       let verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=' + secretKey +
-        '&response=' + req.body.captchaValue +
+        '&response=' + captchaValue +
         '&remoteip=' + remoteIP
 
       let responseCaptcha = await request(verificationUrl)
@@ -96,24 +134,25 @@ export async function doLogin (req, res, next) {
     console.log('error', error)
   }
 
-  const validationResult = validateLoginForm(req.body)
-  if (!validationResult.success) {
-    return resultSend(req, res, '400', {
-      success: false,
-      message: validationResult.message,
-      errors: validationResult.errors
-    })
-  }
+  passport.authenticate('local-login', (error, token, userData) => {
+    console.log('error', error)
+    console.log('token', token)
+    console.log('userData', userData)
 
-  return passport.authenticate('local-login', (err, token, userData) => {
-    if (err) {
-      if (err.name === 'IncorrectCredentialsError') {
+    if (error) {
+      if (error.name === 'IncorrectCredentialsError') {
         return resultSend(req, res, '400', {
           success: false,
-          message: err.message
+          message: error.message
         })
       }
 
+      return resultSend(req, res, '400', {
+        success: false,
+        message: 'Não foi possível processar o formulário.'
+      })
+    } else if (!userData) {
+      // Em tese nunca cai aqui
       return resultSend(req, res, '400', {
         success: false,
         message: 'Não foi possível processar o formulário.'
@@ -131,7 +170,7 @@ export async function doLogin (req, res, next) {
 
 async function resultSend (req, res, status, respObj) {
   try {
-    respObj.hasCaptchaComponent = false
+    respObj.hasCaptchaComponent = respObj.hasCaptchaComponent || false
 
     const objCaptcha = {
       email: req.body.email,
@@ -150,6 +189,7 @@ async function resultSend (req, res, status, respObj) {
     if (replyCountExpires === 0) {
       const isOk = await redisClient.hmsetAsync(req.body.email, objCaptcha)
       console.log('replyCountExpires cria', isOk)
+      console.log('res.json', respObj)
       return res.status(status).json(respObj)
     }
     /* Se expiorado OU Erro no form (eg. senha nao bate) */
@@ -164,6 +204,7 @@ async function resultSend (req, res, status, respObj) {
         console.log('set hasCaptcha true', hasCaptchaOk)
         respObj.hasCaptchaComponent = true
       }
+      console.log('res.json', respObj)
       return res.status(status).json(respObj)
     }
 
@@ -173,6 +214,7 @@ async function resultSend (req, res, status, respObj) {
     console.log('delIsOK', delIsOK)
     /* Só pra garantir */
     respObj.hasCaptchaComponent = false
+    console.log('res.json', respObj)
     return res.status(status).json(respObj)
 
   /* Só entra aqui se houver erros de modulos */

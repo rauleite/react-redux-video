@@ -1,5 +1,5 @@
 import express from 'express'
-import { emailFormValidate } from './utils'
+import { passwordFormValidate } from './utils'
 
 const User = require('mongoose').model('User')
 const router = new express.Router()
@@ -113,19 +113,19 @@ router.post('/', (req, res, next) => {
 /**
  * Validate the login form
  *
- * @param {object} payload - the HTTP body message
+ * @param {object} body - the HTTP body message
  * @returns {object} The result of validation. Object contains a boolean validation result,
  *                   errors tips, and a global message for the whole form.
  */
-function validateResetForm (payload) {
+function validateResetForm (body) {
   const errors = {}
   let isFormValid = true
   let message = ''
 
-  isFormValid = emailFormValidate(payload, errors, isFormValid)
+  isFormValid = passwordFormValidate(body, errors, isFormValid)
 
   if (!isFormValid) {
-    message = 'Ops, Ocorreu algum errinho.'
+    message = 'Ops, Ocorreu algum erro.'
   }
 
   return {

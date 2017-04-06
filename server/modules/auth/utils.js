@@ -13,25 +13,25 @@ export function validateEmail (email) {
 
 /**
  * Altera o objeto errors adicionando mensagem a propriedade email
- * @param {object} payload
+ * @param {object} user
  * @param {object} errors
  * @param {boolean} isFormValid
  */
-export function emailFormValidate (payload, errors, isFormValid) {
+export function emailFormValidate (user, errors, isFormValid) {
   console.log('emailFormValidate()')
-  if (!payload || typeof payload.email !== 'string' || payload.email.trim().length === 0) {
-    console.log('Forneça um email válido, por favor.')
-    isFormValid = false
-    errors.email = 'Forneça um email válido, por favor.'
+  if (user.email.length === 0) {
+    console.error('ERRO GRAVE: Email vazio')
+    errors.email = 'Erro no formulário. Preencha corretamente.'
+    return false
   }
 
-  if (!validateEmail(payload.email)) {
-    console.log('Formato do email inválido.')
-    isFormValid = false
-    errors.email = 'Formato do email inválido.'
+  if (!validateEmail(user.email)) {
+    console.error('ERRO GRAVE: Email não validado')
+    errors.email = 'Erro no formulário. Preencha corretamente.'
+    return false
   }
 
-  return isFormValid
+  return true
 }
 
 /**
@@ -40,19 +40,30 @@ export function emailFormValidate (payload, errors, isFormValid) {
  * @param {object} errors
  * @param {boolean} isFormValid
  */
-export function passwordFormValidate (payload, errors, isFormValid) {
+export function passwordFormValidate (body, errors, isFormValid) {
   console.log('passwordFormValidate()')
-  if (!payload || typeof payload.password !== 'string' || payload.password.trim().length === 0) {
-    console.log('Forneça um password válido, por favor.')
-    isFormValid = false
-    errors.email = 'Forneça um password válido, por favor.'
+  if (body.password.length < 8) {
+    console.error('ERRO GRAVE: A senha deve ter pelo menos 8 dígitos.')
+    // isFormValid = false
+    errors.password = 'Erro no formulário. Preencha corretamente.'
+    return false
   }
 
-  if (payload.password.length < 8) {
-    console.log('A senha deve ter pelo menos 8 dígitos.')
-    isFormValid = false
-    errors.password = 'A senha deve ter pelo menos 8 dígitos.'
+  if (!validatePassword(body.password)) {
+    console.error('ERRO GRAVE: Senha não validada')
+    // isFormValid = false
+    errors.password = 'Erro no formulário. Preencha corretamente.'
+    return false
   }
 
-  return isFormValid
+  return true
+}
+
+/**
+ * Valida o password
+ * @param {string} password senha em questão
+ */
+function validatePassword (password) {
+  var re = /\s/
+  return !re.test(password)
 }

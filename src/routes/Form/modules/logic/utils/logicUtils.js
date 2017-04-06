@@ -54,23 +54,23 @@ export function inputUser (state, action, fieldNames) {
 
   let user = {}
   fieldNames.forEach(function (f) {
-    user[f] = input.name === f ? input.value.trim() : state.get('user')[f]
+    user[f] = input.name === f ? input.value : state.getIn(['user', f])
   })
   return { user, isField }
 }
 
-export function captchaUser (state, action, propNames) {
-  const captcha = action.payload && action.payload.captcha ? action.payload.captcha : null
-  const captchaState = state.get('captcha')
+// export function captchaUser (state, action, propNames) {
+//   const captcha = action.payload && action.payload.captcha ? action.payload.captcha : null
+//   const captchaState = state.get('captcha')
 
-  let result = {}
+//   let result = {}
 
-  propNames.forEach(p => {
-    result[p] = captcha && captcha[p] && captcha[p] !== captchaState[p] ? captcha[p] : captchaState[p]
-  })
+//   propNames.forEach(p => {
+//     result[p] = captcha && captcha[p] && captcha[p] !== captchaState[p] ? captcha[p] : captchaState[p]
+//   })
 
-  return result
-}
+//   return result
+// }
 
 /**
  * Retorna o State[propName]
@@ -105,7 +105,7 @@ export function isCorrectField (fieldNames, input) {
 }
 
 /**
- * Valida email e ja acionando os devidos styles (Modifica objeto result)
+ * Valida email e ja adiciona os devidos styles (Modifica objeto result)
  * @param {object} result state result
  */
 export function validateEmailWithStyles (result) {
@@ -121,6 +121,32 @@ export function validateEmailWithStyles (result) {
 }
 
 /**
+ * Valida password e ja adiciona os devidos styles (Modifica objeto result)
+ * @param {object} result
+ */
+export function validatePasswordWithStyles (result) {
+  const passwordLt = result.user.password.length < 8
+  const passwordZero = result.user.password.length === 0
+
+  if (passwordZero) {
+    result.styles.password = style.default
+    result.errors.password = ' '
+    return
+  }
+
+  if (!validatePassword(result.user.password)) {
+    result.styles.password = style.error
+    result.errors.password = 'Não pode ter espaços'
+  } else if (passwordLt) {
+    result.styles.password = style.warning
+    result.errors.password = '8 dígitos no mínimo'
+  } else {
+    result.styles.password = style.success
+    result.errors.password = ' '
+  }
+}
+
+/**
  * Valida o email
  * @param {string} email email em questão
  */
@@ -131,6 +157,15 @@ export function validateEmail (email) {
     '(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$'
   ].join(''))
   return re.test(email)
+}
+
+/**
+ * Valida o password
+ * @param {string} password senha em questão
+ */
+export function validatePassword (password) {
+  var re = /\s/
+  return !re.test(password)
 }
 
 /**

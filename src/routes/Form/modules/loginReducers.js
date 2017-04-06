@@ -1,63 +1,67 @@
 import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE, CHANGE_CAPTCHA } from '../consts'
 // import { deepFreeze } from '../../utils/dev-mode'
-import { initialState, objInitialState } from './logic/utils/initialState'
+import { initialState2 } from './logic/utils/initialState'
 import { changeUser } from './logic/loginLogic'
-import { className, extractStateProp } from './logic/utils/logicUtils'
+import { className } from './logic/utils/logicUtils'
+import { Map } from 'immutable'
 
-export default function loginReducer (state = initialState, action) {
+export default function loginReducer (state = initialState2, action) {
   // deepFreeze(state)
   console.log('loginReducer', action.type)
 
   if (action.type === PROCESS_FORM) {
-    return state
-      .set('user', extractStateProp(state, action, 'user'))
-      .set('errors', extractStateProp(state, action, 'errors'))
-      .set('styles', extractStateProp(state, action, 'styles'))
-      .set('successMessage', extractStateProp(state, action, 'successMessage'))
-      .set('button', extractStateProp(state, action, 'button'))
-      .set('captcha', extractStateProp(state, action, 'captcha'))
+    const payload = action.payload
+
+    return state.withMutations(state => {
+      for (let key in payload) {
+        if (payload.hasOwnProperty(key)) {
+          if (payload[key]) {
+            const stateKey = state.get(key)
+            if (Map.isMap(stateKey)) {
+              state.set(key, stateKey.concat(payload[key]))
+              continue
+            }
+            state.set(key, payload[key])
+          }
+        }
+      }
+    })
   } else if (action.type === CHANGE_USER) {
-    const { user, errors, styles, button, captcha } = changeUser(state, action)
-    console.log('reducer captcha', captcha)
-    return state
-      .set('user', user)
-      .set('errors', errors)
-      .set('styles', styles)
-      .set('button', button)
-      .set('captcha', captcha)
+    const stateResult = changeUser(state, action)
+
+    return state.withMutations(state => {
+      for (var key in stateResult) {
+        if (stateResult.hasOwnProperty(key)) {
+          state.set(key, state.get(key).concat(stateResult[key]))
+        }
+      }
+    })
   } else if (action.type === CHANGE_CAPTCHA) {
+    const currentCaptcha = action.payload.captcha
+
+    if (currentCaptcha && currentCaptcha.element) {
+      return state
+        .setIn(['captcha', 'element'], currentCaptcha.element)
+    }
     return state
-      .set('captcha', extractStateProp(state, action, 'captcha'))
   } else if (action.type === LOCATION_CHANGE) {
     const successMessage = localStorage.getItem('successMessage')
     const email = localStorage.getItem('email')
 
-    let hasStorage = false
+    localStorage.removeItem('successMessage')
+    localStorage.removeItem('email')
 
-    let objState = objInitialState()
-    let stylesInit = objState.styles
-    let userInit = objState.user
-
-    if (successMessage) {
-      localStorage.removeItem('successMessage')
-      stylesInit.infoMessage = className.success
-      hasStorage = true
+    if (!successMessage) {
+      console.info('não há localStorage')
+      return initialState2
     }
 
-    if (email) {
-      localStorage.removeItem('email')
-      userInit.email = email
-      hasStorage = true
-    }
-
-    if (!hasStorage) {
-      return initialState
-    }
-
-    return initialState
+    let stateReturn = initialState2
+      .setIn(['styles', 'infoMessage'], className.success)
+      .setIn(['user', 'email'], email)
       .set('successMessage', successMessage)
-      .set('styles', stylesInit)
-      .set('user', userInit)
+
+    return stateReturn
   } else {
     return state
   }
