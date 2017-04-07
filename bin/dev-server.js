@@ -1,10 +1,7 @@
 const project = require('../config/project.config')
 require('./env').load('../server/models/user')
 const connectMongo = require('./mongo-connect')
-const redisClient = require('./redis-connect')
-const expressLimiter = require('express-limiter')
 const app = require('./env').load('../server/main')
-const limiter = expressLimiter(app, redisClient)
 
 // const https = require('https')
 // const fs = require('fs')
@@ -18,18 +15,7 @@ const debug = log('app:bin:dev-server')
 // }
 
 // const server = https.createServer(options, app)
-
-    // total: 100,
-    // lookup: 'connection.remoteAddress',
-    // expire: 1000
 connectMongo(() => {
-  /* Limit requests to 100 per hour per ip address. */
-  limiter({
-    lookup: 'headers.x-forwarded-for',
-    total: 1,
-    expire: 1000 * 60 * 60
-  })
-
   app.listen(project.server_port, (error) => {
     if (error) {
       console.error('Erro --> ', error)

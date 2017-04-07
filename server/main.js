@@ -5,20 +5,15 @@ import path from 'path'
 import webpack from 'webpack'
 import webpackConfig from '../config/webpack.config'
 import project from '../config/project.config'
-// import compress from 'compression'
 import bodyParser from 'body-parser'
 import passport from 'passport'
 import localSignupStrategy from './passport/local-signup'
 import localLoginStrategy from './passport/local-login'
-//import helmet from 'helmet'
-// const redisClient = require('redis').createClient()
+import redisClient from '../bin/redis-connect'
 
 const debug = log('app:bin:dev-server')
-
 const app = express()
-
-// Apply gzip compression
-// app.use(compress())
+const limiter = require('express-limiter')(app, redisClient)
 
 /* Para uso de informacoes do proxy, como ler headers, para o limit-express */
 app.enable('trust proxy', true)
@@ -28,11 +23,29 @@ app.enable('trust proxy', 'loopback')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// pass the passport middleware
+/* pass the passport middleware */
 app.use(passport.initialize())
 
-//app.use(helmet())
+/* Esconde o termo: Express do cabeçalho */
 app.disable('x-powered-by')
+
+/* Max de 20 req por minuto - media de 1 req a cada 3 segundos */
+limiter({
+  path: '*',
+  method: 'get',
+  total: 20,
+  expire: 1000 * 60,
+  lookup: 'ip',
+})
+
+/* Max de 1 req a cada 3 segundos */
+limiter({
+  path: '*',
+  method: 'post',
+  total: 1,
+  expire: 1000 * 2,
+  lookup: 'ip',
+})
 
 app.use('*', (req, res, next) => {
   console.log('-------REQ HEADER---------')
@@ -42,12 +55,11 @@ app.use('*', (req, res, next) => {
       console.log('req.headers.' + key, '-->', element)
     }
   }
+  console.log('req.ip', '-->', req.ip)
+  console.log('req.ips', '-->', req.ips)
   console.log('------- /FIM REQ HEADER---------')
   next()
 })
-
-/* Cabeçalhos protegidos */
-// app.use(helmet())
 
 /* load passport strategies */
 passport.use('local-signup', localSignupStrategy)
@@ -121,5 +133,21 @@ if (project.env === 'development') {
 function carregaRotas () {
   return require('./modules/all-routes')(app)
 }
+
+// function limiteRequest () {
+//   return (req, res, /*next*/) => {
+//     console.error('WARNING GRAVE: Atingiu o limite de requests')
+//     const message = 'A Página está temporariamente fora do ar, tente novamente mais tarde.'
+//     const port = '429'
+//     res.format({
+//       html: function(){
+//         res.status(port).end(message)
+//       },
+//       json: function(){
+//         res.status(port).json(message)
+//       }
+//     })
+//   }
+// } 
 
 module.exports = app

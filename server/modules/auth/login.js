@@ -44,11 +44,6 @@ function validateLoginForm (user) {
   }
 }
 
-// const cacheMiddleware = (seconds) => (req, res, next) => {
-//     res.setHeader("Cache-Control", `public, max-age=${seconds}`)
-//     next()
-// }
-
 export async function doLogin (req, res, next) {
   console.log('req.connection.remoteAddress', req.connection.remoteAddress)
   console.log('req.headers.x-forwarded-for', req.headers['x-forwarded-for'])
