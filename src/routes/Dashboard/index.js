@@ -30,6 +30,8 @@ class DashboardPage extends React.Component {
         this.setState({
           secretData: xhr.response.message
         })
+      } else {
+        localStorage.removeItem('token')
       }
     })
     xhr.send()

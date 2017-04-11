@@ -13,13 +13,6 @@ export default class AppContainer extends PureComponent {
     store  : PropTypes.object.isRequired
   }
 
-  // componentWillMount () {
-  // }
-
-  // shouldComponentUpdate () {
-  //   return true
-  // }
-
   render () {
     const { routes, store } = this.props
 

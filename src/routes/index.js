@@ -9,7 +9,12 @@ import ForgotRoute from './Form/forgot'
 import ResetRoute from './Form/reset'
 import Dashboard from './Dashboard'
 
-import { previneAcessosAuth, persistPrevLoginUrl, proibeAcessosSemAuth } from './utils/hooks'
+import { 
+  previneAcessosAuth,
+  persistPrevLoginUrl,
+  proibeAcessosSemAuth,
+  encerraSessaoExpirada
+} from './utils/hooks'
 
 // PlainRoute objects
 export const createRoutes = (store) => ({
@@ -44,11 +49,6 @@ export const createRoutes = (store) => ({
   },
 
   childRoutes: [
-    // {
-    //   indexRedirect: {
-    //     to: '/'
-    //   }
-    // },
     CounterRoute(store),
     LoginRoute(store),
     SignupRoute(store),

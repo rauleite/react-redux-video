@@ -1,5 +1,6 @@
 import './CoreLayout.scss'
 import '../../styles/core.scss'
+import '../../../node_modules/flexboxgrid/dist/flexboxgrid.css'
 
 import Header from '../../components/Header'
 import React from 'react'

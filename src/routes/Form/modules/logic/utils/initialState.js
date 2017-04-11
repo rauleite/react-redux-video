@@ -37,7 +37,7 @@ export function objInitialState () {
       disabled: true
     },
     captcha: {
-      value: {},
+      value: '',
       element: {},
       hasCaptchaComponent: false
     },

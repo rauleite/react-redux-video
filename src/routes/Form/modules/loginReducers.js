@@ -7,12 +7,12 @@ import { Map } from 'immutable'
 
 export default function loginReducer (state = initialState2, action) {
   // deepFreeze(state)
-  console.log('loginReducer', action.type)
+  console.info('loginReducer', action.type)
+  if (action && action.payload) console.info('--- action.payload.captcha', action.payload.captcha)
 
   if (action.type === PROCESS_FORM) {
     const payload = action.payload
-
-    return state.withMutations(state => {
+    const result = state.withMutations(state => {
       for (let key in payload) {
         if (payload.hasOwnProperty(key)) {
           if (payload[key]) {
@@ -26,23 +26,30 @@ export default function loginReducer (state = initialState2, action) {
         }
       }
     })
+    console.info('state updated', result.toJS())
+    return result
   } else if (action.type === CHANGE_USER) {
-    const stateResult = changeUser(state, action)
-
-    return state.withMutations(state => {
-      for (var key in stateResult) {
-        if (stateResult.hasOwnProperty(key)) {
-          state.set(key, state.get(key).concat(stateResult[key]))
+    const result = changeUser(state, action)
+    const resultState = state.withMutations(state => {
+      for (var key in result) {
+        if (result.hasOwnProperty(key)) {
+          state.set(key, state.get(key).concat(result[key]))
         }
       }
     })
+    console.info('state updated', resultState.toJS())
+
+    return resultState
   } else if (action.type === CHANGE_CAPTCHA) {
     const currentCaptcha = action.payload.captcha
 
     if (currentCaptcha && currentCaptcha.element) {
-      return state
+      const result = state
         .setIn(['captcha', 'element'], currentCaptcha.element)
+      console.info('state updated', result.toJS())
+      return result
     }
+    console.info('state NOT updated', state.toJS())
     return state
   } else if (action.type === LOCATION_CHANGE) {
     const successMessage = localStorage.getItem('successMessage')
@@ -60,6 +67,8 @@ export default function loginReducer (state = initialState2, action) {
       .setIn(['styles', 'infoMessage'], className.success)
       .setIn(['user', 'email'], email)
       .set('successMessage', successMessage)
+
+    console.info('state', stateReturn.toJS())
 
     return stateReturn
   } else {

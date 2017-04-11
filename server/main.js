@@ -9,11 +9,9 @@ import bodyParser from 'body-parser'
 import passport from 'passport'
 import localSignupStrategy from './passport/local-signup'
 import localLoginStrategy from './passport/local-login'
-import redisClient from '../bin/redis-connect'
 
 const debug = log('app:bin:dev-server')
 const app = express()
-const limiter = require('express-limiter')(app, redisClient)
 
 /* Para uso de informacoes do proxy, como ler headers, para o limit-express */
 app.enable('trust proxy', true)
@@ -26,40 +24,19 @@ app.use(bodyParser.urlencoded({ extended: true }))
 /* pass the passport middleware */
 app.use(passport.initialize())
 
-/* Esconde o termo: Express do cabeçalho */
-app.disable('x-powered-by')
-
-/* Max de 20 req por minuto - media de 1 req a cada 3 segundos */
-limiter({
-  path: '*',
-  method: 'get',
-  total: 20,
-  expire: 1000 * 60,
-  lookup: 'ip',
-})
-
-/* Max de 1 req a cada 3 segundos */
-limiter({
-  path: '*',
-  method: 'post',
-  total: 1,
-  expire: 1000 * 2,
-  lookup: 'ip',
-})
-
-app.use('*', (req, res, next) => {
-  console.log('-------REQ HEADER---------')
-  for (var key in req.headers) {
-    if (req.headers.hasOwnProperty(key)) {
-      var element = req.headers[key]
-      console.log('req.headers.' + key, '-->', element)
-    }
-  }
-  console.log('req.ip', '-->', req.ip)
-  console.log('req.ips', '-->', req.ips)
-  console.log('------- /FIM REQ HEADER---------')
-  next()
-})
+// app.use('*', (req, res, next) => {
+//   console.log('-------REQ HEADER---------')
+//   for (var key in req.headers) {
+//     if (req.headers.hasOwnProperty(key)) {
+//       var element = req.headers[key]
+//       console.log('req.headers.' + key, '-->', element)
+//     }
+//   }
+//   console.log('req.ip', '-->', req.ip)
+//   console.log('req.ips', '-->', req.ips)
+//   console.log('------- /FIM REQ HEADER---------')
+//   next()
+// })
 
 /* load passport strategies */
 passport.use('local-signup', localSignupStrategy)
@@ -123,6 +100,32 @@ if (project.env === 'development') {
   // Serving ~/dist by default. Ideally these files should be served by
   // the web server and not the app server, but this helps to demo the
   // server in production.
+  
+  /* Esconde o termo: Express do cabeçalho */
+  app.disable('x-powered-by')
+
+  const redisClient = require('../bin/redis-connect')
+  const limiter = require('express-limiter')(app, redisClient)
+  
+  /* Prevent's DDOs attack */
+
+  /* Max de 75 req por 5 minutos - media de 1 req a cada 4 segundos */
+  limiter({
+    path: '*',
+    method: 'all',
+    total: 75,
+    expire: 1000 * 60 * 5,
+    lookup: 'ip',
+  })
+
+  /* Max de 1 req a cada 3 segundos */
+  limiter({
+    path: '*',
+    method: 'post',
+    total: 1,
+    expire: 1000 * 2,
+    lookup: 'ip',
+  })
 
   app.use(express.static(project.paths.dist()))
 
@@ -133,21 +136,5 @@ if (project.env === 'development') {
 function carregaRotas () {
   return require('./modules/all-routes')(app)
 }
-
-// function limiteRequest () {
-//   return (req, res, /*next*/) => {
-//     console.error('WARNING GRAVE: Atingiu o limite de requests')
-//     const message = 'A Página está temporariamente fora do ar, tente novamente mais tarde.'
-//     const port = '429'
-//     res.format({
-//       html: function(){
-//         res.status(port).end(message)
-//       },
-//       json: function(){
-//         res.status(port).json(message)
-//       }
-//     })
-//   }
-// } 
 
 module.exports = app

@@ -80,7 +80,6 @@ export function inputUser (state, action, fieldNames) {
  * @returns {object} prop
  */
 export function extractStateProp (state, action, propName, isNullAlternative) {
-  console.log('action.payload.' + propName, action.payload[propName])
   return (
   action.payload &&
   /* Se houver payload.propName, mesmo que seja string vazia */

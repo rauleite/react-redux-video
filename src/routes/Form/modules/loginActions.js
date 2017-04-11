@@ -56,7 +56,7 @@ export function processForm (event) {
               password: style.error
             },
             captcha: {
-              value: {},
+              value: '',
               element: captcha.element,
               hasCaptchaComponent: res.hasCaptchaComponent
             },
@@ -85,15 +85,19 @@ export function changeUser (eventOrCaptcha) {
   const target = eventOrCaptcha && eventOrCaptcha.target ? eventOrCaptcha.target : null
   const captchaValue = eventOrCaptcha && !eventOrCaptcha.target ? eventOrCaptcha : null
 
-  return {
+  const actionResult = {
     type: CHANGE_USER,
     payload: {
-      input: target,
-      captcha: {
-        value: captchaValue
-      }
+      input: {},
+      captcha: {}
     }
   }
+
+  /* Be one or another */
+  if (target) actionResult.payload.input = target
+  if (captchaValue) actionResult.payload.captcha.value = captchaValue
+
+  return actionResult
 }
 
 /**
@@ -103,7 +107,6 @@ export function changeUser (eventOrCaptcha) {
  * @return {Function} Redux Thunk
  */
 export function changeCaptcha (element) {
-  console.log('changeCaptcha', element)
   return {
     type: CHANGE_CAPTCHA,
     payload: { captcha: { element } }
