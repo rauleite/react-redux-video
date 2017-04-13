@@ -1,7 +1,9 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
+import config from '../../config/project.config'
+import { getDateNowFormartNormalizer } from '../utils'
 const User = require('mongoose').model('User')
+// const Token = require('mongoose').model('Token')
 const PassportLocalStrategy = require('passport-local').Strategy
-const config = require('../../config/project.config')
 
 /**
  * Return the Passport Local Strategy object.
@@ -44,18 +46,27 @@ module.exports = new PassportLocalStrategy({
         return done(error)
       }
 
-      // exp: 5 dias
-      const payload = {
-        sub: user._id
-      }
+      /* 7 dias */
+      const timeExpires = 60 * 60 * 24 * 7
+      // const timeExpires = 60
 
       // create a token string
-      const token = jwt.sign(payload, config.jwt_secret, { expiresIn: '7d' })
-      const data = {
-        name: user.name
-      }
+      const token = jwt.sign(
+        { sub: user._id },
+        config.jwt_secret,
+        { expiresIn: timeExpires }
+      )
 
-      return done(null, token, data)
+      user.validToken = token
+      user.validTokenExpires = getDateNowFormartNormalizer(timeExpires)
+      user.save(error => {
+        if (error) {
+          console.error('ERRO GRAVE: - token.validToken', error)
+          return done(error)
+        }
+      })
+
+      return done(null, token, { name: user.name })
     })
   })
 })

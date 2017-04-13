@@ -1,7 +1,7 @@
-import { sendUser } from '../utils/ajax'
+import { sendData } from '../utils/ajax'
 
 export function sendForm (path, data, dispatch, callback) {
-  sendUser(path, data, (error, res) => {
+  sendData(path, data, (error, res) => {
     if (error) {
       const errors = error.erros ? error.erros : {}
       errors.summary = error.message

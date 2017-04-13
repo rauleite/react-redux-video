@@ -8,7 +8,7 @@ import { promisifyAll } from 'bluebird'
 import {
   emailFormValidate,
   passwordFormValidate
-} from './utils'
+} from '../../utils'
 
 import projectConfig from '../../../config/project.config'
 

@@ -42,11 +42,6 @@ export function proibeAcessosSemAuth ({ location }, replace) {
   }
 }
 
-export function encerraSessaoExpirada (prevState) {
-  console.log('encerraSessaoExpirada()')
-  console.log('prevState', prevState)
-}
-
 /**
  * Persiste a ultima url quando entra na tela de login, para redirecionamento posterior
  * @param {object} prevState

@@ -1,5 +1,5 @@
 import express from 'express'
-import { passwordFormValidate } from './utils'
+import { passwordFormValidate } from '../../utils'
 
 const User = require('mongoose').model('User')
 const router = new express.Router()

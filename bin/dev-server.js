@@ -1,5 +1,8 @@
 const project = require('../config/project.config')
+
 require('./env').load('../server/models/user')
+require('./env').load('../server/models/captcha')
+
 const connectMongo = require('./mongo-connect')
 const app = require('./env').load('../server/main')
 

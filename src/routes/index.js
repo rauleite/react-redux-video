@@ -9,11 +9,10 @@ import ForgotRoute from './Form/forgot'
 import ResetRoute from './Form/reset'
 import Dashboard from './Dashboard'
 
-import { 
+import {
   previneAcessosAuth,
   persistPrevLoginUrl,
-  proibeAcessosSemAuth,
-  encerraSessaoExpirada
+  proibeAcessosSemAuth
 } from './utils/hooks'
 
 // PlainRoute objects

@@ -4,7 +4,7 @@ import passport from 'passport'
 import {
   emailFormValidate,
   passwordFormValidate
-} from './utils'
+} from '../../utils'
 
 const router = new express.Router()
 

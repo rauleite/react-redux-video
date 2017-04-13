@@ -42,10 +42,6 @@ app.use(passport.initialize())
 passport.use('local-signup', localSignupStrategy)
 passport.use('local-login', localLoginStrategy)
 
-/* load models */
-require('./models/user')
-require('./models/captcha')
-
 if (project.env === 'development') {
   const compiler = webpack(webpackConfig)
 
@@ -100,13 +96,13 @@ if (project.env === 'development') {
   // Serving ~/dist by default. Ideally these files should be served by
   // the web server and not the app server, but this helps to demo the
   // server in production.
-  
+
   /* Esconde o termo: Express do cabeçalho */
   app.disable('x-powered-by')
 
   const redisClient = require('../bin/redis-connect')
   const limiter = require('express-limiter')(app, redisClient)
-  
+
   /* Prevent's DDOs attack */
 
   /* Max de 75 req por 5 minutos - media de 1 req a cada 4 segundos */
@@ -115,7 +111,7 @@ if (project.env === 'development') {
     method: 'all',
     total: 75,
     expire: 1000 * 60 * 5,
-    lookup: 'ip',
+    lookup: 'ip'
   })
 
   /* Max de 1 req a cada 3 segundos */
@@ -124,7 +120,7 @@ if (project.env === 'development') {
     method: 'post',
     total: 1,
     expire: 1000 * 2,
-    lookup: 'ip',
+    lookup: 'ip'
   })
 
   app.use(express.static(project.paths.dist()))

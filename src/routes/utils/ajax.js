@@ -1,20 +1,27 @@
 import { Map } from 'immutable'
 
+const opt = {
+  headers: { 'Content-Type': 'application/json' },
+  method: 'POST',
+  body: {}
+}
+
 /**
  * Faz requisicao ajax de usuario, no client
  * @param {string} path url path
  * @param {object} user User do Obj State
  * @param {function} callback Retorno do xhr
  */
+export async function sendData (path, options, callback) {
+  options.headers = options && options.headers || opt.headers
+  options.method = options && options.method || opt.method
+  options.body = options && options.body || opt.body
 
-export async function sendUser (path, data, callback) {
-  console.info('--> POST', data)
+  options.body = JSON.stringify(options.body)
+
+  console.info('-->', options.method, options.body)
+
   try {
-    const options = {
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
-      body: JSON.stringify(data)
-    }
     const res = await fetch(path, options)
     const resThen = await res.json()
     console.info('res', resThen)
