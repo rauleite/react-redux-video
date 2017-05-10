@@ -5,6 +5,7 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import { Link } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
+import Facebook from '../../Facebook/components/Facebook'
 
 // function onChange (value) {
 //   console.log("Captcha value:", value)
@@ -22,6 +23,7 @@ const Login = ({
   captcha
 }) => (
   <Card >
+    <Facebook />
     <form action='/' onSubmit={onSubmit}>
       <CardTitle title='Entre' subtitle='Faça seu login e bom proveito' />
       { successMessage ? <p className={styles.get('infoMessage')}>{ successMessage }</p> : '' }

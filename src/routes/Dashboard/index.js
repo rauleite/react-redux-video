@@ -1,6 +1,7 @@
 import React from 'react'
 import Auth from '../../modules/Auth'
 import Dashboard from './components/Dashboard'
+import { sendForm } from '../Form/formUtils'
 
 class DashboardPage extends React.Component {
 
@@ -19,22 +20,26 @@ class DashboardPage extends React.Component {
    * This method will be executed after initial rendering.
    */
   componentDidMount () {
-    const xhr = new XMLHttpRequest()
-    xhr.open('get', '/api/dashboard')
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-    // set the authorization HTTP header
-    xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`)
-    xhr.responseType = 'json'
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        this.setState({
-          secretData: xhr.response.message
-        })
-      } else {
+    const options = {
+      method : 'GET',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `bearer ${Auth.getToken()}`
+      }
+    }
+
+    sendForm('/api/dashboard', options, (error, res) => {
+      console.log('error', error)
+      console.log('res', res)
+      
+      if (error) {
         localStorage.removeItem('token')
+      } else {
+        this.setState({
+          secretData: res.message
+        })
       }
     })
-    xhr.send()
   }
 
   /**

@@ -2,24 +2,24 @@ import { style,
   className,
   inputUser,
   validateEmailWithStyles,
-  validatePasswordWithStyles
+  validatePasswordWithStyles,
+  validateNameWithStyles
 } from './utils/logicUtils'
 
 import { objInitialState } from './utils/initialState'
 import { isEmpty } from 'lodash'
 
 export function changeUser (state, action) {
-  const fieldNames = ['email', 'password']
+  const fieldNames = ['name', 'email', 'password']
   const result = objInitialState
 
   const { user } = inputUser(state, action, fieldNames)
 
+  result.user.name = user.name
   result.user.email = user.email
   result.user.password = user.password
 
-  const captcha = action.payload && action.payload.captcha ? action.payload.captcha : false
-  if (captcha) result.captcha = captcha
-
+  validateNameWithStyles(result)
   validateEmailWithStyles(result)
   validatePasswordWithStyles(result)
 
@@ -28,6 +28,7 @@ export function changeUser (state, action) {
   fieldNames.forEach((f) => {
     if (isEmpty(result.user[f])) {
       result.styles[f] = style.default
+      result.errors[f] = ' '
     }
   })
 
@@ -40,13 +41,11 @@ export function changeUser (state, action) {
     errors: result.errors,
     styles: result.styles,
     button: result.button,
-    captcha: result.captcha
   }
 }
 
 function isDisableButton (result, style) {
   let isDisabled = true
-
   if (
     result.styles.password === style.success &&
     result.styles.email === style.success
@@ -54,14 +53,6 @@ function isDisableButton (result, style) {
     isDisabled = false
   } else {
     isDisabled = true
-  }
-
-  if (!isDisabled && result.captcha.hasCaptchaComponent) {
-    if (!isEmpty(result.captcha.value)) {
-      isDisabled = false
-    } else {
-      isDisabled = true
-    }
   }
   return isDisabled
 }

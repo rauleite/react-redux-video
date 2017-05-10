@@ -32,6 +32,7 @@ const config = {
 
   db_uri: 'mongodb://rauleite:senha@localhost/react_app',
   jwt_secret: 'kS?3w_Be=#6YJ+&$',
+  facebook_secret: 'a057ef78137483fb8f401362eba64de3',
 
   email : 'raul.abreu.leite@gmail.com',
   email_pass : 'Ja58Ah58',

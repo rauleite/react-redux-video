@@ -1,5 +1,5 @@
-import { CHANGE_USER } from '../consts'
-import { redirectToPrevUrl } from '../../utils/url'
+import { CHANGE_USER, PROCESS_FORM } from '../consts'
+import { redirectToUrl } from '../../utils/url'
 import { sendForm } from '../formUtils'
 
 /**
@@ -23,11 +23,38 @@ export function changeUser (event) {
 export function processForm (event) {
   event.preventDefault()
   return (dispatch, getState) => {
-    const userState = getState().signup.get('user')
+    const user = getState().signup.get('user').toJS()
+    console.log('user', user)
 
-    sendForm('/auth/signup', userState, dispatch, (res) => {
-      // make a redirect
-      redirectToPrevUrl()
+    sendForm('/auth/signup', { body: user }, (error, res) => {
+      dispatch({
+        type: PROCESS_FORM,
+        payload: {
+          button: {
+            label: 'ENVIANDO...',
+            disabled: true
+          }
+        }
+      })
+      if (error) {
+
+      }
+      console.log(res)
+      console.log(res.success)
+      if (res && res.success) {
+        console.log('entrou')
+        console.log(res)
+        console.log(res.success)
+        dispatch({
+          type: CHANGE_USER,
+          payload: {
+            user
+          }
+        })
+        redirectToUrl('/login')
+      } else {
+
+      }
     })
   }
 }

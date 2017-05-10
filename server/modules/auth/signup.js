@@ -1,7 +1,9 @@
 import express from 'express'
+import { isEmpty } from 'lodash'
 // import validator from 'validator'
 import passport from 'passport'
 import {
+  nameFormValidate,
   emailFormValidate,
   passwordFormValidate
 } from '../../utils'
@@ -9,6 +11,13 @@ import {
 const router = new express.Router()
 
 router.post('/', (req, res, next) => {
+  if (!hasCorrectSignupBody(req.body)) {
+      console.error('ERRO GRAVE: request body enviado errado')
+      return res.status(400).json({
+        success: false,
+        message: 'Erro no formulário. Favor preencher corretamente.'
+      })
+    }
   const validationResult = validateSignupForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -18,9 +27,10 @@ router.post('/', (req, res, next) => {
     })
   }
 
-  return passport.authenticate('local-signup', (err) => {
-    if (err) {
-      if (err.name === 'MongoError' && err.code === 11000) {
+  return passport.authenticate('local-signup', (error) => {
+    if (error) {
+      console.log('ERROR', error)
+      if (error.name === 'MongoError' && error.code === 11000) {
         // the 11000 Mongo code is for a duplication email error
         // the 409 HTTP status code is for conflict error
         return res.status(409).json({
@@ -48,23 +58,20 @@ router.post('/', (req, res, next) => {
 /**
  * Validate the sign up form
  *
- * @param {object} payload - the HTTP body message
+ * @param {object} user - the HTTP body message
  * @returns {object} The result of validation. Object contains a boolean validation result,
  *                   errors tips, and a global message for the whole form.
  */
-function validateSignupForm (payload) {
+function validateSignupForm (user) {
   const errors = {}
   let isFormValid = true
   let message = ''
 
-  if (!payload || typeof payload.name !== 'string' || payload.name.trim().length === 0) {
-    isFormValid = false
-    errors.name = 'Por favor, forneça o seu nome.'
-  }
-
-  isFormValid = emailFormValidate(payload, errors, isFormValid)
-
-  isFormValid = passwordFormValidate(payload, errors, isFormValid)
+  isFormValid = (
+    nameFormValidate(user, errors) &&
+    emailFormValidate(user, errors) &&
+    passwordFormValidate(user, errors)
+  )
 
   if (!isFormValid) {
     message = 'Ops, ocorreu algum equívoco.'
@@ -75,6 +82,19 @@ function validateSignupForm (payload) {
     message,
     errors
   }
+}
+
+function hasCorrectSignupBody (body) {
+  return (
+    !isEmpty(body) &&
+    !isEmpty(body.name) &&
+    !isEmpty(body.email) &&
+    !isEmpty(body.password) &&
+    typeof body === 'object' &&
+    typeof body.name === 'string' &&
+    typeof body.email === 'string' &&
+    typeof body.password === 'string'
+  )
 }
 
 // export default router

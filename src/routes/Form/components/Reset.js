@@ -19,10 +19,10 @@ const Reset = ({
     <form action='/' onSubmit={onSubmit}>
       { successMessage && <p className='success-message'>{ successMessage }</p> }
       { /* IF show or not */ }
-      { !success && !errors.errorForm ?
+      { errors.get('summary') ?
         <div>
           <br />
-          <p className='error-message'>{ errors.summary }</p>
+          <p className='error-message'>{ errors.get('summary') }</p>
           <CardText>
             <Link to='/forgot'>Tente novamente</Link>
           </CardText>
@@ -30,16 +30,16 @@ const Reset = ({
         :
         <div>
           <CardTitle title='Altere' subtitle='Digite uma nova senha.' />
-          { errors.summary && <p className='error-message'>{ errors.summary }</p> }
+          { errors.get('summary') && <p className='error-message'>{ errors.get('summary') }</p> }
           <TextField
             autoFocus
             floatingLabelText='Senha'
             type='password'
             name='password'
             onChange={onChange}
-            errorText={errors.password}
-            floatingLabelShrinkStyle={styles.password}
-            errorStyle={styles.password}
+            errorText={errors.get('password')}
+            floatingLabelShrinkStyle={styles.get('password')}
+            errorStyle={styles.get('password')}
           />
           <br />
           <TextField
@@ -47,13 +47,15 @@ const Reset = ({
             type='password'
             name='confirmePassword'
             onChange={onChange}
-            errorText={errors.confirmePassword}
-            floatingLabelShrinkStyle={styles.confirmePassword}
-            errorStyle={styles.confirmePassword}
+            errorText={errors.get('confirmePassword')}
+            floatingLabelShrinkStyle={styles.get('confirmePassword')}
+            errorStyle={styles.get('confirmePassword')}
           />
           <br />
           <br />
-          <RaisedButton type='submit' label='ALTERAR' primary disabled={button.disabled} />
+          {/*<RaisedButton type='submit' label='ALTERAR' primary disabled={button.disabled} />*/}
+           <RaisedButton type='submit' label={button.get('label') ? button.get('label') : 'ENTRAR'}
+              primary disabled={button.get('disabled')} />
           <br />
           <br />
         </div>

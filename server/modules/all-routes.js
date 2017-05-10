@@ -3,6 +3,8 @@ import signup from './auth/signup'
 import forgot from './auth/forgot'
 import reset from './auth/reset'
 import logout from './auth/logout'
+import social from './auth/social'
+// import redirect from './misc/redirect'
 import dashboard from './api/dashboard'
 
 import authCheck from '../middleware/auth-check'
@@ -16,4 +18,6 @@ module.exports = (app) => {
   app.use('/auth/forgot', forgot)
   app.use('/auth/reset', reset)
   app.use('/auth/logout', logout)
+  app.use('/auth/social', social)
+  // app.use('/misc/redirect', redirect)
 }

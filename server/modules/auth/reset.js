@@ -1,5 +1,9 @@
 import express from 'express'
-import { passwordFormValidate } from '../../utils'
+import { isEmpty } from 'lodash'
+import {
+  passwordFormValidate,
+  passwordAndConfirmePasswordMatchValidate 
+} from '../../utils'
 
 const User = require('mongoose').model('User')
 const router = new express.Router()
@@ -49,6 +53,14 @@ router.get('/:token', (req, res) => {
 })
 
 router.post('/', (req, res, next) => {
+  if (!hasCorrectResetBody(req.body)) {
+    console.error('ERRO GRAVE: request body enviado errado')
+    return res.status(400).json({
+      success: false,
+      message: 'Erro no formulário. Favor preencher corretamente.'
+    })
+  }
+
   const validationResult = validateResetForm(req.body)
 
   if (!validationResult.success) {
@@ -122,7 +134,10 @@ function validateResetForm (body) {
   let isFormValid = true
   let message = ''
 
-  isFormValid = passwordFormValidate(body, errors, isFormValid)
+  isFormValid = (
+    passwordFormValidate(body, errors) &&
+    passwordAndConfirmePasswordMatchValidate(body, errors)
+  )
 
   if (!isFormValid) {
     message = 'Ops, Ocorreu algum erro.'
@@ -133,6 +148,23 @@ function validateResetForm (body) {
     message,
     errors
   }
+}
+
+function hasCorrectResetBody (body) {
+  return (
+    !isEmpty(body) &&
+    !isEmpty(body.email) &&
+    !isEmpty(body.password) &&
+    !isEmpty(body.confirmePassword) &&
+    !isEmpty(body.passwordToken) &&
+    !isEmpty(body.token) &&
+    typeof body === 'object' &&
+    typeof body.email === 'string' &&
+    typeof body.password === 'string' &&
+    typeof body.confirmePassword === 'string' &&
+    typeof body.passwordToken === 'string' &&
+    typeof body.token === 'string'
+  )
 }
 
 export default router

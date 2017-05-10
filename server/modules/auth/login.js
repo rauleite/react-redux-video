@@ -15,58 +15,22 @@ import projectConfig from '../../../config/project.config'
 const passport = promisifyAll(passportSync)
 const router = new express.Router()
 
-router.post('/', (req, res, next) => {
-  doLogin(req, res, next)
-})
-
-/**
- * Validate the login form
- *
- * @param {object} payload - the HTTP body message
- * @returns {object} The result of validation. Object contains a boolean validation result,
- *                   errors tips, and a global message for the whole form.
- */
-function validateLoginForm (user) {
-  const errors = {}
-  let isFormValid
-  let message = ''
-
-  isFormValid = emailFormValidate(user, errors) && passwordFormValidate(user, errors)
-
-  if (!isFormValid) {
-    message = 'Ops, Ocorreu algum erro.'
-  }
-
-  return {
-    success: isFormValid,
-    message,
-    errors
-  }
-}
-
-export async function doLogin (req, res, next) {
-  console.log('req.connection.remoteAddress', req.connection.remoteAddress)
-  console.log('req.headers.x-forwarded-for', req.headers['x-forwarded-for'])
-  console.log('req.headers.x-real-ip', req.headers['x-real-ip'])
-  console.log('req.ip', req.ip)
-  console.log('req.ips', req.ips)
+router.post('/', async (req, res, next) => {
+  // doLogin(req, res, next)
+  // console.log('req.connection.remoteAddress', req.connection.remoteAddress)
+  // console.log('req.headers.x-forwarded-for', req.headers['x-forwarded-for'])
+  // console.log('req.headers.x-real-ip', req.headers['x-real-ip'])
+  // console.log('req.ip', req.ip)
+  // console.log('req.ips', req.ips)
   console.log('--> auth/login', req.body)
   try {
-    if (
-      isEmpty(req.body) ||
-      isEmpty(req.body.email) ||
-      isEmpty(req.body.password) ||
-      typeof req.body.email !== 'string' ||
-      typeof req.body.password !== 'string' ||
-      typeof req.body !== 'object'
-    ) {
+    if (!hasCorrectLoginBody(req.body)) {
       console.error('ERRO GRAVE: request body enviado errado')
       return res.status(400).json({
         success: false,
         message: 'Erro no formulário. Favor preencher corretamente.'
       })
     }
-
     const captchaValue = req.body.captchaValue
     const validation = validateLoginForm(req.body)
 
@@ -161,6 +125,35 @@ export async function doLogin (req, res, next) {
       user: userData
     })
   })(req, res, next)
+})
+
+/**
+ * Validate the login form
+ *
+ * @param {object} payload - the HTTP body message
+ * @returns {object} The result of validation. Object contains a boolean validation result,
+ *                   errors tips, and a global message for the whole form.
+ */
+function validateLoginForm (user) {
+  const errors = {}
+  let isFormValid
+  let message = ''
+
+  isFormValid = emailFormValidate(user, errors) && passwordFormValidate(user, errors)
+
+  if (!isFormValid) {
+    message = 'Ops, Ocorreu algum erro.'
+  }
+
+  return {
+    success: isFormValid,
+    message,
+    errors
+  }
+}
+
+export async function doLogin (req, res, next) {
+  
 }
 
 async function resultSend (req, res, status, respObj) {
@@ -217,6 +210,17 @@ async function resultSend (req, res, status, respObj) {
     console.error('ERRO GRAVE: ', error)
     return
   }
+}
+
+function hasCorrectLoginBody (body) {
+  return (
+    !isEmpty(body) &&
+    !isEmpty(body.email) &&
+    !isEmpty(body.password) &&
+    typeof body === 'object' &&
+    typeof body.email === 'string' &&
+    typeof body.password === 'string'
+  )
 }
 
 export default router

@@ -1,58 +1,21 @@
 import { Map } from 'immutable'
 
-export const initialState = Map({ ...objInitialState() })
-export const initialState2 = objInitialState2()
+export const initialState = initialStateImmutable()
 
 /**
  * Apenas representa o initialState
  */
-export function objInitialState () {
-  return {
-    errors: {
-      email: '',
-      password: '',
-      confirmePassword: '',
-      captcha: '',
-      summary: '',
-      /** Erro de Preenchimento, front */
-      errorForm: false
-    },
-    user: {
-      token: '',
-      passwordToken: '',
-      email: '',
-      password: '',
-      confirmePassword: ''
-    },
-    input: {},
-    styles: {
-      infoMessage: {},
-      email: {},
-      password: {},
-      confirmePassword: {},
-      captcha: {}
-    },
-    button: {
-      label: '',
-      disabled: true
-    },
-    captcha: {
-      value: '',
-      element: {},
-      hasCaptchaComponent: false
-    },
-    /* Vem do server */
-    success: true,
-    successMessage: ''
-  }
-}
+export let objInitialState
+
+(() => { objInitialState = initialStateImmutable().toJS() })()
 
 /**
  * Apenas representa o initialState
  */
-export function objInitialState2 () {
+function initialStateImmutable () {
   return Map({
     errors: Map({
+      name: '',
       email: '',
       password: '',
       confirmePassword: '',
@@ -62,15 +25,17 @@ export function objInitialState2 () {
       errorForm: false
     }),
     user: Map({
-      token: '',
+      name: '',
       passwordToken: '',
       email: '',
       password: '',
-      confirmePassword: ''
+      confirmePassword: '',
+      token: ''
     }),
     input: {},
     styles: Map({
       infoMessage: {},
+      name: {},
       email: {},
       password: {},
       confirmePassword: {},
@@ -90,10 +55,3 @@ export function objInitialState2 () {
     successMessage: ''
   })
 }
-
-/**
- * Apenas representa o initialState
- */
-export let objInitialState22
-
-(() => { objInitialState22 = objInitialState2().toJS() })()

@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
+import { promisifyAll } from 'bluebird'
+
+const bcrypt = promisifyAll(require('bcrypt'))
 
 // define the User model schema
 const UserSchema = new mongoose.Schema({
@@ -13,7 +15,11 @@ const UserSchema = new mongoose.Schema({
   hasCaptchaComponent: Boolean,
   name: String,
   validToken: String,
-  validTokenExpires: Number
+  validTokenExpires: Number,
+  facebookId: String,
+  facebookLink: String,
+  facebookEmail: String,
+  photo: String
 })
 
 /**
@@ -22,8 +28,9 @@ const UserSchema = new mongoose.Schema({
  * @param {string} password
  * @returns {object} callback
  */
-UserSchema.methods.comparePassword = function comparePassword (password, callback) {
-  bcrypt.compare(password, this.password, callback)
+UserSchema.methods.comparePassword = async function comparePassword (password) {
+  const bcryptResult = await bcrypt.compareAsync(password, this.password)
+  return bcryptResult
 }
 
 /**

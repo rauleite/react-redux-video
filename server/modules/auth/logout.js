@@ -12,7 +12,8 @@ router.post('/', async (req, res, next) => {
     return res.status(401).end()
   }
   return res.status(200).json({
-    message: 'Saiu.'
+    message: 'Saiu.',
+    success: true
   })
 })
 

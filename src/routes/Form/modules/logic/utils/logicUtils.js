@@ -1,4 +1,5 @@
 import { orange700, green700, red700, cyan700 } from 'material-ui/styles/colors'
+import { Map } from 'immutable'
 
 /* Para estilos material-ui components */
 export let style = {
@@ -29,26 +30,13 @@ export const messages = {
 }
 
 /**
- * Muda o estado com valors atuais
- * @param {object} result As propriedades deste parametro, devem conter o mesmo nome do State
- */
-export function changeState ({ user, styles, errors, button }) {
-  return {
-    user,
-    styles,
-    errors,
-    button
-  }
-}
-
-/**
  * Handle Comon input
  * @param {object} action
  */
 export function inputUser (state, action, fieldNames) {
   const input = extractStateProp(state, action, 'input')
 
-  console.log('input', input)
+  // console.log('input', input)
 
   const isField = isCorrectField(fieldNames, input)
 
@@ -58,19 +46,6 @@ export function inputUser (state, action, fieldNames) {
   })
   return { user, isField }
 }
-
-// export function captchaUser (state, action, propNames) {
-//   const captcha = action.payload && action.payload.captcha ? action.payload.captcha : null
-//   const captchaState = state.get('captcha')
-
-//   let result = {}
-
-//   propNames.forEach(p => {
-//     result[p] = captcha && captcha[p] && captcha[p] !== captchaState[p] ? captcha[p] : captchaState[p]
-//   })
-
-//   return result
-// }
 
 /**
  * Retorna o State[propName]
@@ -95,12 +70,28 @@ export function extractStateProp (state, action, propName, isNullAlternative) {
  * @param {object} input element input
  * @returns {object}
  */
-export function isCorrectField (fieldNames, input) {
+function isCorrectField (fieldNames, input) {
   let isField = {}
   fieldNames.forEach(function (f) {
     isField[f] = input.name === f
   })
   return isField
+}
+
+/**
+ * Valida email e ja adiciona os devidos styles (Modifica objeto result)
+ * @param {object} result state result
+ */
+export function validateNameWithStyles (result) {
+  if (validateName(result.user.name)) {
+    result.styles.name = style.success
+    result.errors.name = ' '
+    return true
+  } else {
+    result.styles.name = style.warning
+    result.errors.name = '(nome completo)'
+    return false
+  }
 }
 
 /**
@@ -168,37 +159,53 @@ export function validatePassword (password) {
 }
 
 /**
- * Monta o objeto com seus devidos atribuos
- * @param {string} value Valor do campo
- * @param {string} msg Mensagem de erro
+ * Mínimo tem que ser 2 nomes com 2 digitos (eg. 'Ab Cd')
+ * @param {string} name
  */
-export function montaObjMesssages (value, msg) {
-  return {
-    value: value,
-    msg: {
-      empty: msg.empty ? msg.empty : '',
-      small: msg.small ? msg.small : '',
-      notMatch: msg.notMatch ? msg.notMatch : '',
-      correct: msg.correct ? msg.correct : ''
-    }
+function validateName (name) {
+  if (name) {
+    name = name.trim()
+    const names = name.split(' ')
+    return names.length >= 2 && names[0].length >= 2 && names[1].length >= 2
+  } else {
+    return false
   }
 }
 
-// module.exports = {
-//   style,
-//   className
-// }
+/**
+ * Set all state, Map via state.setIn() and Plain Object via state.set()
+ * @param {object} state
+ * @param {object} payload 
+ */
+export function setAllStates (state, payload) {
+  return state.withMutations(state => {
+    for (let key in payload) {
+      if (payload.hasOwnProperty(key)) {
+        if (payload[key]) {
+          const stateKey = state.get(key)
+          if (Map.isMap(stateKey)) {
+            /* Merge old state, with new obj */
+            state.set(key, stateKey.concat(payload[key]))
+            continue
+          }
+          state.set(key, payload[key])
+        }
+      }
+    }
+  })
+}
 
-// /**
-//  * Retorna o input element
-//  * @param {object} state
-//  * @param {object} action
-//  */
-// export function inputElement(state, action) {
-//   return (
-//     action.payload &&
-//     action.payload.input
-//       ? action.payload.input
-//       : state.get('input')
-//   )
-// }
+/**
+ * Set state that are Map like, via state.setIn()
+ * @param {object} state
+ * @param {object} payload
+ */
+export function setMapStates (state, payload) {
+  return state.withMutations(state => {
+    for (var key in payload) {
+      if (payload.hasOwnProperty(key)) {
+        state.set(key, state.get(key).concat(payload[key]))
+      }
+    }
+  })
+}

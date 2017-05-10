@@ -1,11 +1,17 @@
 import Auth from '../../modules/Auth'
 import { redirectToPrevUrl } from '../utils/url'
 import { sendData } from '../utils/ajax'
+import hello from '../../../public/hello.all'
 
 export default (store) => ({
   path: 'logout',
   onEnter: (nextState, replace) => {
-    console.log('nextState', nextState)
+    
+    hello('facebook').logout().then(() => {
+      console.info('hello(facebook).logout()')
+    }, (error) => {
+      console.error('ERROR: ' + error.error.message);
+    })
 
     const opt = {
       headers: {

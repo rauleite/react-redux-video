@@ -17,23 +17,23 @@ const Forgot = ({
   <Card >
     <form action='/' onSubmit={onSubmit}>
       <CardTitle title='Esqueceu sua Senha?' subtitle='Então coloque seu email e resete-a' />
-      { successMessage ? <p className={styles.infoMessage}>{ successMessage }</p> : '' }
-      { errors.summary && <p className='error-message'>{ errors.summary }</p> }
+      { successMessage ? <p className={styles.get('infoMessage')}>{ successMessage }</p> : '' }
+      { errors.get('summary') && <p className='error-message'>{ errors.get('summary') }</p> }
 
       <TextField
         autoFocus
         floatingLabelText='Email'
         name='email'
-        errorText={errors.email}
         onChange={onChange}
-        value={user.email}
-        floatingLabelShrinkStyle={styles.email}
-        errorStyle={styles.email}
+        errorText={errors.get('email')}
+        value={user.get('email')}
+        floatingLabelShrinkStyle={styles.get('email')}
+        errorStyle={styles.get('email')}
       />
       <br />
       <br />
-      <RaisedButton type='submit' label={button.label ? button.label : 'ENTRAR'}
-        primary disabled={button.disabled} />
+      <RaisedButton type='submit' label={button.get('label') ? button.get('label') : 'ENTRAR'}
+        primary disabled={button.get('disabled')} />
       <CardText>
         <Link to='/forgot'>Ou esqueceu a senha?</Link>
       </CardText>

@@ -7,8 +7,8 @@ import webpackConfig from '../config/webpack.config'
 import project from '../config/project.config'
 import bodyParser from 'body-parser'
 import passport from 'passport'
-import localSignupStrategy from './passport/local-signup'
-import localLoginStrategy from './passport/local-login'
+import localSignupStrategy from './strategies/local-signup'
+import localLoginStrategy from './strategies/local-login'
 
 const debug = log('app:bin:dev-server')
 const app = express()
@@ -114,7 +114,7 @@ if (project.env === 'development') {
     lookup: 'ip'
   })
 
-  /* Max de 1 req a cada 3 segundos */
+  /* Max de 1 req a cada 2 segundos */
   limiter({
     path: '*',
     method: 'post',

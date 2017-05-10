@@ -1,42 +1,22 @@
 import { PROCESS_FORM, CHANGE_USER, LOCATION_CHANGE } from '../consts'
 import { deepFreeze } from '../../utils/dev-mode'
 import { initialState } from './logic/utils/initialState'
-import { inputUser } from './logic/utils/logicUtils'
-// successMessage: '',
-// const initialState = Map({
-//   errors: {
-//     name: '',
-//     password: '',
-//     email: '',
-//     summary: ''
-//   },
-//   user: Map({
-//     name: '',
-//     password: '',
-//     email: ''
-//   })
-// })
+import { changeUser } from './logic/signupLogic'
+import { setAllStates, setMapStates } from './logic/utils/logicUtils'
 
 export default function signupReducer (state = initialState, action) {
   deepFreeze(state)
-
-  switch (action.type) {
-    case PROCESS_FORM:
-      return state
-        .set('errors', action.payload.errors)
-        .set('user', action.payload.user)
-
-    case CHANGE_USER:
-      const {
-        user
-      } = inputUser(state, action, ['name', 'email', 'password'])
-
-      return state.set('user', user)
-
-    case LOCATION_CHANGE:
-      return initialState
-
-    default:
-      return state
+  /* *** PROCESS FORM *** */
+  if (action.type === PROCESS_FORM) {
+    return setAllStates(state, action.payload)
+  /* *** CHANGE CHANGE_USER *** */
+  } else if (action.type === CHANGE_USER) {
+    const result = changeUser(state, action)
+    return setMapStates(state, result)
+  /* *** LOCATION CHANGE *** */
+  } else if (action.type === LOCATION_CHANGE) {
+    return initialState
+  } else {
+    return state
   }
 }

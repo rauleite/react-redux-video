@@ -23,8 +23,8 @@ export function processForm (event) {
         successMessage: 'Um segundo, enquanto procuramos seu email na base...'
       }
     })
-    const user = getState().forgot.get('user')
-    sendForm('/auth/forgot', user, dispatch, (error, res) => {
+    const user = getState().forgot.get('user').toJS()
+    sendForm('/auth/forgot', { body: user }, (error, res) => {
       if (error) {
         return dispatch({
           type: PROCESS_FORM,

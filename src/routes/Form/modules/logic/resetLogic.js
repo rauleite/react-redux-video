@@ -1,132 +1,90 @@
 import { isEmpty } from 'lodash'
-import { orange500, green500, red500 } from 'material-ui/styles/colors'
-import { montaObjMesssages, isCorrectField } from './utils/logicUtils'
+import { objInitialState } from './utils/initialState'
 
-const warningStyle = 'warningStyle'
-const defaultStyle = 'defaultStyle'
-const correctStyle = 'correctStyle'
+import {
+  className,
+  inputUser,
+  validateEmailWithStyles,
+  validatePasswordWithStyles,
+  style
+} from './utils/logicUtils'
 
 export function changeUser (state, action) {
   const fieldNames = ['password', 'confirmePassword']
 
-  const st = {
-    password: state.get('user').password,
-    confirme: state.get('user').confirmePassword
-  }
-
-  const styles = objFields(fieldNames)
-  const input = action.payload.input
-
-  const isField = isCorrectField(fieldNames, input)
-
-  // const isField = {
-  //   password: input.name === 'password',
-  //   confirme: input.name === 'confirmePassword'
-  // }
-
-  const password = montaObjMesssages(
-    isField.password ? input.value.trim() : st.password,
-    {
-      empty: 'Tem que digitar uma senha ¬¬',
-      small: 'Deve ter no mínimo 8 caracteres.',
-      notMatch: '=/',
-      correct: '=D'
-    }
-  )
-  const confirme = montaObjMesssages(
-    isField.confirmePassword ? input.value.trim() : st.confirme,
-    {
-      notMatch: 'A senha e confirmação não coincidem.',
-      correct: '=D'
-
-    }
-  )
-
-  let errors = {
-    errorForm: false,
-    summary: ''
-  }
-
-  const button = {
-    disabled: true
-  }
-
-  const user = {
-    password: password.value,
-    confirmePassword: confirme.value,
-    passwordToken: window.location.pathname.replace(/\/reset\//, '')
-  }
+  const result = objInitialState
+  const { user } = inputUser(state, action, fieldNames)
+  result.user = user
+  result.user.passwordToken = window.location.pathname.replace(/\/reset\//, '')
 
   /* Se nao foi digitado nada nos dois campos: Reseta erros */
   if (
-    (isEmpty(password.value)) &&
-    (isEmpty(confirme.value))
+    (isEmpty(result.user.password)) &&
+    (isEmpty(result.user.confirmePassword))
   ) {
-    errors.errorForm = false
-    errors.password = ''
-    errors.confirmePassword = ''
-    return changeState(state, event, user, errors, styles, button, defaultStyle, ['password', 'confirmePassword'])
+    // console.log('isEmpty')
+    result.errors.errorForm = false
+    result.errors.password = ''
+    result.errors.confirmePassword = ''
+    result.styles.password = style.default
+    result.styles.confirmePassword = style.default
+    return changeState(result)
   }
 
-  const passwordLt = password && password.value.length < 8
-  const passwordGt = password && password.value.length >= 8
+  const passwordLt = result.user.password && result.user.password.length < 8
+  const passwordGt = result.user.password && result.user.password.length >= 8
 
   if (passwordLt) {
-    errors.errorForm = true
-    errors.password = password.msg.small
-
-    return changeState(state, event, user, errors, styles, button, warningStyle, ['password'])
+    // console.log('passwordLt')
+    result.errors.errorForm = true
+    result.errors.password = 'Deve ter no mínimo 8 caracteres.'
+    result.styles.password = style.warning
+    return changeState(result)
   }
 
   const isPassAndConfirmMaches = (
-  typeof password.value === 'string' &&
-    typeof confirme.value === 'string' &&
-    password.value === confirme.value
+    typeof result.user.password === 'string' &&
+    typeof result.user.confirmePassword === 'string' &&
+    result.user.password === result.user.confirmePassword
   )
   const isSameLengthButNotMatch = (
-  typeof password.value === 'string' &&
-    typeof confirme.value === 'string' &&
-    confirme.value.length >= password.value.length &&
-    password.value !== confirme.value
+    typeof result.user.password === 'string' &&
+    typeof result.user.confirmePassword === 'string' &&
+    result.user.confirmePassword.length >= result.user.password.length &&
+    result.user.password !== result.user.confirmePassword
   )
   if (passwordGt || isSameLengthButNotMatch || isPassAndConfirmMaches) {
+    // console.log('passwordGt || isSameLengthButNotMatch || isPassAndConfirmMaches')
     if (isSameLengthButNotMatch) {
-      errors.errorForm = true
-      errors.password = password.msg.notMatch
-      errors.confirmePassword = confirme.msg.notMatch
-      return changeState(state, event, user, errors, styles, button, defaultStyle, ['password', 'confirmePassword'])
+      // console.log('isSameLengthButNotMatch')
+      result.errors.errorForm = true
+      result.errors.password = '=/'
+      result.errors.confirmePassword = 'A senha e confirmação não coincidem.'
+      result.styles.password = style.error
+      result.styles.confirmePassword = style.error
+      return changeState(result)
     }
     if (isPassAndConfirmMaches) {
-      button.disabled = false
-      errors.errorForm = false
-      errors.password = password.msg.correct
-      errors.confirmePassword = confirme.msg.correct
-      return changeState(state, event, user, errors, styles, button, correctStyle, ['password', 'confirmePassword'])
+      // console.log('isPassAndConfirmMaches')
+      result.button.disabled = false
+      result.errors.errorForm = false
+      result.errors.password = '=D'
+      result.errors.confirmePassword = '=D'
+      result.styles.password = style.success
+      result.styles.confirmePassword = style.success
+      result.button.disabled = false
+      return changeState(result)
     }
     if (passwordGt) {
-      errors.errorForm = false
-      errors.password = password.msg.correct
-      return changeState(state, event, user, errors, styles, button, correctStyle, ['password'])
+      // console.log('passwordGt')
+      result.errors.errorForm = false
+      result.errors.password = '=D'
+      result.errors.confirmePassword = ' '
+          result.styles.password = style.success
+      result.styles.confirmePassword = style.warning
+      return changeState(result)
     }
   }
-}
-
-/**
-  * Monta objeto
-  * @param {Array} fieldNames Field name
-  * @return {object} Objeto montado
-*/
-function objFields (fieldNames) {
-  const styles = {}
-  fieldNames.forEach(f => {
-    styles[f] = {
-      warningStyle: { color: orange500 },
-      correctStyle: { color: green500 },
-      defaultStyle: { color: red500 }
-    }
-  })
-
-  return styles
 }
 
 /**
@@ -136,34 +94,11 @@ function objFields (fieldNames) {
  * @param {string} styleType
  * @param {Array} fieldsStyle
  */
-function changeState (
-  state, event, user, errors, styles, button, styleType, fieldsStyle) {
-  const style = {}
-  /* Configura campo e estilos corretos */
-  fieldsStyle.forEach((f) => {
-    if (styles.hasOwnProperty(f)) {
-      style[f] = styles[f][styleType]
-    } else {
-      console.error('styles.hasOwnProperty(f)')
-    }
-  })
-
+function changeState (result) {
   return {
-    style: style,
-    errors,
-    button,
-    user
+    user: result.user,
+    errors: result.errors,
+    styles: result.styles,
+    button: result.button
   }
 }
-
-// /**
-//  * Função que altera (não immutable) o objeto errors
-//  * @param {string} atributo Representa o atributo
-//  * @param {string} msg Mensagem específica do atributo
-//  */
-// function configuraFieldErros (atributo, msg, hasError) {
-//   if (hasError)
-//     this.errorForm = hasError
-
-//   this[atributo] = msg
-// }

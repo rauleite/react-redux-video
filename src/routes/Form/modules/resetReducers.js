@@ -2,69 +2,28 @@ import { PROCESS_FORM, ON_ENTER_HOOK, CHANGE_USER, LOCATION_CHANGE } from '../co
 import { deepFreeze } from '../../utils/dev-mode'
 import { changeUser } from './logic/resetLogic'
 import { initialState } from './logic/utils/initialState'
+import { setAllStates, setMapStates } from './logic/utils/logicUtils'
 
 export default function resetReducer (state = initialState, action) {
   deepFreeze(state)
   console.log('resetReducer', action.type)
+  /* *** PROCESS FORM *** */
+  if (action.type === PROCESS_FORM) {
+    return setAllStates(state, action.payload)
 
-  switch (action.type) {
-    case PROCESS_FORM:
-      // const result = processForm(state, action)
-      return state
-        .set('errors',
-          action.payload.errors
-            ? action.payload.errors
-            : state.get('errors')
-      )
-        .set('styles',
-          action.payload.styles
-            ? action.payload.styles
-            : state.get('styles')
-      )
-        .set('button',
-          action.payload.button
-            ? action.payload.button
-            : state.get('button')
-      )
-        .set('successMessage',
-          action.payload.successMessage
-            ? action.payload.successMessage
-            : state.get('successMessage')
-      )
+  /* *** ON ENTER HOOK *** */
+  } else if (action.type === ON_ENTER_HOOK) {
+    return setAllStates(state, action.payload)
 
-    case ON_ENTER_HOOK:
-      const resultHook = state
-        .set('user',
-          action.payload.user
-            ? action.payload.user
-            : state.get('user')
-      )
-        .set('errors',
-          action.payload.errors
-            ? action.payload.errors
-            : state.get('errors')
-      )
-        .set('success', action.payload.success)
+    /* *** CHANGE USER *** */
+  } else if (action.type === CHANGE_USER) {
+    const result = changeUser(state, action)
+    return setMapStates(state, result)
 
-        .set('successMessage',
-          action.payload.successMessage || state.get('successMessage'))
-
-      return resultHook
-
-    case CHANGE_USER:
-      const { style, errors, button, user } = changeUser(state, action)
-
-      return (
-      state.set('styles', style)
-        .set('errors', errors)
-        .set('button', button)
-        .set('user', user)
-      )
-
-    case LOCATION_CHANGE:
-      return initialState
-
-    default:
-      return state
+  /* *** LOCATION CHANGE *** */
+  } else if (action.type === LOCATION_CHANGE) {
+    return initialState
+  } else {
+    return state
   }
 }

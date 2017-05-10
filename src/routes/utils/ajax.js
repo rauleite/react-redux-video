@@ -2,8 +2,7 @@ import { Map } from 'immutable'
 
 const opt = {
   headers: { 'Content-Type': 'application/json' },
-  method: 'POST',
-  body: {}
+  method: 'POST'
 }
 
 /**
@@ -15,11 +14,13 @@ const opt = {
 export async function sendData (path, options, callback) {
   options.headers = options && options.headers || opt.headers
   options.method = options && options.method || opt.method
-  options.body = options && options.body || opt.body
+  if (options && options.body) {
+    options.body = options && options.body
+    options.body = JSON.stringify(options.body)
+  }
 
-  options.body = JSON.stringify(options.body)
 
-  console.info('-->', options.method, options.body)
+  console.info('-->', options.method, path, options)
 
   try {
     const res = await fetch(path, options)
@@ -29,15 +30,17 @@ export async function sendData (path, options, callback) {
     let error = false
 
     if (!resThen.success) {
-      console.error('Erro no retorno -- !resThen.success')
       error = {
         erros: resThen.errors,
         message: resThen.message
       }
-      console.error('error', error)
+      
+      if (callback && typeof callback === 'function'){
+        return callback(error)
+      }
     }
 
-    return callback(error, resThen)
+    return callback(null, resThen)
   } catch (error) {
     console.error('ERRO GRAVE:', error)
   }

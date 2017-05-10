@@ -11,23 +11,6 @@ export function processForm (event) {
   event.preventDefault()
 
   return (dispatch, getState) => {
-    // const errors = {}
-    // const captcha = getState().login.get('captcha')
-    // console.log('captcha', captcha)
-
-    // if (isEmpty(captcha)) {
-    //   errors.summary = 'É necessário o preenchimento correto do captcha'
-    //   return dispatch({
-    //     type: PROCESS_FORM,
-    //     payload: {
-    //       errors,
-    //       button: {
-    //         label: 'ERRO...',
-    //         disabled: true
-    //       }
-    //     }
-    //   })
-    // }
     dispatch({
       type: PROCESS_FORM,
       payload: {
@@ -41,8 +24,8 @@ export function processForm (event) {
     const captcha = getState().login.get('captcha').toJS()
     const captchaValue = captcha.value || {}
 
-    sendForm('/auth/login', { body: { ...user, captchaValue } }, dispatch, (error, res) => {
-      console.log('res', res)
+    sendForm('/auth/login', { body: { ...user, captchaValue } }, (error, res) => {
+      console.log('res login', res)
       if (error) {
         if (captcha.hasCaptchaComponent) captcha.element.reset()
         return dispatch({

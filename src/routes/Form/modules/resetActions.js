@@ -24,9 +24,9 @@ export function changeUser (event) {
 export function processForm (event) {
   event.preventDefault()
   return (dispatch, getState) => {
-    const userState = getState().reset.get('user')
-
-    sendForm('/auth/reset', userState, dispatch, (error, res) => {
+    const user = getState().reset.get('user').toJS()
+    console.log('user', user)
+    sendForm('/auth/reset', { body: user }, (error, res) => {
       if (error) {
         return dispatch({
           type: PROCESS_FORM,

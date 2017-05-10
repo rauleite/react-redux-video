@@ -4,6 +4,7 @@ import nodemailer from 'nodemailer'
 import config from '../../../config/project.config'
 import mongoose from 'mongoose'
 import Promise from 'bluebird'
+import { isEmpty } from 'lodash'
 // import asyncUtils from '../../../utils/asyncUtils'
 import { emailFormValidate } from '../../utils'
 
@@ -14,6 +15,16 @@ Promise.promisifyAll(crypto)
 const router = new express.Router()
 
 router.post('/', async (req, res, next) => {
+  console.log('--> auth/forgot', req.body)
+
+  if (!hasCorrectForgotBody(req.body)) {
+    console.error('ERRO GRAVE: request body enviado errado')
+    return res.status(400).json({
+      success: false,
+      message: 'Erro no formulário. Favor preencher corretamente.'
+    })
+  }
+
   const validationResult = validateForgotForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -106,6 +117,15 @@ function mailOptions (user, req, token) {
       Caso você não tenha feito esta solicitação, por favor ignore este email. Assim, sua senha permanecerá inalterada.
     `
   }
+}
+
+function hasCorrectForgotBody (body) {
+  return (
+    !isEmpty(body) &&
+    !isEmpty(body.email) &&
+    typeof body === 'object' &&
+    typeof body.email === 'string'
+  )
 }
 
 // export default router
