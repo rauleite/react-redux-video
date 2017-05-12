@@ -3,8 +3,7 @@ import { Router, browserHistory } from 'react-router'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Provider } from 'react-redux'
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import theme from './theme'
 
 export default class AppContainer extends PureComponent {
 
@@ -17,7 +16,7 @@ export default class AppContainer extends PureComponent {
     const { routes, store } = this.props
 
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+      <MuiThemeProvider muiTheme={theme}>
         <Provider store={store}>
           <div style={{ height: '100%' }}>
             <Router history={browserHistory} children={routes} />

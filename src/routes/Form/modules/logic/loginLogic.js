@@ -14,8 +14,8 @@ export function changeUser (state, action) {
 
   const { user } = inputUser(state, action, fieldNames)
 
-  result.user.email = user.email
-  result.user.password = user.password
+  result.user.email = user.email ? user.email.trim() : user.email
+  result.user.password = user.password ? user.password.trim() : user.password
 
   const captcha = action.payload && action.payload.captcha ? action.payload.captcha : false
   if (captcha) result.captcha = captcha

@@ -40,30 +40,47 @@ const Navbar = () => (
  * @returns elementoHtml
  */
 function links () {
-  const linksNoAuth = [
+  const linksNotShowAuth = [
     '/login',
-    '/signup?param1=oi&param2=hello',
-    '/forgot'
+    '/signup',
+    '/forgot',
+    '/counter'
   ]
 
-  const labelLinksNoAuth = [
+  const labelLinksNotShowAuth = [
     'login',
     'cadastre-se',
-    'forgot'
+    'forgot',
+    'counter'
+  ]
+
+  const linksShowAuth = [
+    '/counter',
+    '/dashboard',
+    '/logout'
+  ]
+
+  const labelNotShowAuth = [
+    'counter',
+    'dashboard',
+    'logout'
   ]
 
   if (Auth.isUserAuthenticated()) {
-    return (
-      <li key={'logout'}>
-        <Link to='/logout'> sair
-        </Link>
-      </li>)
-  } else {
-    return map(linksNoAuth, (value, index) => {
+    return map(linksShowAuth, (value, index) => {
       return (
         <li key={index}>
           <Link to={value}>
-            {labelLinksNoAuth[index]}
+            {labelNotShowAuth[index]}
+          </Link>
+        </li>)
+    })
+  } else {
+    return map(linksNotShowAuth, (value, index) => {
+      return (
+        <li key={index}>
+          <Link to={value}>
+            {labelLinksNotShowAuth[index]}
           </Link>
         </li>)
     })

@@ -1,4 +1,5 @@
 import 'babel-polyfill'
+import 'babel-core/register'
 import express from 'express'
 import log from 'debug'
 import path from 'path'

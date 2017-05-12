@@ -1,14 +1,14 @@
 import React from 'react'
 import hello from '../../../../public/hello.all'
+// import '../../../styles/icons/scss/material-design-iconic-font.scss'
+import FacebookButton from '../../../components/Buttons/FacebookButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import { sendForm } from '../../Form/formUtils'
 import { redirectToPrevUrl } from '../../utils/url'
 import Auth from '../../../modules/Auth'
 
 export const Facebook = (props) => (
-  <RaisedButton onClick={onclick} primary={true}>
-    Facebook
-  </RaisedButton>
+  <FacebookButton onClick={ onclick } ></FacebookButton>
 )
 
 function onclick () {

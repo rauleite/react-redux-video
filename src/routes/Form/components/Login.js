@@ -1,15 +1,13 @@
-import { Card, CardText, CardTitle } from 'material-ui/Card'
 import React, { PropTypes } from 'react'
-import ReCAPTCHA from 'react-google-recaptcha'
-
-import { Link } from 'react-router'
+import { Card, CardText, CardTitle } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import Facebook from '../../Facebook/components/Facebook'
+import ReCAPTCHA from 'react-google-recaptcha'
 
-// function onChange (value) {
-//   console.log("Captcha value:", value)
-// }
+import { Link } from 'react-router'
+import '../../../styles/icons/scss/material-design-iconic-font.scss'
+import '../../../styles/core.scss'
 
 const Login = ({
   onSubmit,
@@ -23,14 +21,19 @@ const Login = ({
   captcha
 }) => (
   <Card >
-    <Facebook />
     <form action='/' onSubmit={onSubmit}>
-      <CardTitle title='Entre' subtitle='Faça seu login e bom proveito' />
+      <CardTitle
+        title={<i className='zmdi zmdi-account zmdi-hc-3x' ></i>}
+        subtitle='Faça seu login e bom proveito' />
+
       { successMessage ? <p className={styles.get('infoMessage')}>{ successMessage }</p> : '' }
       { errors.get('summary') && <p className='error-message'>{ errors.get('summary') }</p> }
 
+      <p><Facebook /></p>
+      <hr className='hr-text' data-content='Ou' />
       <TextField
-        floatingLabelText='Email'
+        floatingLabelText={<i className='zmdi zmdi-email zmdi-hc-lg'></i>}
+        hintText='Email'
         tabIndex='1'
         autoFocus
         name='email'
@@ -42,7 +45,8 @@ const Login = ({
       />
       <br />
       <TextField
-        floatingLabelText='Senha'
+        floatingLabelText={<i className='zmdi zmdi-key zmdi-hc-lg'></i>}
+        hintText='Senha'
         tabIndex='2'
         type='password'
         name='password'
@@ -60,12 +64,13 @@ const Login = ({
       <RaisedButton type='submit' label={button.get('label') ? button.get('label') : 'ENTRAR'}
         primary disabled={button.get('disabled')} />
       <CardText>
-        <Link to='/forgot'>Ou esqueceu a senha?</Link>
+        <Link to='/forgot'><i className='zmdi zmdi-help'></i> Esqueceu a senha?</Link>
       </CardText>
       <CardText>
-        Não possui uma conta?<Link to={'/signup'}> Crie uma</Link>.
+        Ainda não tem cadastro?<Link to={'/signup'}> <i className='zmdi zmdi-account-add'></i> Crie uma conta</Link>.
       </CardText>
     </form>
+    <br />
   </Card>
 )
 

@@ -1,0 +1,25 @@
+/**
+  @media only screen...
+*/
+@mixin media-only($viewport-mixin, $action) {
+  /* Se screen for xs, esconde */
+  @media only #{$viewport-mixin} {
+    @if $action == "hidden" {
+      display: none;
+      visibility: hidden;
+    }
+  }
+}
+
+/**
+  @media not screen...
+*/
+@mixin media-not($viewport-mixin, $action) {
+  /* Se screen for xs, esconde */
+  @media not #{$viewport-mixin} {
+    @if $action == "hidden" {
+      display: none;
+      visibility: hidden;
+    }
+  }
+}

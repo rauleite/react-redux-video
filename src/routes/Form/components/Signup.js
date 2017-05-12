@@ -1,5 +1,8 @@
 import { Card, CardText, CardTitle } from 'material-ui/Card'
 import React, { PropTypes } from 'react'
+import Facebook from '../../Facebook/components/Facebook'
+
+import '../../../styles/icons/scss/material-design-iconic-font.scss'
 
 import { Link } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -17,14 +20,17 @@ const Signup = ({
   <Card>
     <form action='/' onSubmit={onSubmit}>
       <CardTitle
-        title='Cadastre-se'
+        title={<i className='zmdi zmdi-account-add zmdi-hc-3x'></i>}
         subtitle='Tenha acesso a muito conteúdo [significativo] gratuitamente'
       />
       {errors.summary && <p className='error-message'> {errors.summary} </p>}
       <div>
+        <p><Facebook /></p>
+        <hr className='hr-text' data-content='Ou' />
         <TextField
+          floatingLabelText={<i className='zmdi zmdi-account zmdi-hc-lg'></i>}
+          hintText='Nome'
           tabIndex='1'
-          floatingLabelText='Nome'
           name='name'
           autoFocus
           onChange={onChange}
@@ -37,8 +43,9 @@ const Signup = ({
       </div>
       <div>
         <TextField
+          floatingLabelText={<i className='zmdi zmdi-email zmdi-hc-lg'></i>}
+          hintText='Email'
           tabIndex='2'
-          floatingLabelText='Email'
           name='email'
           onChange={onChange}
 
@@ -50,8 +57,9 @@ const Signup = ({
       </div>
       <div>
         <TextField
+          floatingLabelText={<i className='zmdi zmdi-key zmdi-hc-lg'></i>}
+          hintText='Senha'
           tabIndex='3'
-          floatingLabelText='Senha'
           type='password'
           name='password'
           onChange={onChange}
@@ -73,7 +81,7 @@ const Signup = ({
       </div>
       <CardText>
         Já possui uma conta?
-        <Link to={'/login'}> Logue-se
+        <Link to={'/login'}> <i className='zmdi zmdi-account' ></i> Logue-se
         </Link>
       </CardText>
     </form>

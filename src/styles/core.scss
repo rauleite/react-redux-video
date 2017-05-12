@@ -1,7 +1,52 @@
+@import 'mixins';
+@import 'variables';
+
 body {
   margin: 0;
   font-size: 16px;
+  overflow-x: hidden;
 }
+
+// ::-webkit-scrollbar {
+//     display: none;
+// }
+
+/* ---------- Responsividade ---------- */
+
+.hidden {
+  &-xs {
+    @include media-only($xs-media, "hidden");
+  }
+  &-sm {
+    @include media-only($sm-media, "hidden");
+  }
+  &-md {
+    @include media-only($md-media, "hidden");
+  }
+  &-lg {
+    @include media-only($lg-media, "hidden");
+  }
+}
+
+.show {
+  &-xs {
+    @include media-not($xs-media, "hidden");
+  }
+  &-sm {
+    @include media-not($sm-media, "hidden");
+  }
+  &-md {
+    @include media-not($md-media, "hidden");
+  }
+  &-lg {
+    @include media-not($lg-media, "hidden");
+  }
+}
+
+/* Para tirar horizontal scroll do flexboxgrid */
+// .container {
+//   max-width: calc(100% - 10em);
+// }
 
 a {
   color: #00bcd4;
@@ -42,12 +87,6 @@ a:hover {
   margin: 0 8px;
 }
 
-/*.container {
-  margin: 0 auto;
-  text-align: center;
-  width: 700px;
-}*/
-
 .card-heading {
   padding: 16px;
 }
@@ -69,6 +108,40 @@ a:hover {
 .warning-message {
   padding: 0 16px;
   color: #ff9800;
+}
+
+.hr-text {
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+  &:before {
+    content: '';
+    // use the linear-gradient for the fading effect
+    // use a solid background color for a solid bar
+    background: linear-gradient(to right, transparent, #e4e4e4, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+  }
+  &:after {
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    // this is really the only tricky part, you need to specify the background color of the container element...
+    color: #e4e4e4;
+    background-color: #303030;
+  }
 }
 
 // Just change "red" to any color

@@ -16,8 +16,8 @@ export function changeUser (state, action) {
   const { user } = inputUser(state, action, fieldNames)
 
   result.user.name = user.name
-  result.user.email = user.email
-  result.user.password = user.password
+  result.user.email = user.email ? user.email.trim() : user.email
+  result.user.password = user.password ? user.password.trim() : user.password
 
   validateNameWithStyles(result)
   validateEmailWithStyles(result)

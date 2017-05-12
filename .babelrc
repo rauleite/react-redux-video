@@ -6,5 +6,11 @@
   "ignore": [
     "node_modules"
   ],
-   "plugins": ["async-to-promises"]
+   "plugins": [
+    //  "async-to-promises",
+     ["transform-runtime", {
+      "polyfill": false,
+      "regenerator": true
+    }]
+  ]
 }
