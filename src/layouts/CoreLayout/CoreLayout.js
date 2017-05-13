@@ -10,18 +10,18 @@ export const CoreLayout = ({ children }) => (
     <Header />
     <div className='row'>
 
-      <div className='col-sm-3'>
+      <div className='col-sm-2 col-md-3'>
         <div className='box hidden-xs'>
         </div>
       </div>
       
-      <div className='col-xs-12 col-sm-6 center-xs' >
+      <div className='col-xs-12 col-sm-8 col-md-6 center-xs' >
         <div className='box'>
           {children}
         </div>
       </div>
 
-      <div className='col-sm-3'>
+      <div className='col-sm-2 col-md-3'>
         <div className='box hidden-xs'>
         </div>
       </div>

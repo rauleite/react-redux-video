@@ -1,7 +1,10 @@
+import { IndexLink, Link } from 'react-router'
+
 import './Navbar.scss'
 import '../../styles/core.scss'
 
-import { IndexLink, Link } from 'react-router'
+import Menu from '../Menu'
+
 import { map } from 'lodash'
 
 import Auth from '../../modules/Auth'
@@ -10,37 +13,40 @@ import React from 'react'
 const Navbar = () => (
   <nav className='navbar'>
     <div className='container-fluid'>
-      <div className='row '>
-        <div className='col-md-4'>
+      <div className='row'>
+
+        <div className='col-xs-2'>
           <div className='box'>
             <IndexLink to='/'>
               Melhore.me
             </IndexLink>
           </div>
+
         </div>
-        <div className='col-md-4'>
+
+        <div className='col-xs-4'>
           <div className='box'>
-            <span>&nbsp;</span>
+            <span>oi</span>
           </div>
         </div>
-        <div className='col-md-4'>
-          <div className='box'>
+
+        <div className='col-xs-6'>
+          <div className='box hidden-xs'>
             <ul className='nav nav-right'>
               {links()}
             </ul>
           </div>
+          <div className='box show-xs nav-right'>
+            <Menu links={ linksLabel() } />
+          </div>
         </div>
+
       </div>
     </div>
   </nav>
 )
 
-/**
- * Cria os links do lado direito do Navbar
- * @returns elementoHtml
- */
-function links () {
-  const linksNotShowAuth = [
+const linksNotShowAuth = [
     '/login',
     '/signup',
     '/forgot',
@@ -66,6 +72,11 @@ function links () {
     'logout'
   ]
 
+/**
+ * Cria os links do lado direito do Navbar
+ * @returns elementoHtml
+ */
+function links () {
   if (Auth.isUserAuthenticated()) {
     return map(linksShowAuth, (value, index) => {
       return (
@@ -83,6 +94,34 @@ function links () {
             {labelLinksNotShowAuth[index]}
           </Link>
         </li>)
+    })
+  }
+}
+
+/**
+ * Cria os links do lado direito do Navbar
+ * @returns elementoHtml
+ */
+function linksLabel () {
+  if (Auth.isUserAuthenticated()) {
+    return map(linksShowAuth, (value, index) => {
+      return (
+        // <li key={index}>
+          <Link to={value}>
+            {labelNotShowAuth[index]}
+          </Link>
+        // </li>
+      )
+    })
+  } else {
+    return map(linksNotShowAuth, (value, index) => {
+      return (
+        // <li key={index}>
+          <Link to={value}>
+            {labelLinksNotShowAuth[index]}
+          </Link>
+        // </li>
+      )
     })
   }
 }

@@ -25,7 +25,7 @@ const Signup = ({
       />
       {errors.summary && <p className='error-message'> {errors.summary} </p>}
       <div>
-        <p><Facebook /></p>
+        <p /><Facebook />
         <hr className='hr-text' data-content='Ou' />
         <TextField
           floatingLabelText={<i className='zmdi zmdi-account zmdi-hc-lg'></i>}

@@ -29,7 +29,7 @@ const Login = ({
       { successMessage ? <p className={styles.get('infoMessage')}>{ successMessage }</p> : '' }
       { errors.get('summary') && <p className='error-message'>{ errors.get('summary') }</p> }
 
-      <p><Facebook /></p>
+      <p /><Facebook />
       <hr className='hr-text' data-content='Ou' />
       <TextField
         floatingLabelText={<i className='zmdi zmdi-email zmdi-hc-lg'></i>}
