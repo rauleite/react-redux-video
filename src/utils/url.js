@@ -20,3 +20,12 @@ export function redirectToPrevUrl () {
 export function redirectToUrl (pathname) {
   browserHistory.push(pathname)
 }
+
+/**
+ * Retorna se é ou não o path informado
+ * @param {string} pathname
+ * @return {boolean}
+ */
+export function isUrl (pathname) {
+  return location.pathname === pathname
+}

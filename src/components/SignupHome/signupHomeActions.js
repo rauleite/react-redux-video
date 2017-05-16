@@ -1,6 +1,9 @@
-import { CHANGE_USER, PROCESS_FORM } from '../consts'
-import { redirectToUrl } from '../../../utils/url'
-import { sendForm } from '../formUtils'
+import { 
+  CHANGE_USER_SIGNUP_HOME,
+  PROCESS_FORM_SIGNUP_HOME
+} from '../../routes/Form/consts'
+import { sendForm } from '../../routes/Form/formUtils'
+import { redirectToUrl } from '../../utils/url'
 
 /**
  * Action para onChange
@@ -10,7 +13,7 @@ import { sendForm } from '../formUtils'
  */
 export function changeUser (event) {
   return {
-    type: CHANGE_USER,
+    type: CHANGE_USER_SIGNUP_HOME,
     payload: {
       input: event.target
     }
@@ -28,7 +31,7 @@ export function processForm (event) {
 
     sendForm('/auth/signup', { body: user }, (error, res) => {
       dispatch({
-        type: PROCESS_FORM,
+        type: PROCESS_FORM_SIGNUP_HOME,
         payload: {
           button: {
             label: 'ENVIANDO...',
@@ -46,7 +49,7 @@ export function processForm (event) {
         console.log(res)
         console.log(res.success)
         dispatch({
-          type: CHANGE_USER,
+          type: CHANGE_USER_SIGNUP_HOME,
           payload: {
             user
           }

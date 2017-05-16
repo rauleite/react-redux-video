@@ -11,14 +11,14 @@ export default (store) => ({
           dependencies for bundling */
 
       // dynamic imports
-      const Login = require('./containers/SingupContainer').default
+      const Signup = require('./containers/SignupContainer').default
       const reducer = require('./modules/signupReducers').default
 
-      /*  Add the reducer to the store on key 'login'  */
+      /*  Add the reducer to the store on key 'signup'  */
       injectReducer(store, { key: 'signup', reducer })
 
       /*  Return getComponent   */
-      cbReplace(null, Login)
+      cbReplace(null, Signup)
 
     /* Webpack named bundle   */
     }, 'signup')

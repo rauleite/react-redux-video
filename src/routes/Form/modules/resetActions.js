@@ -1,5 +1,5 @@
 import { CHANGE_USER, PROCESS_FORM } from '../consts'
-import { redirectToUrl } from '../../utils/url'
+import { redirectToUrl } from '../../../utils/url'
 import { sendForm } from '../formUtils'
 import { style, className } from './logic/utils/logicUtils'
 

@@ -10,14 +10,45 @@ import { objInitialState } from './utils/initialState'
 import { isEmpty } from 'lodash'
 
 export function changeUser (state, action) {
-  const fieldNames = ['name', 'email', 'password']
+  const fieldNames = [
+    'name',
+    'email',
+    'password'
+  ]
+  const fieldNamesSignupHome = [
+    'nameSignupHome',
+    'emailSignupHome',
+    'passwordSignupHome'
+  ]
+
   const result = objInitialState
 
-  const { user } = inputUser(state, action, fieldNames)
+  let { user, isField } = inputUser(
+    state, action, fieldNames.concat(fieldNamesSignupHome))
 
-  result.user.name = user.name
-  result.user.email = user.email ? user.email.trim() : user.email
-  result.user.password = user.password ? user.password.trim() : user.password
+  let userSignupHome = null
+  let sufixo = ''
+  fieldNamesSignupHome.forEach((f, index) => {
+    if (isField[f]) {
+      sufixo = 'SignupHome'
+      userSignupHome = user
+      user = null
+      return
+    }
+  })
+  console.log('user', user)
+  console.log('userSignupHome', userSignupHome)
+  const userTemp = user || userSignupHome
+
+  const name = userTemp[`name${sufixo}`]
+  const email = userTemp[`email${sufixo}`]
+  const password = userTemp[`password${sufixo}`]
+
+  result.user.name = name
+  result.user.email = email ? email.trim() : email
+  result.user.password = password ? password.trim() : password
+
+  console.log('result.user.name', result.user.name)
 
   validateNameWithStyles(result)
   validateEmailWithStyles(result)
@@ -36,12 +67,22 @@ export function changeUser (state, action) {
     result.styles.infoMessage = className.success
   }
 
-  return {
-    user: result.user,
+  const resultFinal = {
     errors: result.errors,
     styles: result.styles,
     button: result.button,
   }
+  console.log('sufixo', sufixo)
+  if (sufixo) {
+    resultFinal[`user${sufixo}`] = result.user
+    result.user = null
+  } else {
+    resultFinal.user = result.user
+  }
+
+  console.log('resulFinal', resultFinal)
+
+  return resultFinal
 }
 
 function isDisableButton (result, style) {

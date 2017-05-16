@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import Drawer from 'material-ui/Drawer'
 import MenuItem from 'material-ui/MenuItem'
 import FlatButton from 'material-ui/FlatButton'
+import SignupHome from '../SignupHome'
 import '../../styles/icons/scss/material-design-iconic-font.scss'
 
 export default class Menu extends React.Component {
@@ -30,16 +31,7 @@ export default class Menu extends React.Component {
           width={200}
           open={this.state.open}
           onRequestChange={(open) => this.setState({open})} >
-
-          {console.log('this.props.links', this.props.links)}
-          {/*{
-            <Link to='/login'>
-              login
-            </Link>
-          }*/}
-          {
-            itens(this.links)
-          }
+          { itens(this.links) }
         </Drawer>
       </div>
     );

@@ -2,7 +2,7 @@ import { injectReducer } from '../../store/reducers'
 import { ON_ENTER_HOOK } from './consts'
 import Auth from '../../modules/Auth'
 import { isEmpty } from 'lodash'
-import { send } from '../utils/ajax'
+import { send } from '../../utils/ajax'
 
 export default (store) => ({
   path: 'reset/:token',

@@ -1,14 +1,12 @@
 // We only need to import the modules necessary for initial render
 import CoreLayout from '../layouts/CoreLayout'
 import CounterRoute from './Counter'
-import FacebookRoute from './Facebook'
 import Home from './Home'
 import LoginRoute from './Form/login'
 import SignupRoute from './Form/signup'
 import LogoutRoute from './Form/logout'
 import ForgotRoute from './Form/forgot'
 import ResetRoute from './Form/reset'
-// import FacebookRoute from './Form/facebook'
 import Dashboard from './Dashboard'
 
 import {
@@ -28,7 +26,6 @@ export const createRoutes = (store) => ({
     SignupRoute(store),
     LogoutRoute(store),
     ForgotRoute(store),
-    FacebookRoute(store),
     ResetRoute(store),
     { path: 'dashboard', component: Dashboard },
     { path: '*', component: Home }

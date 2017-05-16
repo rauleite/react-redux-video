@@ -7,6 +7,11 @@ body {
   overflow-x: hidden;
 }
 
+.hidden {
+  display: none;
+  visibility: hidden;
+}
+
 /* ---------- Responsividade ---------- */
 
 .hidden {
@@ -39,6 +44,65 @@ body {
   }
 }
 
+.hidden-up {
+  &-xs {
+    @include hidden-up("xs");
+  }
+  &-sm {
+    @include hidden-up("sm");
+  }
+  &-md {
+    @include hidden-up("md");
+  }
+  &-lg {
+    @include hidden-up("lg");
+  }
+}
+
+.hidden-down {
+  &-xs {
+    @include hidden-down("xs");
+  }
+  &-sm {
+    @include hidden-down("sm");
+  }
+  &-md {
+    @include hidden-down("md");
+  }
+  &-lg {
+    @include hidden-down("lg");
+  }
+}
+
+// .show-top {
+//   &-xs {
+//     @include show-top("xs");
+//   }
+//   &-sm {
+//     @include show-top("sm");
+//   }
+//   &-md {
+//     @include show-top("md");
+//   }
+//   &-lg {
+//     @include show-top("lg");
+//   }
+// }
+
+// .show-down {
+//   &-xs {
+//     @include show-down("xs");
+//   }
+//   &-sm {
+//     @include show-down("sm");
+//   }
+//   &-md {
+//     @include show-down("md");
+//   }
+//   &-lg {
+//     @include show-down("lg");
+//   }
+// }
 
 a {
   color: #00bcd4;

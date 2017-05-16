@@ -6,17 +6,26 @@ import { setAllStates, setMapStates } from './logic/utils/logicUtils'
 
 export default function signupReducer (state = initialState, action) {
   deepFreeze(state)
-  /* *** PROCESS FORM *** */
-  if (action.type === PROCESS_FORM) {
-    return setAllStates(state, action.payload)
-  /* *** CHANGE CHANGE_USER *** */
-  } else if (action.type === CHANGE_USER) {
-    const result = changeUser(state, action)
-    return setMapStates(state, result)
-  /* *** LOCATION CHANGE *** */
-  } else if (action.type === LOCATION_CHANGE) {
-    return initialState
-  } else {
-    return state
+  console.info('SIGNUP REDUCER')
+  console.info('|__ state', state)
+  console.info('|__ action', action)
+  switch(action.type) {
+
+    /* *** PROCESS FORM *** */
+    case PROCESS_FORM:
+      return setAllStates(state, action.payload)
+
+    /* *** CHANGE CHANGE_USER *** */
+    case CHANGE_USER:
+      const result = changeUser(state, action)
+      console.log('result --', result)
+      return setMapStates(state, result)
+      
+    /* *** LOCATION CHANGE *** */
+    case LOCATION_CHANGE:
+      return initialState
+      
+    default:
+      return state
   }
 }

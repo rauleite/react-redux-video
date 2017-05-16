@@ -1,4 +1,6 @@
 import { IndexLink, Link } from 'react-router'
+import LoginNav from '../LoginNav'
+import { isUrl } from '../../utils/url'
 
 import './Navbar.scss'
 import '../../styles/core.scss'
@@ -18,26 +20,22 @@ const Navbar = () => (
         <div className='col-xs-2'>
           <div className='box'>
             <IndexLink to='/'>
-              Melhore.me
+              M.m
             </IndexLink>
           </div>
 
         </div>
 
-        <div className='col-xs-4'>
-          <div className='box'>
-            <span>oi</span>
-          </div>
-        </div>
-
-        <div className='col-xs-6'>
+        <div className='col-xs-6 col-xs-10 col-md-10 col-lg-10'>
           <div className='box hidden-xs'>
             <ul className='nav nav-right'>
-              {links()}
+              {showLoginNav()}
             </ul>
           </div>
           <div className='box show-xs nav-right'>
-            <Menu links={ linksLabel() } />
+            <ul className='nav nav-right'>
+              <Menu links={linksLabel()} />
+            </ul>
           </div>
         </div>
 
@@ -45,6 +43,12 @@ const Navbar = () => (
     </div>
   </nav>
 )
+
+function showLoginNav() {
+  if (isUrl('/')) {
+    return <LoginNav />
+  }
+}
 
 const linksNotShowAuth = [
     '/login',

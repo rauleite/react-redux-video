@@ -1,41 +1,44 @@
+// import Signup from '../../routes/Form/components/Signup'
+// import SignupHomeContainer from '../../containers/SignupHomeContainer'
+import SignupHomeContainer from './SignupHomeContainer'
 import { Card, CardText, CardTitle } from 'material-ui/Card'
 import React, { PropTypes } from 'react'
-import FacebookEnter from '../../../components/Buttons/Facebook/FacebookEnter'
+import FacebookEnter from '../../components/Buttons/Facebook/FacebookEnter'
 
-import '../../../styles/icons/scss/material-design-iconic-font.scss'
+import '../../styles/icons/scss/material-design-iconic-font.scss'
 
 import { Link } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
-const Signup = ({
+const SignupHome = ({
   onSubmit,
   onChange,
   errors,
   styles,
   button,
   successMessage,
-  user
+  userSignupHome
 }) => (
   <Card>
     <form action='/' onSubmit={onSubmit}>
-      <CardTitle
-        title={<i className='zmdi zmdi-account-add zmdi-hc-3x'></i>}
-        subtitle='Tenha acesso a muito conteúdo [significativo] gratuitamente'
-      />
-      {errors.summary && <p className='error-message'> {errors.summary} </p>}
+      {/*<CardTitle
+        subtitle='Faça seu cadastro e tenha acesso a conteúdo gratuito'
+      />*/}
       <div>
-        <p /><FacebookEnter >facebook</FacebookEnter>
+        <br />
+        <FacebookEnter >cadastre-se</FacebookEnter>
+        <br />&nbsp;
         <hr className='hr-text' data-content='Ou' />
         <TextField
           floatingLabelText={<i className='zmdi zmdi-account zmdi-hc-lg'></i>}
           hintText='Nome'
-          tabIndex='1'
-          name='name'
+          tabIndex='3'
+          name='nameSignupHome'
           autoFocus
           onChange={onChange}
 
-          value={user.get('name')}
+          value={userSignupHome.get('name')}
           errorText={errors.get('name')}
           floatingLabelShrinkStyle={styles.get('name')}
           errorStyle={styles.get('name')}
@@ -45,11 +48,11 @@ const Signup = ({
         <TextField
           floatingLabelText={<i className='zmdi zmdi-email zmdi-hc-lg'></i>}
           hintText='Email'
-          tabIndex='2'
-          name='email'
+          tabIndex='4'
+          name='emailSignupHome'
           onChange={onChange}
 
-          value={user.get('email')}
+          value={userSignupHome.get('email')}
           errorText={errors.get('email')}
           floatingLabelShrinkStyle={styles.get('email')}
           errorStyle={styles.get('email')}
@@ -59,12 +62,12 @@ const Signup = ({
         <TextField
           floatingLabelText={<i className='zmdi zmdi-key zmdi-hc-lg'></i>}
           hintText='Senha'
-          tabIndex='3'
+          tabIndex='5'
           type='password'
-          name='password'
+          name='passwordSignupHome'
           onChange={onChange}
 
-          value={user.get('password')}
+          value={userSignupHome.get('password')}
           errorText={errors.get('password')}
           floatingLabelShrinkStyle={styles.get('password')}
           errorStyle={styles.get('password')}
@@ -76,26 +79,22 @@ const Signup = ({
 
         <RaisedButton type='submit' label={button.get('label') ? button.get('label') : 'ENTRAR'}
         primary disabled={button.get('disabled')} />
-
-        {/*<RaisedButton type='submit' label='CRIAR NOVA CONTA' primary />*/}
       </div>
-      <CardText>
-        Já possui uma conta?
-        <Link to={'/login'}> <i className='zmdi zmdi-account' ></i> Logue-se
-        </Link>
-      </CardText>
     </form>
+    <br />&nbsp;
   </Card>
 )
 
-Signup.propTypes = {
+SignupHome.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   styles: PropTypes.object.isRequired,
   button: PropTypes.object.isRequired,
   successMessage: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired,
+  userSignupHome: PropTypes.object.isRequired,
 }
 
-export default Signup
+// export default SignupHome
+
+export default SignupHomeContainer(SignupHome)

@@ -32,6 +32,18 @@ function initialStateImmutable () {
       confirmePassword: '',
       token: ''
     }),
+    /* 
+      Variacao do user que teve que ser criada, pra não gerar conflito com o user
+      do loginNav, na homepage.
+     */
+    userSignupHome: Map({
+      name: '',
+      passwordToken: '',
+      email: '',
+      password: '',
+      confirmePassword: '',
+      token: ''
+    }),
     input: {},
     styles: Map({
       infoMessage: {},

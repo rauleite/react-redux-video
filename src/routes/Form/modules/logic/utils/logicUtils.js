@@ -42,7 +42,7 @@ export function inputUser (state, action, fieldNames) {
 
   let user = {}
   fieldNames.forEach(function (f) {
-    user[f] = input.name === f ? input.value : state.getIn(['user', f])
+    user[f] = input.name === f ? input.value : state.getIn(['user', f]) || ''
   })
   return { user, isField }
 }

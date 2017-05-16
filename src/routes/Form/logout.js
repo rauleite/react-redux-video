@@ -1,6 +1,6 @@
 import Auth from '../../modules/Auth'
-import { redirectToPrevUrl } from '../utils/url'
-import { sendData } from '../utils/ajax'
+import { redirectToPrevUrl } from '../../utils/url'
+import { sendData } from '../../utils/ajax'
 import hello from '../../../public/hello.all'
 
 export default (store) => ({

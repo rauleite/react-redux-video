@@ -1,8 +1,9 @@
 import Auth from '../../../modules/Auth'
 import { CHANGE_USER, PROCESS_FORM, CHANGE_CAPTCHA } from '../consts'
-import { redirectToPrevUrl } from '../../utils/url'
+// import { redirectToPrevUrl } from '../../utils/url'
 import { sendForm } from '../formUtils'
 import { style } from './logic/utils/logicUtils'
+import { redirectToUrl, redirectToPrevUrl } from '../../../utils/url'
 
 /**
  * @param {Object} Event Objeto de evento javascript
@@ -27,6 +28,12 @@ export function processForm (event) {
     sendForm('/auth/login', { body: { ...user, captchaValue } }, (error, res) => {
       console.log('res login', res)
       if (error) {
+      console.log('location', location)
+      console.log('location.pathname !== /login', location.pathname !== '/login')
+        
+        if (location.pathname !== '/login') {
+          return redirectToUrl('/login')
+        }
         if (captcha.hasCaptchaComponent) captcha.element.reset()
         return dispatch({
           type: PROCESS_FORM,

@@ -3,12 +3,12 @@ import hello from '../../../../public/hello.all'
 // import '../../../styles/icons/scss/material-design-iconic-font.scss'
 import FacebookButton from '../../../components/Buttons/FacebookButton'
 import RaisedButton from 'material-ui/RaisedButton'
-import { sendForm } from '../../Form/formUtils'
-import { redirectToPrevUrl } from '../../utils/url'
+import { sendForm } from '../../../routes/Form/formUtils'
+import { redirectToPrevUrl } from '../../../utils/url'
 import Auth from '../../../modules/Auth'
 
 export const Facebook = (props) => (
-  <FacebookButton onClick={ onclick } ></FacebookButton>
+  <FacebookButton onClick={ onclick } >{props.children}</FacebookButton>
 )
 
 function onclick () {

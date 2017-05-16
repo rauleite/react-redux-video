@@ -1,4 +1,4 @@
-import Signup from '../components/Signup'
+// import Signup from '../components/Signup'
 import { connect } from 'react-redux'
 import { processForm, changeUser } from '../modules/signupActions'
 
@@ -12,7 +12,8 @@ const mapStateToProps = ({ signup }) => ({
     successMessage: signup.get('successMessage'),
     user: signup.get('user'),
     styles: signup.get('styles'),
-    button: signup.get('button')
+    button: signup.get('button'),
+    userSignupHome: signup.get('userSignupHome')
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signup)
+export default connect(mapStateToProps, mapDispatchToProps)

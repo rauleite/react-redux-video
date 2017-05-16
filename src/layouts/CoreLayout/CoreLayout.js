@@ -1,6 +1,6 @@
 import './CoreLayout.scss'
 import '../../styles/core.scss'
-import '../../../node_modules/flexboxgrid/dist/flexboxgrid.css'
+// import '../../../node_modules/flexboxgrid/dist/flexboxgrid.css'
 
 import Header from '../../components/Header'
 import React from 'react'
@@ -8,25 +8,7 @@ import React from 'react'
 export const CoreLayout = ({ children }) => (
   <div>
     <Header />
-    <div className='row'>
-
-      <div className='col-sm-2 col-md-3'>
-        <div className='box hidden-xs'>
-        </div>
-      </div>
-      
-      <div className='col-xs-12 col-sm-8 col-md-6 center-xs' >
-        <div className='box'>
-          {children}
-        </div>
-      </div>
-
-      <div className='col-sm-2 col-md-3'>
-        <div className='box hidden-xs'>
-        </div>
-      </div>
-
-    </div>
+    {children}
   </div>
 )
 

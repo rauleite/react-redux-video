@@ -1,4 +1,4 @@
-import { sendData } from '../utils/ajax'
+import { sendData } from '../../utils/ajax'
 
 // export function sendForm (path, data, dispatch, callback) {
 
