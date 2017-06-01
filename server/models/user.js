@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { promisifyAll } from 'bluebird'
-
-const bcrypt = promisifyAll(require('bcrypt'))
+const bcrypt = require('bcrypt')
+// const bcrypt = promisifyAll(require('bcrypt'))
 
 // define the User model schema
 const UserSchema = new mongoose.Schema({
@@ -28,10 +28,32 @@ const UserSchema = new mongoose.Schema({
  * @param {string} password
  * @returns {object} callback
  */
-UserSchema.methods.comparePassword = async function comparePassword (password) {
-  const bcryptResult = await bcrypt.compareAsync(password, this.password)
-  return bcryptResult
+UserSchema.methods.comparePassword = async function (password) {
+  console.log('local-login password', password, 'this', this, this.password)
+
+  // TODO:
+  // IF this.password === undefined
+  // AND loop (social networks).id === not empty
+  // SO Warning: Você escolheu fazer login pelo facebook
+  // porém pode criar uma senha a qualquer momento e efetuar
+  // o login através destas duas opções
+
+  try {
+    const bcryptResult = await bcrypt.compareSync(password, this.password)
+    console.log('local-login password2', password)
+    return bcryptResult
+  } catch (error) {
+    console.error('ERRO GRAVE:', error)
+    return false
+  }
 }
+
+// UserSchema.methods.comparePassword = function (password) {
+//   console.log('local-login password', password, 'this', this, this.password)
+//   const bcryptResult = bcrypt.compare(password, this.password)
+//   console.log('local-login password2', password)
+//   return bcryptResult
+// }
 
 /**
  * The pre-save hook method.

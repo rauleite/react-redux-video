@@ -1,16 +1,13 @@
-import { IndexLink, Link } from 'react-router'
-import LoginNav from '../LoginNav'
-import { isUrl } from '../../utils/url'
-
+import React from 'react'
+import { IndexLink } from 'react-router'
+import LoginNav from './../../routes/Home/LoginNav/LoginNav'
 import './Navbar.scss'
 import '../../styles/core.scss'
 
 import Menu from '../Menu'
+import { isUrl } from '../../utils/url'
+import { linksLabel } from './../../utils/components'
 
-import { map } from 'lodash'
-
-import Auth from '../../modules/Auth'
-import React from 'react'
 
 const Navbar = () => (
   <nav className='navbar'>
@@ -47,86 +44,6 @@ const Navbar = () => (
 function showLoginNav() {
   if (isUrl('/')) {
     return <LoginNav />
-  }
-}
-
-const linksNotShowAuth = [
-    '/login',
-    '/signup',
-    '/forgot',
-    '/counter'
-  ]
-
-  const labelLinksNotShowAuth = [
-    'login',
-    'cadastre-se',
-    'forgot',
-    'counter'
-  ]
-
-  const linksShowAuth = [
-    '/counter',
-    '/dashboard',
-    '/logout'
-  ]
-
-  const labelNotShowAuth = [
-    'counter',
-    'dashboard',
-    'logout'
-  ]
-
-/**
- * Cria os links do lado direito do Navbar
- * @returns elementoHtml
- */
-function links () {
-  if (Auth.isUserAuthenticated()) {
-    return map(linksShowAuth, (value, index) => {
-      return (
-        <li key={index}>
-          <Link to={value}>
-            {labelNotShowAuth[index]}
-          </Link>
-        </li>)
-    })
-  } else {
-    return map(linksNotShowAuth, (value, index) => {
-      return (
-        <li key={index}>
-          <Link to={value}>
-            {labelLinksNotShowAuth[index]}
-          </Link>
-        </li>)
-    })
-  }
-}
-
-/**
- * Cria os links do lado direito do Navbar
- * @returns elementoHtml
- */
-function linksLabel () {
-  if (Auth.isUserAuthenticated()) {
-    return map(linksShowAuth, (value, index) => {
-      return (
-        // <li key={index}>
-          <Link to={value}>
-            {labelNotShowAuth[index]}
-          </Link>
-        // </li>
-      )
-    })
-  } else {
-    return map(linksNotShowAuth, (value, index) => {
-      return (
-        // <li key={index}>
-          <Link to={value}>
-            {labelLinksNotShowAuth[index]}
-          </Link>
-        // </li>
-      )
-    })
   }
 }
 

@@ -1,13 +1,13 @@
 // We only need to import the modules necessary for initial render
 import CoreLayout from '../layouts/CoreLayout'
 import CounterRoute from './Counter'
-import Home from './Home'
-import LoginRoute from './Form/login'
-import SignupRoute from './Form/signup'
+import HomeRoute from './Home/Home/_home'
+import LoginRoute from './Form/Login/_login'
+import SignupRoute from './Form/Signup/_signup'
+import ForgotRoute from './Form/Forgot/_forgot'
+import ResetRoute from './Form/Reset/_reset'
+import Dashboard from "./Dashboard/components/Dashboard"
 import LogoutRoute from './Form/logout'
-import ForgotRoute from './Form/forgot'
-import ResetRoute from './Form/reset'
-import Dashboard from './Dashboard'
 
 import {
   previneAcessosAuth,
@@ -19,7 +19,8 @@ import {
 export const createRoutes = (store) => ({
   path: '/',
   component: CoreLayout,
-  indexRoute: Home,
+  // indexRoute: Home,
+  indexRoute: HomeRoute(store),
   childRoutes: [
     CounterRoute(store),
     LoginRoute(store),
@@ -28,7 +29,8 @@ export const createRoutes = (store) => ({
     ForgotRoute(store),
     ResetRoute(store),
     { path: 'dashboard', component: Dashboard },
-    { path: '*', component: Home }
+    // { path: '*', component: Home }
+    { path: '*', ...HomeRoute(store) }
 
   ],
 

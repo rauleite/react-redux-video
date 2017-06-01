@@ -3,7 +3,7 @@ import hello from '../../../../public/hello.all'
 // import '../../../styles/icons/scss/material-design-iconic-font.scss'
 import FacebookButton from '../../../components/Buttons/FacebookButton'
 import RaisedButton from 'material-ui/RaisedButton'
-import { sendForm } from '../../../routes/Form/formUtils'
+import { sendForm } from './../../../utils/formUtils'
 import { redirectToPrevUrl } from '../../../utils/url'
 import Auth from '../../../modules/Auth'
 

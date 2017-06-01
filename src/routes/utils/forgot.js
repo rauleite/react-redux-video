@@ -5,7 +5,7 @@ import config from '../../../config/project.config'
 import mongoose from 'mongoose'
 import Promise from 'bluebird'
 // import asyncUtils from '../../../utils/asyncUtils'
-import { emailFormValidate } from './utils'
+import { emailFormValidate } from "../../../server/utils"
 
 /* Promisify some methods */
 const User = Promise.promisifyAll(mongoose).model('User')

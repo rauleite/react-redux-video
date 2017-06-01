@@ -1,7 +1,12 @@
-import deepFreezeLib from 'deep-freeze'
-
-export function deepFreeze (obj) {
+export const deepFreeze = (obj) => {
   if (__DEV__) {
-    deepFreezeLib(obj)
+    require('deep-freeze')(obj)
   }
 }
+
+export const ImmutablePropTypes = (
+  __DEV__ ?
+  require('react-immutable-proptypes') :
+  null
+)
+

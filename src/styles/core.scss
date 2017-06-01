@@ -74,6 +74,36 @@ body {
   }
 }
 
+.container-fluid-up {
+  &-xs {
+    @include container-fluid-up("xs");
+  }
+  &-sm {
+    @include container-fluid-up("sm");
+  }
+  &-md {
+    @include container-fluid-up("md");
+  }
+  &-lg {
+    @include container-fluid-up("lg");
+  }
+}
+
+.container-fluid-down {
+  &-xs {
+    @include container-fluid-down("xs");
+  }
+  &-sm {
+    @include container-fluid-down("sm");
+  }
+  &-md {
+    @include container-fluid-down("md");
+  }
+  &-lg {
+    @include container-fluid-down("lg");
+  }
+}
+
 // .show-top {
 //   &-xs {
 //     @include show-top("xs");

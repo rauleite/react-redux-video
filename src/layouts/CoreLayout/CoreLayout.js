@@ -4,11 +4,13 @@ import '../../styles/core.scss'
 
 import Header from '../../components/Header'
 import React from 'react'
+import Footer from './../../components/Footer'
 
 export const CoreLayout = ({ children }) => (
   <div>
     <Header />
     {children}
+    <Footer />
   </div>
 )
 

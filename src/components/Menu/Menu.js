@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import Drawer from 'material-ui/Drawer'
 import MenuItem from 'material-ui/MenuItem'
 import FlatButton from 'material-ui/FlatButton'
-import SignupHome from '../SignupHome'
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import '../../styles/icons/scss/material-design-iconic-font.scss'
 
 export default class Menu extends React.Component {
@@ -21,10 +21,16 @@ export default class Menu extends React.Component {
   render() {
     return (
       <div>
-        <FlatButton
+        {/*<FlatButton
           icon={<i className='zmdi zmdi-menu'></i>}
           onTouchTap={this.handleToggle}
-        />
+        />*/}
+        <FloatingActionButton
+          onTouchTap={this.handleToggle}
+          mini={true}>
+          
+          <i className='zmdi zmdi-menu'></i>
+        </FloatingActionButton>
 
         <Drawer
           docked={false}
