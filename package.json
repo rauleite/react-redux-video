@@ -8,7 +8,7 @@
     "npm": "^4.1.2"
   },
   "scripts": {
-    "postinstall": "yarn build && yarn deploy:light",
+    "postinstall": "yarn deploy:light",
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
     "compile:prod": "better-npm-run compile",
@@ -86,7 +86,7 @@
       }
     },
     "deploy:light": {
-      "command": "npm run clean && npm run compile && npm run compile:server",
+      "command": "npm run clean && npm run compile:prod",
       "env": {
         "NODE_ENV": "production",
         "DEBUG": "app:*"
