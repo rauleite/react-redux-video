@@ -86,7 +86,7 @@
       }
     },
     "deploy:light": {
-      "command": "npm run clean && npm run compile",
+      "command": "npm run clean && npm run compile && npm run compile:server",
       "env": {
         "NODE_ENV": "production",
         "DEBUG": "app:*"
