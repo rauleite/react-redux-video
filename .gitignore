@@ -1,11 +1,19 @@
+# Pesado e desnecessario
+node_modules
+coverage
 .DS_STORE
 *.log
 
-node_modules
-coverage
-
+# IDE
 .idea/
 
+# Local
 js-tests.js
 
+# Build
 dist*
+
+# S
+config
+Dockerfile
+build.sh

@@ -30,7 +30,7 @@ const config = {
   ssl_cert : '/www/ssl/cert-melhore.pem',
   ssl_key : '/www/ssl/key-melhore.pem',
 
-  db_uri: 'mongodb://rauleite:senha@localhost/react_app',
+  db_uri: 'mongodb://rauleite:bfx3Dt2wcTZPx4VzYSzE6Mg54Np@172.17.0.2:27017/videoaulas',
   jwt_secret: 'kS?3w_Be=#6YJ+&$',
   facebook_secret: 'a057ef78137483fb8f401362eba64de3',
 
