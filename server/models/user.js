@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { promisifyAll } from 'bluebird'
-const bcrypt = require('bcrypt')
-// const bcrypt = promisifyAll(require('bcrypt'))
+const bcrypt = require('bcrypt-nodejs')
+// const bcrypt = promisifyAll(require('bcrypt-nodejs'))
 
 // define the User model schema
 const UserSchema = new mongoose.Schema({

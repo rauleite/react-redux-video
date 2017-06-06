@@ -1,0 +1,38 @@
+version: "3"
+services:
+  db:
+    image: mongo:3.4.4
+    volumes:
+      - /data/db
+    tty: true
+    container_name: db_mongo
+
+  ram:
+    image: redis:3.2.8-alpine
+    tty: true
+    container_name: ram_redis
+
+  web:
+    build: .
+    ports:
+      - 3000:3000
+    links:
+      - db
+      - ram
+    tty: true
+    labels:
+    - "videoaulas app in production mode"
+    container_name: web_videoaulas
+
+  proxy:
+    image: nginx:1.13.0-alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - $(pwd)/config/deploy/ssl:/var/ssl
+      - $(pwd):/var/www -v $(pwd)/config/deploy/nginx.conf:/etc/nginx/nginx.conf
+      - $(pwd)/config/deploy/default:/etc/nginx/sites-enabled/default
+    links: web
+    tty: true
+    container_name: proxy_nginx
