@@ -15,5 +15,5 @@ dist*
 
 # S
 config
-Dockerfile
+# Dockerfile
 build.sh
