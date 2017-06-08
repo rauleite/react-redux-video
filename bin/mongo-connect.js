@@ -6,7 +6,9 @@ const debug = log('app:bin:dev-server')
 
 module.exports = function connect (callback) {
   // connect to the database and load models
-  mongoose.connect(project.db_uri)
+  let db_uri = `mongodb://${project.mongo_user}:${project.mongo_password}@${project.mongo_path}/${project.mongo_db}`
+
+  mongoose.connect(db_uri)
 
   // plug in the promise library:
   mongoose.Promise = global.Promise

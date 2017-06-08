@@ -13,7 +13,6 @@ js-tests.js
 # Build
 dist*
 
-# S
+# Jd
 config
-# Dockerfile
-build.sh
+infos.txt
