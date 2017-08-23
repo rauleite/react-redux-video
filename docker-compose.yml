@@ -33,7 +33,7 @@ services:
     labels:
     - "videoaulas app in production mode"
     container_name: app
-    read_only: true
+    # read_only: true
     volumes: 
       - ./dist:/app/dist
       - ./dist-server:/app/dist-server
@@ -50,7 +50,7 @@ services:
     ports:
       - 80:80
       - 443:443
-    read_only: false
+    # read_only: false
     volumes:
       - ./config/deploy/ssl:/var/ssl
       - ./:/var/www
