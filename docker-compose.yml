@@ -8,7 +8,7 @@ services:
       - ./config/mongo/data/db:/data/db
     ports:
       - 27017:27017
-    tty: true
+    # tty: true
     container_name: db
 
   # https://hub.docker.com/_/redis/
@@ -16,7 +16,7 @@ services:
     image: redis:3.2.8-alpine
     ports:
      - 6379:6379
-    tty: true
+    # tty: true
     container_name: mem
 
   # https://hub.docker.com/_/node/
@@ -29,7 +29,7 @@ services:
     links:
       - db
       - mem
-    tty: false
+    # tty: false
     labels:
     - "videoaulas app in production mode"
     container_name: app
@@ -58,5 +58,5 @@ services:
       - ./config/deploy/default:/etc/nginx/sites-enabled/default
     links:
       - app
-    tty: true
+    # tty: true
     container_name: web
