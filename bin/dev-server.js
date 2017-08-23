@@ -12,6 +12,9 @@ const app = require('./env').load('../server/main')
 const log = require('debug')
 const debug = log('app:bin:dev-server')
 
+console.log('----------> process.env.MONGO_HOST:', process.env.MONGO_HOST)
+console.log('----------> process.env.REDIS_HOST:', process.env.REDIS_HOST)
+
 // const options = {
 //   cert: fs.readFileSync(project.ssl_cert),
 //   key: fs.readFileSync(project.ssl_key)

@@ -1,14 +1,19 @@
 const redis = require('redis')
 const log = require('debug')
 const Promise = require('bluebird')
+const project = require('../config/project.config')
 
 /* Promisify methods */
 Promise.promisifyAll(redis)
 
 const debug = log('app:bin:dev-server')
 
+console.log('------> REDIS_HOST:', process.env.REDIS_HOST || 'localhost')
+
 const redisClient = redis.createClient({
-  host: process.env.REDIS_HOST || '172.17.0.3'
+  // host: project.redis_host
+  host: 'mem'
+  
 })
 
 redisClient.on('connect', () => {

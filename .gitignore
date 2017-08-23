@@ -1,5 +1,6 @@
 # Pesado e desnecessario
 node_modules
+yarn.lock
 coverage
 .DS_STORE
 *.log
@@ -9,6 +10,7 @@ coverage
 
 # Local
 js-tests.js
+nohup.out
 
 # Build
 dist*

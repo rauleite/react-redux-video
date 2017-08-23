@@ -2,7 +2,7 @@ FROM node:6.10-alpine
 
 MAINTAINER rauleite
 
-WORKDIR app
+WORKDIR ./
 
 # ADD dist dist
 # ADD dist-server dist-server
@@ -10,6 +10,6 @@ WORKDIR app
 # VOLUME node_modules node_modules
 
 # RUN npm install pm2
-# RUN pm2-docker start npm -- start
+# RUN pm2-docker start npm -- 
 
 ENTRYPOINT npm start
