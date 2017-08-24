@@ -23,4 +23,4 @@ services:
       - ./package.json:/www/package.json:ro
       - ./bin:/www/bin:ro
       - ./config:/www/config
-    entrypoint: sh -c "npm install && npm deploy:light && npm start"
+    entrypoint: sh -c "npm install && npm run deploy:light && npm start"
