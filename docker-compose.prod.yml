@@ -1,0 +1,25 @@
+version: "3.2"
+services:
+  # https://hub.docker.com/_/node/
+  app:
+    build: .
+    environment:
+      - MONGO_HOST=db
+    ports:
+      - 3000:3000
+    links:
+      - db
+      - mem
+    # tty: false
+    labels:
+    - "videoaulas app in production mode"
+    container_name: app
+    # read_only: true
+    volumes: 
+      - ./dist:/www/dist:ro
+      - ./dist-server:/www/dist-server:ro
+      - ./public:/www/public:ro
+      - ./package.json:/www/package.json:ro
+      - ./bin:/www/bin:ro
+      - ./config:/www/config:ro
+    entrypoint: npm start e npm install
