@@ -22,4 +22,4 @@ services:
       - ./package.json:/www/package.json:ro
       - ./bin:/www/bin:ro
       - ./config:/www/config:ro
-    entrypoint: npm install e npm start
+    entrypoint: npm install && npm start
