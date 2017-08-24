@@ -224,7 +224,6 @@
     "karma-mocha-reporter": "^2.0.0",
     "karma-webpack-with-fast-source-maps": "^1.9.2",
     "mocha": "^3.0.1",
-    "phantomjs-prebuilt": "^2.1.15",
     "react-addons-test-utils": "~15.4.2",
     "react-immutable-proptypes": "^2.1.0",
     "redbox-react": "^1.2.10",
