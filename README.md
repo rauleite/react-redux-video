@@ -15,7 +15,7 @@ PS. Sempre baseado em Ubuntu.
 1. Ao invés de usar NPM use [Yarn](https://yarnpkg.com/lang/en/docs/install)
 1. `yarn install`
 1. Subir server, mem, db, e app de uma vez:
-* `docker-compose up`
+    * `docker-compose up`
 
 ## Ambiente Prod (Servidor - PRIMEIRA VEZ)
 1. Acessar EC2
