@@ -21,7 +21,6 @@ services:
 
   # https://hub.docker.com/_/node/
   app:
-    build: .
     environment:
       - MONGO_HOST=db
     ports:
@@ -34,14 +33,6 @@ services:
     - "videoaulas app in production mode"
     container_name: app
     # read_only: true
-    volumes: 
-      - ./dist:/app/dist
-      - ./dist-server:/app/dist-server
-      - ./public:/app/public
-      - ./package.json:/app/package.json
-      - ./node_modules:/app/node_modules
-      - ./bin:/app/bin
-      - ./config:/app/config
 
   # https://hub.docker.com/_/nginx/
   web:

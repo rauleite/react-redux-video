@@ -4,6 +4,7 @@ yarn.lock
 coverage
 .DS_STORE
 *.log
+package-lock.json
 
 # IDE
 .idea/

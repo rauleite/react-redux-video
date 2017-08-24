@@ -2,31 +2,32 @@
 
 PS. Sempre baseado em Ubuntu.
 
-## Ambiente Dev (Local)
+## Ambiente Dev (Local - PRIMEIRA VEZ)
 1. Apontar dns ***127.0.0.1 melhore-local.me*** em **/etc/hosts**
-
-
-## Ambiente Prod (Servidor - PRIMEIRA VEZ)
-<!-- 1. Baixar e descompactar na raiz do projeto o diretório **config** (fica em cloud separada e não no repositório do projeto) -->
-1. Acessar EC2
-    * PS. *(Troque para arquivo PEM e DNS corretos)*:  
-    `sudo ssh -i "config/aws/free.pem" ubuntu@ec2-18-220-205-21.us-east-2.compute.amazonaws.com`
+1. Baixar e descompactar na raiz do projeto o diretório **config** *(fica em cloud separada e não no repositório do projeto)*
 1. Usar versões de node indicado em *package.json*
     * Recomendo instalar via [NVM](https://github.com/creationix/nvm#installation)
     * PS. *(Troque pela versão correta)*:  
-    `nvm install 7.7.2`  
-    `nvm alias default 7.7.2`
+    `nvm install 8.4.0`  
+    `nvm alias default 8.4.0`
+1. Pre requisito
+    * `sudo apt-get install build-essential -y`
+
+## Ambiente Prod (Servidor - PRIMEIRA VEZ)
+1. Acessar EC2
+    * PS. *(Troque para arquivo PEM e DNS corretos)*:  
+    `sudo ssh -i "config/aws/free.pem" ubuntu@ec2-18-220-205-21.us-east-2.compute.amazonaws.com`
 1. Clonar repositório
-    * `git clone https://github.com/rauleite/react-redux-video.git video && cd video`
+    * `cd ~ && mkdir -p www && git clone https://github.com/rauleite/react-redux-video.git www && cd www`
 1. Ao invés de usar NPM use [Yarn](https://yarnpkg.com/lang/en/docs/install)
-1. `yarn install`
+<!-- 1. `yarn install` -->
 1. Copiar **config** para remoto. Na máquina local:
     * PS. *(Troque para path, PEM  e DNS corretos)*:  
-  `sudo scp -i config/aws/free.pem ~/Download/config.tar.gz ubuntu@ec2-18-220-205-21.us-east-2.compute.amazonaws.com:/home/ubuntu/video/`
-1. Volte pra raiz do projeto **remoto**
-    * `tar -zxvf config.tar.gz && rm config.tar.gz`
-1. Gerar *arquivos dev*:
-    * `yarn run deploy:light`
+  `sudo scp -i config/aws/free.pem ~/Download/config.tar.gz ubuntu@ec2-18-220-205-21.us-east-2.compute.amazonaws.com:~/www/`
+<!-- 1. Volte pra raiz do projeto **remoto**
+    * `tar -zxvf config.tar.gz && rm config.tar.gz` -->
+<!-- 1. Gerar *arquivos dist*:
+    * `yarn run deploy:light` -->
 1. Instalar [docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/) e [docker-compose](https://docs.docker.com/compose/install/#install-compose)
 1. Apontar dns *127.0.0.1 melhore.me* em **/etc/hosts**
 1. Subir server, mem, db, e app de uma vez:
