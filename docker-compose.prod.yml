@@ -5,6 +5,7 @@ services:
     build: .
     environment:
       - MONGO_HOST=db
+      - NODE_ENV=production
     ports:
       - 3000:3000
     links:
@@ -22,4 +23,4 @@ services:
       - ./package.json:/www/package.json:ro
       - ./bin:/www/bin:ro
       - ./config:/www/config
-    entrypoint: sh -c "npm install && npm start"
+    entrypoint: sh -c "npm install && npm deploy:light && npm start"
