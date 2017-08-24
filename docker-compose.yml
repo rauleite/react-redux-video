@@ -21,6 +21,7 @@ services:
 
   # https://hub.docker.com/_/node/
   app:
+    build: config/dockerfiles/${ENV_UP}
     environment:
       - MONGO_HOST=db
     ports:

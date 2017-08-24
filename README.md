@@ -24,14 +24,14 @@ PS. Sempre baseado em Ubuntu.
 1. Copiar **config** para remoto. Na máquina local:
     * PS. *(Troque para path, PEM  e DNS corretos)*:  
   `sudo scp -i config/aws/free.pem ~/Download/config.tar.gz ubuntu@ec2-18-220-205-21.us-east-2.compute.amazonaws.com:~/www/`
-<!-- 1. Volte pra raiz do projeto **remoto**
-    * `tar -zxvf config.tar.gz && rm config.tar.gz` -->
+1. Volte pra raiz do projeto **remoto**
+    * `tar -zxvf config.tar.gz && rm config.tar.gz`
 <!-- 1. Gerar *arquivos dist*:
     * `yarn run deploy:light` -->
 1. Instalar [docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/) e [docker-compose](https://docs.docker.com/compose/install/#install-compose)
 1. Apontar dns *127.0.0.1 melhore.me* em **/etc/hosts**
 1. Subir server, mem, db, e app de uma vez:
-    * `docker-compose up`
+    * `docker-compose -f config/dockerfiles/deploy/Dockerfile up`
 1. Acessar em melhore.me
 
 
